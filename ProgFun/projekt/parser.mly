@@ -1,5 +1,5 @@
 %{
-open Model;;
+  open Model;;
 %}
 
 %token <float> FLOAT

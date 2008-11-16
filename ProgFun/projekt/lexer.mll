@@ -14,5 +14,6 @@ rule next = parse
   | '\n'                { NEWLINE }
   | comment             { next lexbuf }
   | "usemtl Material\n" { next lexbuf }
+  | "usemtl (null)\n"   { next lexbuf }
   | "s off\n"           { next lexbuf }
   | eof                 { EOE }
