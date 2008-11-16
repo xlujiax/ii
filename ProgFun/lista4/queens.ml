@@ -12,9 +12,8 @@ let rec ltake = function
 
 let rec lfilter pred = function
     LNil -> LNil
-  | LCons(x,xf) -> if pred x
-    then LCons (x, function () -> lfilter pred (xf()))
-    else lfilter pred (xf())
+  | LCons(x,xf) when pred x -> LCons (x, function () -> lfilter pred (xf()))
+  | LCons(_,xf)             -> lfilter pred (xf())
 
 let breadthFirst next x =
   let rec bfs = function

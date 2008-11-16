@@ -2,18 +2,17 @@
 %token <int> INT
 %token V
 %token F
-%token EOE              /* End Of Expression */
+%token EOE
 %token NEWLINE
-%start main             /* entry point */
-%type <Model.line list> main   /* the parser will return an Abstract Syntax Tree */
+%start main
+%type <Model.line list> main
 %%
 main:
-    expr NEWLINE EOE  { [$1] }
-  | expr NEWLINE main { $1 :: $3 }
-;
-expr:
+  | information NEWLINE EOE  { [$1] }
+  | information NEWLINE main { $1 :: $3 };
+
+information:
   | V FLOAT FLOAT FLOAT { Model.Vertex ($2,$3,$4) }
-  | F INT INT INT       { Model.Face ($2,$3,$4) }
-;
+  | F INT INT INT       { Model.Face ($2,$3,$4) };
 
 %%

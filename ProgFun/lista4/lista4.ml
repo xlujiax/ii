@@ -26,10 +26,8 @@ let uniq lst =
 let vars f =
   let rec aux f = match f with
     | Var p -> [p]
-    | Impl (fi, psi) -> (aux fi) @ (aux psi)
-    | And (fi, psi) -> (aux fi) @ (aux psi)
-    | Or (fi, psi) -> (aux fi) @ (aux psi)
     | Not fi -> (aux fi)
+    | Impl (fi, psi) | And (fi, psi) | Or (fi, psi) -> (aux fi) @ (aux psi)
   in uniq (aux f)
 
 let concat x xs = x :: xs
@@ -59,11 +57,8 @@ let rec clausule v = match v with
 	Var p
       else
 	Not (Var p)
-  | (p, b)::xs ->
-      if b = true then
-	And (Var p, clausule xs)
-      else
-	And (Not (Var p), clausule xs)
+  | (p, b)::xs when b     -> And (Var p, clausule xs)
+  | (p, b)::xs when not b -> And (Not (Var p), clausule xs)
 
 let rec alternate lst = match lst with
     [f] -> f

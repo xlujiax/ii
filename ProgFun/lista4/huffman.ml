@@ -1,8 +1,7 @@
 type huffman_tree = Leaf of float * char | Node of float * huffman_tree * huffman_tree
 
 let probability = function
-  | Leaf (p, _) -> p
-  | Node (p, _, _) -> p
+  | Leaf (p, _) | Node (p, _, _) -> p;;
 
 let tree assoc =
   let pred = (fun a b -> (probability a) < (probability b))
@@ -19,14 +18,14 @@ let tree assoc =
 	  aux (Sort.merge pred [Node ((pa +. pb),b,a)] rest)
     | [x] -> [x]
     | [] -> []
-  in List.hd (aux sorted)
+  in List.hd (aux sorted);;
 
-let rec dfs ?(path=[]) = function
+let rec dfs path = function
   | Leaf (_, c) -> [(path, c)]
-  | Node (_, l, r) -> (dfs ~path:('0'::path) l) @ (dfs ~path:('1'::path) r)
+  | Node (_, l, r) -> (dfs ('0'::path) l) @ (dfs ('1'::path) r);;
 
-let ex = [(0.1, 'a'); (0.2, 'b'); (0.3, 'c'); (0.24, 'd'); (0.16, 'e')]
+let ex = [(0.1, 'a'); (0.2, 'b'); (0.3, 'c'); (0.24, 'd'); (0.16, 'e')];;
 
-let codes assoc = dfs (tree assoc)
-let encode c assoc = fst (List.find (fun (_, a) -> a = c) (codes assoc))
-let decode path assoc = snd (List.find (fun (p, _) -> p = path) (codes assoc))
+let codes assoc = dfs [] (tree assoc);;
+let encode c assoc = fst (List.find (fun (_, a) -> a = c) (codes assoc));;
+let decode path assoc = snd (List.find (fun (p, _) -> p = path) (codes assoc));;
