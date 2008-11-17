@@ -59,3 +59,6 @@ let x = ahiext x 9;;
 let y = aupdate x 4 99;;
 let y = aupdate y 5 100;;
 let y = aupdate y 6 101;;
+
+let z = ahirem x;;
+let z = ahirem z;;
