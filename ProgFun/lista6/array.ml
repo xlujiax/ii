@@ -23,6 +23,28 @@ let asub (_, tree) k =
 	  aux (k / 2) right
   in aux k tree;;
 
+let aupdate (max, tree) k new_el =
+  let rec aux k t = match k, t with
+    | (_, Leaf) -> failwith "index out of bounds"
+    | (1, Node (left, _, right)) -> Node (left, new_el, right)
+    | (_, Node (left, el, right)) ->
+	if k mod 2 = 0 then
+	  Node (aux (k / 2) left, el, right)
+	else
+	  Node (left, el, aux (k / 2) right)
+  in (max, aux k tree);;
+
+let ahirem (max, tree) =
+  let rec aux k t = match k, t with
+    | (_, Leaf) -> failwith "index out of bounds"
+    | (1, Node (left, _, right)) -> Leaf
+    | (_, Node (left, el, right)) ->
+	if k mod 2 = 0 then
+	  Node (aux (k / 2) left, el, right)
+	else
+	  Node (left, el, aux (k / 2) right)
+  in (max - 1, aux max tree);;
+
 let aempty = (0, Leaf);;
 
 let x = aempty;;
@@ -33,3 +55,7 @@ let x = ahiext x 6;;
 let x = ahiext x 7;;
 let x = ahiext x 8;;
 let x = ahiext x 9;;
+
+let y = aupdate x 4 99;;
+let y = aupdate y 5 100;;
+let y = aupdate y 6 101;;
