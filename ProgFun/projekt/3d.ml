@@ -16,17 +16,26 @@ let flatten_vertex = function (x, y, z) -> (screen_width *. projection_d *. x /.
 let flatten_tri (a, b, c) = (flatten_vertex a, flatten_vertex b, flatten_vertex c);;
 let flatten_model model = List.map flatten_tri model;;
 
+let avg_z ((_,_,z1), (_,_,z2), (_,_,z3)) =
+  (z1 +. z2 +. z3) /. 3.;;
+
+let sort_z tris =
+  Sort.list (fun a b -> avg_z a < avg_z b) tris;;
+
 let render_tri (v1,v2,v3) =
   Graphics.draw_poly (Array.map (fun (x,y) ->
 				   (int_of_float x, int_of_float y)) [| v1; v2; v3 |]);;
-let render_model model = List.iter render_tri (flatten_model model);;
+
+let render_world tris =
+  List.iter render_tri (flatten_model (sort_z tris));;
+
 
 let rec loop model =
   Graphics.auto_synchronize false;
   Graphics.clear_graph ();
   
   Graphics.set_color (Graphics.rgb 0 0 0);
-  render_model model;
+  render_world model;
 
   Graphics.auto_synchronize true;
   let status = Graphics.wait_next_event [Graphics.Poll; Graphics.Key_pressed] in
