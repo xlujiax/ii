@@ -1,3 +1,11 @@
+// Maciej Pacut
+// Permutacje, zad3 z listy 6
+// input przykladowy:
+// 4
+// 1 2 2 3
+// (pierwszy wiersz to ilosc el. w sekwencji
+// drugi wiersz to sekwencja)
+
 #include <stdio.h>
 #include <malloc.h>
 #include <stdlib.h>
@@ -54,7 +62,6 @@ void permutations(int level)
 {
   if(level == size)
     {
-      //print_arr(walker, size);
       store_arr(walker, size);
     }
   else
@@ -96,8 +103,10 @@ void print_perms_unique()
 {
   qsort(perms, factorial(size), sizeof(int*), arr_cmp);
 
-  
+  // w petli for zaczyna sie od 1
   print_arr(perms[0], size);
+
+  // skoro tablica permutacji jest posortowana to aby otrzymac unikaty wystarczy ignorowac nastepujace po sobie identyczne wystapienia
   int i;
   for(i = 1; i < factorial(size); ++i)
     if(!equal_arr(perms[i - 1], perms[i], size))
@@ -122,7 +131,6 @@ int main()
 
   for(i = 0; i < size; ++i)
     scanf("%d", &arr[i]);
-  printf("--------\n");
 
   permutations(0);
   print_perms_unique();
