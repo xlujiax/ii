@@ -54,7 +54,7 @@ struct Graph
 
 	Node& n = (*i).second;
 	for(map<string, Edge>::iterator j = n.edges.begin(); j != n.edges.end(); ++j)
-	  cout << (*j).first << " (" << (*j).second.distance << ") ";
+	  cout << (*j).first << " (" << (*j).second.distance << "), ";
 	cout << endl;
       }
   }
