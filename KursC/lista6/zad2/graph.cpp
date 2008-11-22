@@ -40,6 +40,19 @@ struct Graph
     nodes[a].edges[b].hours.insert(make_pair(start, end));
   }
 
+  void Print()
+  {
+    for(map<string, Node>::iterator i = nodes.begin(); i != nodes.end(); ++i)
+      {
+	cout << (*i).first << ": ";
+
+	Node& n = (*i).second;
+	for(map<string, Edge>::iterator j = n.edges.begin(); j != n.edges.end(); ++j)
+	  cout << (*j).first << " (" << (*j).second.distance << ") ";
+	cout << endl;
+      }
+  }
+
   // Dijkstra; nie zwraca uwagi na to czy istnieje godzina o ktorej da sie dojechac z a do b
   list<string> ShortestPath(string a, string b)
   {
@@ -53,10 +66,12 @@ struct Graph
       distances[(*i).first] = 99999999;
 
     priorityQueue.insert(make_pair(0, a));
+    distances[a] = 0;
+    
     while(!priorityQueue.empty())
       {
 	string minimumID = (*priorityQueue.begin()).second;
-
+	
 	if(minimumID == b)
 	  {
 	    break;
@@ -70,7 +85,9 @@ struct Graph
 	for(map<string, Edge>::iterator next = minimum.edges.begin(); next != minimum.edges.end(); ++next)
 	  {
 	    string nextID = (*next).first;
+
 	    Edge& edge = (*next).second;
+
 	    if(visited.find(nextID) == visited.end())
 	      {
 		if(distances[nextID] > edge.distance + distances[minimumID])
@@ -82,23 +99,79 @@ struct Graph
 		  }
 	      }
 	  }
-
-	list<string> path;
-	string actual = b;
-	while(predecessors.find(actual) != predecessors.end())
-	  {
-	    path.push_back(actual);
-	    actual = predecessors[actual];
-	  }
-	path.reverse();
-	return path;
       }
+
+    list<string> path;
+    string actual = b;
+    while(true)
+      {
+	path.push_back(actual);
+	if(predecessors.find(actual) == predecessors.end())
+	  break;
+	actual = predecessors[actual];
+      }
+    path.reverse();
+    return path;
   }
 };
 
 
 
 int main()
-{  
+{
+  Graph g;
+  
+  string command;
+  while(true)
+    {
+      cout << "(s)hortest path, add (n)ode, add (c)onnection, (p)rint graph or (q)uit?" << endl;
+      cin >> command;
+      if(command == "s")
+	{
+	  cout << "from? ";
+	  string from;
+	  cin >> from;
+
+	  cout << "to? ";
+	  string to;
+	  cin >> to;
+
+	  list<string> path = g.ShortestPath(from, to);
+	  for(list<string>::iterator i = path.begin(); i != path.end(); ++i)
+	    cout << *i << endl;
+	}
+      else if(command == "n")
+	{
+	  cout << "name of node? ";
+	  string name;
+	  cin >> name;
+	  g.AddNode(name);
+	}
+      else if(command == "c")
+	{
+	  cout << "from? ";
+	  string from;
+	  cin >> from;
+
+	  cout << "to? ";
+	  string to;
+	  cin >> to;
+	  
+	  cout << "distance? ";
+	  int distance;
+	  cin >> distance;
+	  
+	  g.AddConnection(from, to, distance);
+	  g.AddConnection(to, from, distance);
+	}
+      else if(command == "p")
+	{
+	  g.Print();
+	}
+      else if(command == "q")
+	{
+	  break;
+	}
+    }
   return 0;
 }
