@@ -119,6 +119,78 @@ struct Graph
     path.reverse();
     return path;
   }
+
+  // Dijkstra; nie zwraca uwagi na to czy istnieje godzina o ktorej da sie dojechac z a do b
+  list<string> FastestPath(string a, string b)
+  {
+    map<int, string> priorityQueue; // kolejka priorytetowa
+    map<string, int> times; // odwrotnosc kolejki priorytetowej; szuka kosztu majac identyfikator
+    map<string, string> predecessors; // potrzebne do konstrukcji sciezki
+    set<string> visited; // dubluje informacje z predecessors i distances, ale uzyty jest dla czytelnosci
+
+    // wszystkie wezly na poczatku maja distance 9999999
+    for(map<string, Node>::iterator i = nodes.begin(); i != nodes.end(); ++i)
+      times[(*i).first] = 99999999;
+
+    priorityQueue.insert(make_pair(0, a));
+    times[a] = 0;
+    
+    while(!priorityQueue.empty())
+      {
+	string minimumID = (*priorityQueue.begin()).second;
+	
+	if(minimumID == b)
+	  {
+	    break;
+	  }
+	
+	priorityQueue.erase(priorityQueue.begin());
+	Node& minimum = nodes[minimumID];
+
+	visited.insert(minimumID);
+
+	for(map<string, Edge>::iterator next = minimum.edges.begin(); next != minimum.edges.end(); ++next)
+	  {
+	    string nextID = (*next).first;
+
+	    Edge& edge = (*next).second;
+
+	    if(visited.find(nextID) == visited.end())
+	      {
+		int next_end_time = 999999999;
+		int actual_time = times[minimumID];
+		for(map<int, int>::iterator h = edge.hours.begin(); h != edge.hours.end(); ++h) // nieefektywne; powiniennem uzyc lower_bound
+		  {
+		    if((*h).first >= actual_time)
+		      {
+			next_end_time = (*h).second;
+			break;
+		      }
+		  }
+		
+		if(times[nextID] > edge.distance + next_end_time)
+		  {
+		    predecessors[nextID] = minimumID;
+		    times[nextID] = edge.distance + next_end_time;
+
+		    priorityQueue.insert(make_pair(next_end_time, nextID));
+		  }
+	      }
+	  }
+      }
+
+    list<string> path;
+    string actual = b;
+    while(true)
+      {
+	path.push_back(actual);
+	if(predecessors.find(actual) == predecessors.end())
+	  break;
+	actual = predecessors[actual];
+      }
+    path.reverse();
+    return path;
+  }
 };
 
 
@@ -130,7 +202,7 @@ int main()
   string command;
   while(true)
     {
-      cout << "(s)hortest path, add (n)ode, add (c)onnection, (p)rint graph or (q)uit?" << endl;
+      cout << "(s)hortest path, (f)astest path, add (n)ode, add (c)onnection, add (h)our, (p)rint graph or (q)uit?" << endl;
       cin >> command;
       if(command == "s")
 	{
@@ -143,8 +215,26 @@ int main()
 	  cin >> to;
 
 	  list<string> path = g.ShortestPath(from, to);
+	  cout << endl << "shortest path is [ ";
 	  for(list<string>::iterator i = path.begin(); i != path.end(); ++i)
-	    cout << *i << endl;
+	    cout << *i << ' ';
+	  cout << ']' << endl;
+	}
+      else if(command == "f")
+	{
+	  cout << "from? ";
+	  string from;
+	  cin >> from;
+
+	  cout << "to? ";
+	  string to;
+	  cin >> to;
+
+	  list<string> path = g.FastestPath(from, to);
+	  cout << endl << "fastest path is [ ";
+	  for(list<string>::iterator i = path.begin(); i != path.end(); ++i)
+	    cout << *i << ' ';
+	  cout << ']' << endl;
 	}
       else if(command == "n")
 	{
@@ -169,6 +259,26 @@ int main()
 	  
 	  g.AddConnection(from, to, distance);
 	  g.AddConnection(to, from, distance);
+	}
+      else if(command == "h")
+	{
+	  cout << "from? ";
+	  string from;
+	  cin >> from;
+
+	  cout << "to? ";
+	  string to;
+	  cin >> to;
+	  
+	  cout << "start hour? ";
+	  int start;
+	  cin >> start;
+
+	  cout << "end hour? ";
+	  int end;
+	  cin >> end;
+	  
+	  g.AddConnectionHour(from, to, start, end);
 	}
       else if(command == "p")
 	{
