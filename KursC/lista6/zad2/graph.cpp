@@ -1,3 +1,9 @@
+// Maciej Pacut
+// zadanie 2, lista 6
+
+// ! program w C++ nie w C
+// program jest interaktywny, po uruchomieniu mozna tworzyc graf, dodawac polaczenia i wykonywac serie zapytan o najkrotsza sciezke
+
 #include <iostream>
 #include <list>
 #include <set>
