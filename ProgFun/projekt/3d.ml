@@ -1,5 +1,7 @@
 open Model;;
 
+let (|>) x f = f x;;
+
 let (screen_width, screen_height) = (600., 600.);;
 let projection_d = 1.;;
 
@@ -27,7 +29,10 @@ let render_tri (v1,v2,v3) =
 				   (int_of_float x, int_of_float y)) [| v1; v2; v3 |]);;
 
 let render_world tris =
-  List.iter render_tri (flatten_model (sort_z tris));;
+  tris
+  |>  sort_z
+  |>  flatten_model
+  |>  List.iter render_tri;;
 
 
 let rec loop model =
@@ -36,7 +41,7 @@ let rec loop model =
   
   Graphics.set_color (Graphics.rgb 0 0 0);
   render_world model;
-
+   
   Graphics.auto_synchronize true;
   let status = Graphics.wait_next_event [Graphics.Poll; Graphics.Key_pressed] in
     if (not status.Graphics.keypressed) then loop model
@@ -47,9 +52,9 @@ let init_args = Printf.sprintf " %dx%d" (int_of_float screen_width) (int_of_floa
 let init () =
   Graphics.open_graph init_args;
   Graphics.set_window_title "3d rendering engine";
-  let filename = Sys.argv.(1)
-  in let model = parse_model filename
-  in loop model;;
+  let filename = Sys.argv.(1) in
+  let model = parse_model filename in
+    loop model;;
 
 let () =
   init ();;
