@@ -7,7 +7,7 @@ let rec bfnum' i = function
       let right' :: left' :: rest' = bfnum' (i + 1) (rest @ [left] @ [right]) in
 	rest' @ [Node (left', i, right')];;
 
-let bfnum tree = let [root] = (bfnum' 1 [tree]) in root;;
+let bfnum tree = let [root] = bfnum' 1 [tree] in root;;
 
 let ex = Node (Node (Leaf 'a', 'b', Leaf 'c'), 'd', Leaf 'e');;
 let ex2 = Node (Node (Leaf 'c', 'b', Leaf 'd') , 'a' , Node (Leaf 'f', 'e' , Leaf 'g'));;
