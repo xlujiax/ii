@@ -58,7 +58,7 @@ sig
   val add_v : t -> vertex -> t
 end;;
 
-module Graph (VER : VERTEX) (EDG : EDGE with type vertex = VER.t) : (GRAPH) =
+module Graph (VER : VERTEX) (EDG : EDGE with type vertex = VER.t) : (GRAPH with module V = VER) =
 struct
   module V = VER
   module E = EDG
