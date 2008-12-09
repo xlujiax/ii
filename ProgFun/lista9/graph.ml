@@ -79,6 +79,7 @@ sig
   val fold_e : (edge -> 'a -> 'a) -> t -> 'a -> 'a
 
   val dfs : t -> vertex -> vertex list
+  val bfs : t -> vertex -> vertex list
 end;;
 
 module Graph (VER : VERTEX) (EDG : EDGE with type vertex = VER.t and type label = int) : (GRAPH with module V = VER and module E = EDG) =
@@ -122,21 +123,62 @@ struct
 	  List.iter aux (succ g actual)
 	end
     in aux vstart;
-      !visited
+      List.rev !visited
+	
+  let bfs g vstart =
+    let visited = ref []
+    and queue = ref []
+    in let rec aux actual =
+	if List.exists (V.equal actual) !visited then
+	  ()
+	else begin
+	  visited := actual :: !visited;
+	  queue := !queue @ (succ g actual);
+	  List.iter aux !queue
+	end
+    in aux vstart;
+      List.rev !visited
 end;;
 
 module XGraph = Graph(Vertex) (XEdge);;
 
-let a = Vertex.create 5;;
-let b = Vertex.create 6;;
-let c = Vertex.create 7;;
-let e1 = XEdge.create 56 a b;;
-let e2 = XEdge.create 67 b c;;
-let e3 = XEdge.create 75 b a;;
+let v1 = Vertex.create 1;;
+let v2 = Vertex.create 2;;
+let v3 = Vertex.create 3;;
+let v4 = Vertex.create 4;;
+let v5 = Vertex.create 5;;
+let v6 = Vertex.create 6;;
+let v7 = Vertex.create 7;;
+let e1 = XEdge.create 12 v1 v2;;
+let e2 = XEdge.create 23 v2 v3;;
+let e3 = XEdge.create 34 v3 v4;;
+let e4 = XEdge.create 45 v3 v5;;
+let e5 = XEdge.create 24 v2 v4;;
+let e6 = XEdge.create 24 v1 v6;;
+let e7 = XEdge.create 24 v6 v7;;
 let g = XGraph.empty;;
-let g = XGraph.add_v g a;;
-let g = XGraph.add_v g b;;
-let g = XGraph.add_v g c;;
+let g = XGraph.add_v g v1;;
+let g = XGraph.add_v g v2;;
+let g = XGraph.add_v g v3;;
+let g = XGraph.add_v g v4;;
+let g = XGraph.add_v g v5;;
+let g = XGraph.add_v g v6;;
+let g = XGraph.add_v g v7;;
 let g = XGraph.add_e g e1;;
 let g = XGraph.add_e g e2;;
 let g = XGraph.add_e g e3;;
+let g = XGraph.add_e g e4;;
+let g = XGraph.add_e g e5;;
+let g = XGraph.add_e g e6;;
+let g = XGraph.add_e g e7;;
+
+
+(*
+1
+|\
+6 2
+| \ \
+7 3-4
+    |
+    5
+*)
