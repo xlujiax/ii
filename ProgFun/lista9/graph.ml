@@ -115,12 +115,12 @@ struct
   let dfs g vstart =
     let visited = ref []
     in let rec aux actual =
-      if List.exists (V.equal actual) !visited then
-	[]
-      else begin
-	visited := vstart :: !visited;
-	List.flatten (List.map aux (succ g vstart))
-      end
+	if List.exists (V.equal actual) !visited then
+	  ()
+	else begin
+	  visited := actual :: !visited;
+	  List.iter aux (succ g actual)
+	end
     in aux vstart;
       !visited
 end;;
@@ -129,8 +129,14 @@ module XGraph = Graph(Vertex) (XEdge);;
 
 let a = Vertex.create 5;;
 let b = Vertex.create 6;;
-let e = XEdge.create 56 a b;;
+let c = Vertex.create 7;;
+let e1 = XEdge.create 56 a b;;
+let e2 = XEdge.create 67 b c;;
+let e3 = XEdge.create 75 b a;;
 let g = XGraph.empty;;
 let g = XGraph.add_v g a;;
 let g = XGraph.add_v g b;;
-let g = XGraph.add_e g e;;
+let g = XGraph.add_v g c;;
+let g = XGraph.add_e g e1;;
+let g = XGraph.add_e g e2;;
+let g = XGraph.add_e g e3;;
