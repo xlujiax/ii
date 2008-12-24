@@ -41,7 +41,7 @@ let rec loop model =
   
   Graphics.set_color (Graphics.rgb 0 0 0);
   render_world model;
-   
+
   Graphics.auto_synchronize true;
   let status = Graphics.wait_next_event [Graphics.Poll; Graphics.Key_pressed] in
     if (not status.Graphics.keypressed) then loop model

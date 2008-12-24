@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <malloc.h>
+
+int factorial(int n)
+{
+  int i, res = 1;
+  for(i = 1; i <= n; ++i)
+    res *= i;
+  return res;
+}
+
+void copy_arr(int src[], int dest[], int size)
+{
+  int i;
+  for(i = 0; i < size; ++i)
+    dest[i] = src[i];
+}
+
+int** permutations(int arr[], int size)
+{
+  int** perms = malloc(sizeof(int*) * factorial(size));
+
+  int* walker; // na tej tablicy wykonywane sa operacje
+  copy_arr(arr, walker, size);
+
+  int level = 0; // mowi ile elementow juz wstawilismy do walker
+  int* used = malloc(sizeof(int) * size); // tablicujemy juz uzyte wartosci aby uzyskac informacje o powtorzeniach w O(1)
+  
+  int inserter = 0;
+  while(inserter < factorial(size))
+    {
+      
+      if(level == size)
+	{
+	  // utworzono nowa permutacje -> kopiujemy ja do perms
+	  perms[i] = malloc(sizeof(int) * size);
+	  copy_arr(walker, perms[inserter], size);
+	  inserter++;
+	}
+    }
+  return perms;
+}
+
+void print_matrix(int** mx, int width, int height)
+{
+  int x, y;
+  printf("MATRIX:\n");
+  for(y = 0; y < height; ++y)
+    {
+      printf("| ");
+      for(x = 0; x < width; ++x)
+	printf("%d ", mx[y][x]);
+      printf("|\n");
+    }
+    printf("\n");
+}
+
+int main()
+{
+  int size;
+  scanf("%d", &size);
+
+  int* arr = malloc(sizeof(int) * size);
+  
+  int i;
+  for(i = 0; i < size; ++i)
+    scanf("%d", &arr[i]);
+
+  printf("fac %d = %d\n", size, factorial(size));
+  
+  print_matrix(permutations(arr, size), size, factorial(size));
+  
+  return 0;
+}
