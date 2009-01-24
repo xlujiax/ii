@@ -21,6 +21,6 @@ lexer.cmo: lexer.ml parser.cmo
 	ocamlc -c $<
 
 3d.e: parser.cmo lexer.cmo 3d.ml
-	ocamlc graphics.cma unix.cma $+ -o $@
+	ocamlc -dtypes graphics.cma unix.cma $+ -o $@
 
 
