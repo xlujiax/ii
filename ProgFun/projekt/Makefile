@@ -20,7 +20,11 @@ lexer.ml: lexer.mll
 lexer.cmo: lexer.ml parser.cmo  
 	ocamlc -c $<
 
-3d.e: parser.cmo lexer.cmo 3d.ml
-	ocamlc -dtypes graphics.cma unix.cma $+ -o $@
+math.cmo: math.ml
+	ocamlc -c $<
 
+transformations.cmo: transformations.ml
+	ocamlc -c $<
 
+3d.e: parser.cmo lexer.cmo math.cmo transformations.cmo
+	ocamlc -dtypes graphics.cma unix.cma $+ 3d.ml -o $@
