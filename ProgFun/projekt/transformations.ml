@@ -1,7 +1,13 @@
 (*
+  autor: Maciej Pacut
   zbiór czysto funkcyjnych funkcji poruszających modelem
   to funkcje typu (model -> model); nie modyfikują współrzędnych tylko tworzą nową kopię modelu
 *)
+
+open Math;;
+
+(* najprostsze "przekształcenie" *)
+let identity x = x;;
 
 (* model to lista trójkątów, to pomocnicza funkcja aplikująca przekształcenie do każdego wierzchołka każdego trójkąta *)
 let transform vertex_transformation model =
@@ -9,6 +15,7 @@ let transform vertex_transformation model =
 				 vertex_transformation v2,
 				 vertex_transformation v3)) model;;
 
+(* aplikuje przesunięcie do wszystkich wierzchołków trójkąta *)
 let move (vx, vy, vz) model =
   transform (fun (x, y, z) ->
 	       (x +. vx, y +. vy, z +. vz)) model;;
@@ -24,9 +31,6 @@ let move_down delta = move (0.0, -.delta, 0.0);;
 (* ruch wzdłuż współrzędnej z *)
 let move_closer delta = move (0.0, 0.0, -.delta);;
 let move_further delta = move (0.0, 0.0, delta);;
-
-let sum lst = List.fold_right (+.) lst 0.0;;
-let average lst = (sum lst) /. (float (List.length lst));;
 
 let average_position model =
   let x_coords = List.map (fun ((x1,_,_),(x2,_,_),(x3,_,_)) -> (x1 +. x2 +. x3) /. 3.0) model (* liczy średnie z 3 wierzchołków trójkąta *)
@@ -47,7 +51,7 @@ let average_position model =
 let rotate_x angle model =
   let (cx, cy, cz) = (average_position model) in
     transform (fun (x, y, z) ->
-		 let (dx, dy, dz) = (cx -. x, cy -. y, cz -. z)
+		 let (dx, dy, dz) = (cx -. x, cy -. y, cz -. z) (* przywrócenie obiektu do środka układu współrzędnych *)
 		 in (x,
 		     dy *. (cos angle) -. dz *. (sin angle) +. cy,
 		     dy *. (sin angle) +. dz *. (cos angle) +. cz)) model;;
@@ -56,7 +60,7 @@ let rotate_x angle model =
 let rotate_y angle model =
   let (cx, cy, cz) = (average_position model) in
     transform (fun (x, y, z) ->
-		 let (dx, dy, dz) = (cx -. x, cy -. y, cz -. z)
+		 let (dx, dy, dz) = (cx -. x, cy -. y, cz -. z) (* przywrócenie obiektu do środka układu współrzędnych *)
 		 in (dx *. (cos angle) +. dz *. (sin angle) +. cx,
 		     y,
 		     dz *. (cos angle) -. dx *. (sin angle) +. cz)) model;;
@@ -64,7 +68,7 @@ let rotate_y angle model =
 let rotate_z angle model =
   let (cx, cy, cz) = (average_position model) in
     transform (fun (x, y, z) ->
-		 let (dx, dy, dz) = (cx -. x, cy -. y, cz -. z)
+		 let (dx, dy, dz) = (cx -. x, cy -. y, cz -. z) (* przywrócenie obiektu do środka układu współrzędnych *)
 		 in (dx *. (cos angle) -. dy *. (sin angle) +. cx,
 		     dx *. (sin angle) +. dy *. (cos angle) +. cy,
 		     z)) model;;

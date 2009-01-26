@@ -30,6 +30,7 @@ let parse_model filename =
 let init_args =
   Printf.sprintf " %dx%d" (int screen_width) (int screen_height);;
 
+
 (* tworzy okno, parsuje model i wchodzi do pętli renderującej *)
 let run model_name =
   Graphics.open_graph init_args;

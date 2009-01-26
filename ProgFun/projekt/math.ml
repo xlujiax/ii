@@ -1,8 +1,30 @@
-type vector = float * float * float;;
+(* autor: Maciej Pacut *)
 
 let int (f : float) = int_of_float f;;
 let float (i : int) = float_of_int i;;
-let positive x = if x >= 0.0 then x else 0.0;;
+
+let max a b = if a > b then a else b;;
+let min a b = if a > b then b else a;;
+
+let positive x = max 0.0 x;;
+
+let sum lst = List.fold_right (+.) lst 0.0;;
+let average lst = (sum lst) /. (float (List.length lst));;
+
+(* operacje na wektorach *)
+type vector = float * float * float;;
+
+let (+|) (x1, y1, z1) (x2, y2, z2) =
+  (x1 +. x2, y1 +. y2, z1 +. z2);;
+
+let reflect (x,y,z) =
+  (-.x,-.y,-.z);;
+
+let (-|) a b =
+  a +| (reflect b);;
+
+let ( *| ) (x, y, z) scalar =
+  (x *. scalar, y *. scalar, z *. scalar);;
 
 let normalize (x, y, z) =
   let len = sqrt (x *. x +. y *. y +. z *. z) in
