@@ -37,7 +37,7 @@ let run model_name =
   Graphics.set_window_title "3d rendering engine";
   let model = parse_model model_name in
     try
-      rendering_loop (move_further 5.0 model) (* oddalam na początku model, żeby kamera nie była wewnątrz *)
+      rendering_loop (rotate_y (-.0.5) (move_further 5.0 model)) (* oddalam na początku model, żeby kamera nie była wewnątrz *)
     with Break -> ()
       
 let path_to_model () =

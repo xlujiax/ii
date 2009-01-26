@@ -1,3 +1,5 @@
+(* autor : Maciej Pacut *)
+
 {
 open Parser
 }

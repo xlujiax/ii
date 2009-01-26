@@ -1,4 +1,6 @@
 %{
+  (* autor: Maciej Pacut *)
+
   open Model;;
 %}
 

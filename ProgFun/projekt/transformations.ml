@@ -44,7 +44,7 @@ let average_position model =
 (*
   obroty wg stałych osi
   funkcje rotujące przesuwają model do punktu 0,0,0
-  następnie wykonują obrót i przywaracają do punktu początkowego;
+  następnie wykonują obrót i przywracają do punktu początkowego;
   w przeciwnym przypadku model nie obracał się wg własnego środka, ale wokół punktu 0,0,0
 *)
 
