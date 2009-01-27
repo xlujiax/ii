@@ -13,7 +13,8 @@ let (screen_width, screen_height) = (600., 600.);;
   że nie są w nim bezpośrednio zapisywane współrzędne wierzchołków każdego trójkąta;
   na początku pliku jest lista wierzchołków a następnie współrzędne trójkątów
   brane są przez indeksowanie tej listy;
-  ta funkcja zamienia indeksy współrzędnych na współrzędne
+  ta funkcja zamienia indeksy współrzędnych na współrzędne;
+  jedyne użycie imperatywnych struktur danych w tym projekcie  
 *)
 let indices_to_coordinates model =
   let indexed_vertices = Array.of_list model.vertices

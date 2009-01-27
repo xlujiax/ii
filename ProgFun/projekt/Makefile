@@ -1,4 +1,4 @@
-all: main.e
+all: render.e
 clean:
 	rm -f *.cm* lexer.ml parser.ml 3d.e
 
@@ -29,5 +29,5 @@ transformations.cmo: transformations.ml
 engine.cmo: math.cmo transformations.cmo engine.ml
 	ocamlc -c engine.ml
 
-main.e: parser.cmo lexer.cmo math.cmo transformations.cmo engine.cmo 
+render.e: parser.cmo lexer.cmo math.cmo transformations.cmo engine.cmo 
 	ocamlc graphics.cma unix.cma $+ main.ml -o $@
