@@ -20,13 +20,13 @@ lexer.ml: lexer.mll
 lexer.cmo: lexer.ml parser.cmo  
 	ocamlc -c $<
 
-math.cmo: math.ml
+math.cmo:
 	ocamlc -c $<
 
-transformations.cmo: transformations.ml
+transformations.cmo:
 	ocamlc -c $<
 
-engine.cmo: math.cmo transformations.cmo engine.ml
+engine.cmo: math.cmo transformations.cmo
 	ocamlc -c engine.ml
 
 render.e: parser.cmo lexer.cmo math.cmo transformations.cmo engine.cmo 
