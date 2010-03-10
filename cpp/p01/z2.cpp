@@ -1,7 +1,11 @@
+#include <cstdlib>
+#include <ctime>
+
 #include <algorithm>
 #include <deque>
 #include <list>
 #include <vector>
+#include <iostream>
 
 template <
   typename T,
@@ -45,6 +49,12 @@ template <typename T,template <typename, typename> class Container>
 }
 
 template <typename T,template <typename, typename> class Container>
+  bool stack<T, Container>::empty() const
+{
+  return cont.empty();
+}
+
+template <typename T,template <typename, typename> class Container>
   void stack<T, Container>::pop()
 {
   cont.pop_back();
@@ -58,19 +68,46 @@ template <typename T2, template <typename,typename> class Container2 >
   return *this;
 }
 
+template <typename T>
+  T random_value();
+
+template <>
+  int random_value() { return rand() % 100; }
+
+template <typename Stack>
+void test_stack()
+{
+  Stack s;
+
+  for(int i = 0; i < 5; ++i)
+  {
+    typename Stack::value_type rd = random_value<typename Stack::value_type>();
+    std::cout << "Na stos: " << rd << std::endl;
+    s.push(rd);
+  }
+
+  while(!s.empty())
+  {
+    std::cout << "Ze stosu: " << s.top() << std::endl;
+    s.pop();
+  }
+
+  // uzycie operatora =
+  
+  stack<typename Stack::value_type, std::vector> v;
+  stack<typename Stack::value_type, std::deque> d;
+  stack<typename Stack::value_type, std::list> l;
+
+  v = s;
+  d = s;
+  l = s;
+}
 
 int main()
 {
-  stack<int, std::deque> a;
-
-  a.push(5);
-  a.push(4);
-  a.push(3);
+  srand(time(0));
   
-  stack<int, std::list> b;
-  stack<int, std::vector> c;
-
-  b = a;
+  test_stack<stack<int, std::vector> >();
   
   return 0;
 }
