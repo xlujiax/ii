@@ -23,36 +23,9 @@ public:
   void push( const T& );
   bool empty() const;
   T pull();
-
-  void debug()
-  {
-    std::cout << begin << ":" << end << "(" << count << ") [ ";
-    for(int i = 0; i < Size; ++i)
-      std::cout << arr[i] << " ";
-    std::cout << "]";
-
-    std::cout << " { ";
-    if(begin == end && count != 0)
-    {
-      std::cout << arr[begin] << ' ';
-
-      for(int i = next(begin); i != end; pre_inc(i))
-	std::cout << arr[i] << " ";
-    }
-    else
-    {
-      for(int i = begin; i != end; pre_inc(i))
-	std::cout << arr[i] << " ";
-    }
-    std::cout << "}" << std::endl;
-  }
 };
 
-template <
-  typename T,
-  int Size,
-  bool Overwrite
-  >
+template <typename T, int Size, bool Overwrite>
   ring_buffer<T, Size, Overwrite>::ring_buffer() : begin(0), end(0), count(0)
 {
 
@@ -90,6 +63,9 @@ template <typename T, int Size, bool Overwrite>
       throw std::runtime_error("Attempt to push element to full ring buffer.");
     else
     {
+      // Dla utrzymania poprawnej liczby obiektów w zmiennej count.
+      // Czy lepszym rozwiązaniem nie byłoby usunięcie dekrementacji
+      // i włączenie inkrementacji w klauzulę else?
       --count;
       pre_inc(begin);
     }
@@ -137,7 +113,6 @@ bool push_pull_test()
   {
     ring_buffer<int, 5, false> ri;
 
-    // dla wielu wartości początkowych
     for(int i = 0; i < 100; ++i)
     {
       int a = rand();
@@ -174,7 +149,6 @@ bool push_pull_big_test()
   {
     ring_buffer<Big, 5, false> ri;
 
-    // dla wielu wartości początkowych
     for(int i = 0; i < 100; ++i)
     {
       Big a;
