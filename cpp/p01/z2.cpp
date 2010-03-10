@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <ctime>
+#include <complex>
 
 #include <algorithm>
 #include <deque>
@@ -74,6 +75,15 @@ template <typename T>
 template <>
   int random_value() { return rand() % 100; }
 
+template <>
+  float random_value() { return static_cast<float>(rand()) / static_cast<float>(RAND_MAX); }
+
+template <>
+  std::complex<float> random_value()
+{
+  return std::complex<float>(random_value<float>(), random_value<float>());
+}
+
 template <typename Stack>
 void test_stack()
 {
@@ -108,6 +118,7 @@ int main()
   srand(time(0));
   
   test_stack<stack<int, std::vector> >();
+  test_stack<stack<std::complex<float>, std::vector> >();
   
   return 0;
 }
