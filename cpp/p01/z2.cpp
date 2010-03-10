@@ -11,6 +11,14 @@ template <
   > class Container = std::deque
 >
 class stack {
+  template<
+    typename T3,
+    template<
+      typename E3,
+      typename A3
+      > class C3
+    > friend class stack;
+  
   Container<T> cont;
 public:
   typedef T value_type;
