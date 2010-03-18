@@ -1,6 +1,6 @@
 // Maciej Pacut, 221082
 
-#include <iostream>
+#include <cstdio>
 #include <map>
 using namespace std;
 
@@ -10,9 +10,8 @@ typedef smap::iterator siter;
 
 int main()
 {
-  ios_base::sync_with_stdio(false);
-
-  int n; cin >> n;
+  int n;
+  scanf("%d", &n);
 
   smap ones;
   smap more;
@@ -20,7 +19,8 @@ int main()
   for(int i = 0; i < n; ++i)
   {
     int amount, len;
-    cin >> len >> amount;
+    scanf("%d %d", &len, &amount);
+
     if(amount == 1)
       ones[len] = 1;
     else
@@ -32,21 +32,6 @@ int main()
     siter longest = more.begin();
     int amount = (*longest).second;
     int len = (*longest).first;
-
-    /*
-    cout << len << ' ' << amount << ' ' << more.size();
-
-    cout << " [ ";
-    for(siter i = ones.begin(); i != ones.end(); ++i)
-      cout << (*i).first << ' ';
-    cout << "]";
-    
-    cout << " { ";
-    for(siter i = more.begin(); i != more.end(); ++i)
-      cout << (*i).first << "(" << (*i).second << ") ";
-    cout << "}" << endl;
-    */
-    
     more.erase(longest);
 
     siter twice = ones.find(len*2);
@@ -71,7 +56,7 @@ int main()
     }
   }
 
-  cout << ones.size() << endl;
+  printf("%d\n",ones.size());
   
   return 0;
 }
