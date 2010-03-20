@@ -1,62 +1,60 @@
 // Maciej Pacut, 221082
 
-#include <cstdio>
+#include <iostream>
 #include <map>
+#include <algorithm>
+#include <iterator>
+
 using namespace std;
 
 // mapa z długości sznurków w ich liczność
-typedef map<int, int, greater<int> > smap;
+typedef map<int, int> smap;
 typedef smap::iterator siter;
 
 int main()
 {
+  ios_base::sync_with_stdio(0);
+  
   int n;
-  scanf("%d", &n);
+  cin >> n;
 
-  smap ones;
-  smap more;
+  smap str;
   
   for(int i = 0; i < n; ++i)
   {
     int amount, len;
-    scanf("%d %d", &len, &amount);
+    cin >> len >> amount;
+    str[len] = amount;
+  }
+
+  int counter = 0;
+
+  while(!str.empty())
+  {
+    siter shortest = str.begin();
+    int amount = (*shortest).second;
+    int len = (*shortest).first;
+
+    str.erase(shortest);
 
     if(amount == 1)
-      ones[len] = 1;
-    else
-      more[len] = amount;
-  }
-
-  while(!more.empty())
-  {
-    siter longest = more.begin();
-    int amount = (*longest).second;
-    int len = (*longest).first;
-    more.erase(longest);
-
-    siter twice = ones.find(len*2);
-    
-    if(twice != ones.end())
     {
-      more[len*2] = amount / 2 + 1;
-      ones.erase(twice);
+      counter ++;
     }
     else
     {
-      if(amount / 2 == 1)
-	ones[len*2] = 1;
-      else
-	more[len*2] = amount / 2;
-    }
-
-    if(amount % 2 != 0)
-    {
-      ones[len] = 1;
-      
+      int insert = len;
+      while(amount != 0)
+      {
+	if(amount % 2 != 0)
+	  str[insert]++;
+	
+	amount = amount / 2;
+	insert *= 2;
+      }
     }
   }
+  cout << counter << endl;
 
-  printf("%d\n",ones.size());
-  
   return 0;
 }
