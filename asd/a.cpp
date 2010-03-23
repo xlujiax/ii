@@ -1,35 +1,15 @@
 // Maciej Pacut, 221082
 
-#include <iostream>
-#include <map>
-#include <algorithm>
-#include <iterator>
+//#define NDEBUG
 
+#include <cassert>
+#include <iostream>
 using namespace std;
 
-static const int MAX_DATA = 1000000 * 63;
+static const int MAX_DATA = 10;//00000;
+int arr[MAX_DATA];
 
-bool arr[MAX_DATA];
 int counter = 0;
-
-/*
-unsigned int count_ones()
-{
-  unsigned int count = 0;
-  for(int i = 0; i < MAX_DATA; ++i)
-    if(arr[i])
-      count ++;
-  return count;
-}
-
-void print()
-{
-  cout << "[ ";
-  for(int i = 0; i < MAX_DATA; ++i)
-    if(arr[i])
-      cout << i << " ";
-  cout << "]" << endl;
-}
 
 void binary(int n)
 {
@@ -39,38 +19,71 @@ void binary(int n)
       cout << 1;
     else
       cout << 0;
-      
     n = n / 2;
   }
-  cout << endl;
-}*/
+}
+
+void print_arr()
+{
+  cout << "[ ";
+  for(int i = 0; i < MAX_DATA; ++i)
+    if(arr[i])
+    {
+      cout << "(" << i << "," << arr[i] << ") ";
+    }
+  cout << "]" << endl;
+}
+
+int binary_ones(int n)
+{
+  int c = 0;
+  while(n)
+  {
+    if(n % 2 != 0)
+      ++c;
+    n /= 2;
+  }
+  return c;
+}
 
 void insert(int len, int amount)
 {
-  if(arr[len])
+  print_arr();
+  cout << "insert(" << len << ", " << amount << ")" << endl;
+  if(len >= MAX_DATA)
   {
-    amount++;
-    arr[len] = false;
-    --counter;
-  }
-
-  if(amount == 1)
-  {
-    arr[len] = 1;
-    ++counter;
+    insert(len/2,amount*2);
   }
   else
   {
-    int inserter = len;
-    while(amount != 0)
+    if(arr[len] != 0)
     {
-      if(amount % 2 != 0)
-      {
-	insert(inserter, 1);
-      }
+      counter -= binary_ones(arr[len]);
       
-      amount = amount / 2;
-      inserter *= 2;
+      amount += arr[len];
+      arr[len] = 0;
+    }
+    
+    assert(arr[len] == 0);
+
+    if(amount == 1)
+    {
+      ++counter;
+      arr[len] = 1;
+    }
+    else
+    {
+      int inserter = len;
+      while(amount != 0)
+      {
+	if(amount % 2 != 0)
+	{
+	  insert(inserter, 1);
+	}
+	
+	amount = amount / 2;
+	inserter *= 2;
+      }
     }
   }
 }
@@ -87,11 +100,9 @@ int main()
     int amount, len;
     cin >> len >> amount;
     insert(len, amount);
-
-    //cout << "insert " << len << " " << amount << " = ";
-    //binary(amount);
-    //print();
   }
+
+  print_arr();
 
   cout << counter << endl;
 

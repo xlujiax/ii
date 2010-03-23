@@ -174,19 +174,45 @@ template <typename T>
   T random_value();
 
 template <>
-  int random_value() { return rand() % 100; }
+  int random_value<int>() { return rand() % 100; }
 
 template <>
-  char random_value() { return rand() % 26 + 65; }
+  char random_value<char>() { return rand() % 26 + 65; }
 
 template <>
-  float random_value() { return static_cast<float>(rand()) / static_cast<float>(RAND_MAX); }
+  float random_value<float>() { return static_cast<float>(rand()) / static_cast<float>(RAND_MAX); }
 
 template <>
-  std::complex<float> random_value()
+  std::string random_value<std::string>()
+{
+  static const int MAX_LENGTH = 10;
+  
+  std::string s;
+  std::generate_n(back_inserter(s), rand() % MAX_LENGTH, random_value<char>);
+  return s;
+}
+
+template <>
+  std::complex<float> random_value<std::complex<float> >()
 {
   return std::complex<float>(random_value<float>(), random_value<float>());
 }
+
+template<typename T, typename Iter>
+  bool test_aux(int N, Iter a_begin, Iter a_inserter, Iter b_begin, Iter b_inserter)
+{
+  /*std::generate_n(a_inserter, N, random_value<T>);
+  std::copy(a_begin, a_inserter, b_inserter);
+
+  std::sort(a_begin, a_inserter);
+  bubble_sort(b_begin, b_inserter);
+
+  return equal(a_begin, a_inserter, b_begin);*/
+  return false;
+}
+
+template<typename T, typename Container>
+  bool test(int, Container);
 
 template<
   typename T,
@@ -194,38 +220,30 @@ template<
     typename U,
     typename Alloc = std::allocator<U> >
   class Container>
-  bool test(int N)
+  bool test(int N, Container<T> a)
 {
-  Container<T> cont;
-  std::generate_n(std::back_inserter(cont), N, random_value<T>);
-
-  Container<T> cont2;
-  std::copy(cont.begin(), cont.end(), back_inserter(cont2));
-
-  std::cout << "cont ";
-  std::copy(cont.begin(), cont.end(), std::ostream_iterator<int>(std::cout, " "));
-  std::cout << std::endl;
-  
-  std::sort(cont2.begin(), cont2.end());
-  quick_sort(cont.begin(), cont.end());
-
-  std::cout << "cont ";
-  std::copy(cont.begin(), cont.end(), std::ostream_iterator<int>(std::cout, " "));
-  std::cout << std::endl;
-  
-  std::cout << "cont2 ";
-  std::copy(cont2.begin(), cont2.end(), std::ostream_iterator<int>(std::cout, " "));
-  std::cout << std::endl;
-
-
-  return equal(cont.begin(), cont.end(), cont2.begin());
+  Container<T> b;
+  return test_aux<T, typename Container<T>::iterator>(N, a.begin(), std::back_inserter(a), b.begin(), std::back_inserter(b));
 }
+
+template<>
+  bool test<char, std::string>(int N, std::string a)
+{
+  std::string b;
+  return test_aux<char, std::string::iterator>(N, a.begin(), std::back_inserter(a), b.begin(), std::back_inserter(b));
+}
+/*
+template<typename T>
+  bool test<T, T*>(int N, T* a)
+{
+  return false;
+  }*/
 
 int main(int, char*[])
 {
   srand(time(0));
   
-  if(test<int, std::vector>(10))
+  if(test<std::string, std::vector>(10, std::vector<std::string>()))
     std::cout << "OK" << std::endl;
   else
     std::cout << "Niepowodzenie" << std::endl;
