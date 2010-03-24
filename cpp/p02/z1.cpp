@@ -11,7 +11,7 @@
 #include <cassert>
 
 template<typename Iter>
-  void bubble_sort(Iter begin, Iter end)
+  void bubble_sort(const Iter begin, const Iter end)
 {
   Iter t = begin;
 
@@ -20,12 +20,19 @@ template<typename Iter>
     Iter a = begin;
     Iter b = begin;
     b++;
-    
+
+    // { a == b + 1 }
+
     while(b != end)
     {
       if(*a > *b)
       {
-	std::swap(*a, *b);
+	typename std::iterator_traits<Iter>::value_type tmp(*a);
+	*a = *b;
+	*b = tmp;
+	
+	// lub prościej:
+	// std::swap(*a, *b);
       }
       
       ++a;
@@ -35,9 +42,48 @@ template<typename Iter>
 }
 
 template<typename Iter>
-  void quick_sort(Iter begin, Iter end)
+  Iter next(const Iter iter, const int delta = 1)
 {
-  bubble_sort(begin, end);
+  Iter n = iter;
+  for(int i = 0; i < delta; ++i)
+    n++;
+  return n;
+}
+
+template<typename Iter>
+  void quick_sort(const Iter begin, const Iter end)
+{
+  // jeśli sekwencja ma 0 lub 1 element
+  if(next(begin) == end || next(begin, 2) == end)
+    return;
+
+  // podział na sekwencje (begin, pivot) i (pivot+1, end)
+  Iter hi = begin;
+  Iter lo = end;
+
+  const Iter pivot = begin;
+
+  // przesuwamy lo, aby przetwarzać podsekwencję bez pivot
+  // oraz przesuwamy hi, aby hi wskazywało na element sekwencji,
+  // zamiast (wg konwencji STL) na miejsce za ostatnim elementem sekwencji
+  ++lo, --hi;
+
+  // tutaj zapisz warunek na liczność sekwencji za pomocą lo i hi, bez next
+
+  do
+  {
+    while(hi != lo && *lo <= *pivot) ++lo;
+    while(hi != lo && *hi > *pivot) --hi;
+
+    if(hi != lo)
+      std::swap(*hi, *lo);
+  }
+  while(hi != lo);
+
+  std::swap(*pivot, *hi);
+  
+  quick_sort(begin, pivot);
+  quick_sort(next(pivot), end);
 }
 
 // generatory losowych wartości
@@ -222,26 +268,27 @@ int main(int, char*[])
 {
   srand(time(0));
 
-  static const int Size = 7;
-
-  assert(( Test<int, int* >()(Size)                               ));
-  assert(( Test<double, double* >()(Size)                         ));
-  assert(( Test<std::string, std::string* >()(Size)               ));
-
-  assert(( Test<int, std::list<int> >()(Size)                     ));
-  assert(( Test<double, std::list<double> >()(Size)               ));
-  assert(( Test<std::string, std::list<std::string> >()(Size)     ));
-  
-  assert(( Test<int, std::vector<int> >()(Size)                   ));
-  assert(( Test<double, std::vector<double> >()(Size)             ));
-  assert(( Test<std::string, std::vector<std::string> >()(Size)   ));
+  for(int size = 0; size < 10; ++size)
+  {
+    assert(( Test<int, int* >()(size)                               ));
+    assert(( Test<double, double* >()(size)                         ));
+    assert(( Test<std::string, std::string* >()(size)               ));
     
-  assert(( Test<int, std::deque<int> >()(Size)                    ));
-  assert(( Test<double, std::deque<double> >()(Size)              ));
-  assert(( Test<std::string, std::deque<std::string> >()(Size)    ));
+    assert(( Test<int, std::list<int> >()(size)                     ));
+    assert(( Test<double, std::list<double> >()(size)               ));
+    assert(( Test<std::string, std::list<std::string> >()(size)     ));
+    
+    assert(( Test<int, std::vector<int> >()(size)                   ));
+    assert(( Test<double, std::vector<double> >()(size)             ));
+    assert(( Test<std::string, std::vector<std::string> >()(size)   ));
+    
+    assert(( Test<int, std::deque<int> >()(size)                    ));
+    assert(( Test<double, std::deque<double> >()(size)              ));
+    assert(( Test<std::string, std::deque<std::string> >()(size)    ));
       
-  assert(( Test<char, std::string>()(Size)                        ));
-
+    assert(( Test<char, std::string>()(size)                        ));
+  }
+      
   std::cout << "Wszystkie testy zakończono powodzeniem" << std::endl;
 
   return 0;
