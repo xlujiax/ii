@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <complex>
 #include <ctime>
+#include <cassert>
 
 template<typename Iter>
   void bubble_sort(Iter begin, Iter end)
@@ -46,7 +47,7 @@ template <>
   char random_value<char>() { return rand() % 26 + 65; }
 
 template <>
-  float random_value<float>() { return static_cast<float>(rand()) / static_cast<float>(RAND_MAX); }
+  double random_value<double>() { return static_cast<double>(rand()) / static_cast<double>(RAND_MAX); }
 
 template <>
   std::string random_value<std::string>()
@@ -56,12 +57,6 @@ template <>
   std::string s;
   std::generate_n(back_inserter(s), rand() % MAX_LENGTH, random_value<char>);
   return s;
-}
-
-template <>
-  std::complex<float> random_value<std::complex<float> >()
-{
-  return std::complex<float>(random_value<float>(), random_value<float>());
 }
 
 // }
@@ -83,7 +78,7 @@ template<typename T>
 
     std::sort(a, a + N);
     bubble_sort(b, b + N);
-    
+
     return std::equal(a, a + N, b);
   }
 };
@@ -163,17 +158,27 @@ int main(int, char*[])
 {
   srand(time(0));
 
-  bool test = 
-    Test<int, std::vector<int> >()(7) &&
-    Test<int, int* >()(7)             &&
-    Test<int, std::list<int> >()(7)   &&
-    Test<int, std::deque<int> >()(7)   &&
-    Test<char, std::string >()(7);
+  static const int Size = 7;
 
-  if(test)
-    std::cout << "OK" << std::endl;
-  else
-    std::cout << "Niepowodzenie" << std::endl;
+  assert(( Test<int, int* >()(Size)                 ));
+  assert(( Test<double, double* >()(Size)           ));
+  assert(( Test<std::string, std::string* >()(Size) ));
+
+  assert(( Test<int, std::list<int> >()(Size)   ));
+  assert(( Test<double, std::list<double> >()(Size)  ));
+  assert(( Test<std::string, std::list<std::string> >()(Size)     ));
   
+  assert(( Test<int, std::vector<int> >()(Size) ));
+    assert(( Test<double, std::vector<double> >()(Size) ));
+    assert(( Test<std::string, std::vector<std::string> >()(Size) ));
+    
+    assert(( Test<int, std::deque<int> >()(Size) ));
+      assert(( Test<double, std::deque<double> >()(Size) ));
+      assert(( Test<std::string, std::deque<std::string> >()(Size) ));
+      
+      assert(( Test<char, std::string>()(Size) ));
+
+  std::cout << "Wszystkie testy zakończono powodzeniem" << std::endl;
+
   return 0;
 }
