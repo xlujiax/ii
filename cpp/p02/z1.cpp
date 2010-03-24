@@ -50,32 +50,9 @@ template<typename Iter>
   return n;
 }
 
-int stack = 0;
-
 template<typename Iter>
   void quick_sort(const Iter begin, const Iter end)
 {
-  //std::copy(begin, end, std::ostream_iterator<int>(std::cout, " "));
-  //std::cout << std::endl;
-  
-  // jeśli sekwencja ma 0 lub 1 element;
-  // warunek begin == end powstaje przy jednym z wariantów podziału
-  if(begin == end || next(begin) == end)
-    return;
-
-  if(next(begin, 2) == end)
-  {
-    Iter last = next(begin);
-    if(*last < *begin)
-    {
-      typename std::iterator_traits<Iter>::value_type tmp(*last);
-      *last = *begin;
-      *begin = tmp;
-      //std::swap(*last, *begin);
-    }
-    return;
-  }
-
   // podział na sekwencje (begin, pivot) i (pivot+1, end)
   Iter lo = begin;
   Iter hi = end;
@@ -87,7 +64,9 @@ template<typename Iter>
   // zamiast (wg konwencji STL) na miejsce za ostatnim elementem sekwencji
   ++lo, --hi;
 
-  // tutaj zapisz warunek na liczność sekwencji za pomocą lo i hi, bez next
+  // jeśli sekwencja ma 0 lub 1 element;
+  if(begin == end || lo == end)
+    return;
 
   do
   {
@@ -96,8 +75,12 @@ template<typename Iter>
 
     if(hi != lo)
     {
-      // TODO: powinnieneś korzystać tutaj z traits
-      std::swap(*hi, *lo);
+      typename std::iterator_traits<Iter>::value_type tmp(*lo);
+      *lo = *hi;
+      *hi = tmp;
+
+      // lub prościej:
+      // std::swap(*hi, *lo);
     }
   }
   while(hi != lo);
@@ -106,9 +89,6 @@ template<typename Iter>
     --hi;
   
   std::swap(*pivot, *hi);
-  
-  //std::copy(begin, end, std::ostream_iterator<int>(std::cout, " "));
-  //std::cout << std::endl;
   
   quick_sort(begin, hi);
   quick_sort(next(hi), end);
@@ -296,7 +276,7 @@ int main(int, char*[])
 {
   srand(time(0));
 
-  for(int size = 0; size < 10; ++size)
+  for(int size = 0; size < 100; ++size)
   {
     assert(( Test<int, int* >()(size)                               ));
     assert(( Test<double, double* >()(size)                         ));
