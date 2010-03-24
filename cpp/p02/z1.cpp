@@ -34,6 +34,12 @@ template<typename Iter>
   }
 }
 
+template<typename Iter>
+  void quick_sort(Iter begin, Iter end)
+{
+  
+}
+
 // generatory losowych wartości
 // {
 
@@ -70,16 +76,20 @@ template<typename T>
 {
   bool operator()(const int N) const
   {
-    T* a = new T[N];
-    T* b = new T[N];
+    T* source = new T[N];
+    T* bubble = new T[N];
+    T* quick = new T[N];
     
-    std::generate_n(a, N, random_value<T>);
-    std::copy(a, a + N, b);
+    std::generate_n(source, N, random_value<T>);
+    std::copy(source, source + N, bubble);
+    std::copy(source, source + N, quick);
 
-    std::sort(a, a + N);
-    bubble_sort(b, b + N);
+    std::sort(source, source + N);
+    bubble_sort(bubble, bubble + N);
+    quick_sort(quick, quick + N);
 
-    return std::equal(a, a + N, b);
+    return std::equal(source, source + N, bubble)
+      && std::equal(source, source + N, quick);
   }
 };
 
@@ -96,7 +106,7 @@ template<typename T>
   Test<int, std::vector<int> >()(5)
   --------------------------------------------
 
-  Szablon pierwotny #1:
+  Przykład. Szablon pierwotny #1:
   
   --------------------------------------------
   template<typename U,
@@ -147,16 +157,20 @@ template<
 {
   bool operator()(const int N) const
   {
-    Cont<T> a;
-    Cont<T> b;
+    Cont<T> source;
+    Cont<T> bubble;
+    Cont<T> quick;
     
-    std::generate_n(std::back_inserter(a), N, random_value<T>);
-    std::copy(a.begin(), a.end(), std::back_inserter(b));
+    std::generate_n(std::back_inserter(source), N, random_value<T>);
+    std::copy(source.begin(), source.end(), std::back_inserter(bubble));
+    std::copy(source.begin(), source.end(), std::back_inserter(quick));
 
-    std::sort(a.begin(), a.end());
-    bubble_sort(b.begin(), b.end());
+    std::sort(source.begin(), source.end());
+    bubble_sort(bubble.begin(), bubble.end());
+    quick_sort(quick.begin(), quick.end());
     
-    return std::equal(a.begin(), a.end(), b.begin());
+    return std::equal(source.begin(), source.end(), bubble.begin())
+      && std::equal(source.begin(), source.end(), quick.begin());
   }
 };
 
@@ -165,16 +179,20 @@ template<typename T>
 {
   bool operator()(const int N) const
   {
-    std::list<T> a;
-    std::list<T> b;
+    std::list<T> source;
+    std::list<T> bubble;
+    std::list<T> quick;
 
-    std::generate_n(std::back_inserter(a), N, random_value<T>);
-    std::copy(a.begin(), a.end(), std::back_inserter(b));
+    std::generate_n(std::back_inserter(source), N, random_value<T>);
+    std::copy(source.begin(), source.end(), std::back_inserter(bubble));
+    std::copy(source.begin(), source.end(), std::back_inserter(quick));
 
-    a.sort();
-    bubble_sort(b.begin(), b.end());
+    source.sort();
+    bubble_sort(bubble.begin(), bubble.end());
+    quick_sort(quick.begin(), quick.end());
     
-    return std::equal(a.begin(), a.end(), b.begin());
+    return std::equal(source.begin(), source.end(), bubble.begin())
+      && std::equal(source.begin(), source.end(), quick.begin());
   }
 };
 
@@ -183,16 +201,20 @@ template<>
 {
   bool operator()(const int N) const
   {
-    std::string a;
-    std::string b;
+    std::string source;
+    std::string bubble;
+    std::string quick;
 
-    std::generate_n(std::back_inserter(a), N, random_value<char>);
-    std::copy(a.begin(), a.end(), std::back_inserter(b));
+    source = random_value<std::string>();
+    std::copy(source.begin(), source.end(), std::back_inserter(bubble));
+    std::copy(quick.begin(), quick.end(), std::back_inserter(quick));
 
-    std::sort(a.begin(), a.end());
-    bubble_sort(b.begin(), b.end());
+    std::sort(source.begin(), source.end());
+    bubble_sort(bubble.begin(), bubble.end());
+    quick_sort(quick.begin(), quick.end());
     
-    return std::equal(a.begin(), a.end(), b.begin());
+    return std::equal(source.begin(), source.end(), bubble.begin())
+      && std::equal(source.begin(), source.end(), quick.begin());
   }
 };
 
@@ -202,23 +224,23 @@ int main(int, char*[])
 
   static const int Size = 7;
 
-  assert(( Test<int, int* >()(Size)                 ));
-  assert(( Test<double, double* >()(Size)           ));
-  assert(( Test<std::string, std::string* >()(Size) ));
+  assert(( Test<int, int* >()(Size)                               ));
+  assert(( Test<double, double* >()(Size)                         ));
+  assert(( Test<std::string, std::string* >()(Size)               ));
 
-  assert(( Test<int, std::list<int> >()(Size)   ));
-  assert(( Test<double, std::list<double> >()(Size)  ));
+  assert(( Test<int, std::list<int> >()(Size)                     ));
+  assert(( Test<double, std::list<double> >()(Size)               ));
   assert(( Test<std::string, std::list<std::string> >()(Size)     ));
   
-  assert(( Test<int, std::vector<int> >()(Size) ));
-    assert(( Test<double, std::vector<double> >()(Size) ));
-    assert(( Test<std::string, std::vector<std::string> >()(Size) ));
+  assert(( Test<int, std::vector<int> >()(Size)                   ));
+  assert(( Test<double, std::vector<double> >()(Size)             ));
+  assert(( Test<std::string, std::vector<std::string> >()(Size)   ));
     
-    assert(( Test<int, std::deque<int> >()(Size) ));
-      assert(( Test<double, std::deque<double> >()(Size) ));
-      assert(( Test<std::string, std::deque<std::string> >()(Size) ));
+  assert(( Test<int, std::deque<int> >()(Size)                    ));
+  assert(( Test<double, std::deque<double> >()(Size)              ));
+  assert(( Test<std::string, std::deque<std::string> >()(Size)    ));
       
-      assert(( Test<char, std::string>()(Size) ));
+  assert(( Test<char, std::string>()(Size)                        ));
 
   std::cout << "Wszystkie testy zakończono powodzeniem" << std::endl;
 
