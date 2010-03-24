@@ -37,7 +37,7 @@ template<typename Iter>
 template<typename Iter>
   void quick_sort(Iter begin, Iter end)
 {
-  
+  bubble_sort(begin, end);
 }
 
 // generatory losowych wartości
@@ -207,7 +207,7 @@ template<>
 
     source = random_value<std::string>();
     std::copy(source.begin(), source.end(), std::back_inserter(bubble));
-    std::copy(quick.begin(), quick.end(), std::back_inserter(quick));
+    std::copy(source.begin(), source.end(), std::back_inserter(quick));
 
     std::sort(source.begin(), source.end());
     bubble_sort(bubble.begin(), bubble.end());
