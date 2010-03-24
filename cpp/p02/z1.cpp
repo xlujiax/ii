@@ -83,6 +83,60 @@ template<typename T>
   }
 };
 
+/*
+  Dlaczego nie można przekazywać do testu niepełnych typów,
+  np.
+  --------------------------------------------
+  Test<int, std::vector>()(5)
+  --------------------------------------------
+
+  zamiast
+  
+  --------------------------------------------
+  Test<int, std::vector<int> >()(5)
+  --------------------------------------------
+
+  Szablon pierwotny #1:
+  
+  --------------------------------------------
+  template<typename U,
+  template<
+  typename U,
+  typename A = std::allocator<U>
+  > class T>
+  struct F;
+  --------------------------------------------
+
+  Szablon pierwotny #2:
+  
+  --------------------------------------------
+  template<typename U, typename T>
+  struct F;
+  --------------------------------------------
+
+  Ukonkretnenienie działające tylko z szablonem pierwotnym #1.
+  W przypadku szablonu bazowego #2 otrzymujemy błąd: redefinicja parametru szblonu - spodziewano się typu, otrzymano typ częściowo wyspecjalizowany
+
+  --------------------------------------------
+  template<typename U>
+  struct F<U, std::list>
+  {
+  void f() { std::list<U> l; }
+  };
+  --------------------------------------------
+
+  Ukonkretnienie działające tylko z szablonem pierwotnym #2.
+  W przypadku szalonu bazowego #1 typ U* nie jest prawidłowym ukonkretnieniem typu template<typename, typename>class T.
+
+  --------------------------------------------
+  template<typename U>
+  struct F<U, U*>
+  {
+  void f() { U* arr; }
+  }
+  --------------------------------------------
+*/
+
 template<
   typename T,
   template<
