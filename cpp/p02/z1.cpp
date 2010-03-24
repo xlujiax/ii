@@ -88,7 +88,7 @@ template<
   template<
     typename U,
     typename Alloc = std::allocator<U>
-    > class Cont >
+    > class Cont>
   struct Test<T, Cont<T> >
 {
   bool operator()(const int N) const
@@ -97,11 +97,7 @@ template<
     Cont<T> b;
     
     std::generate_n(std::back_inserter(a), N, random_value<T>);
-
-    b = a;
-
-    // ! back_inserter nie działa
-    // std::copy(a.begin, a.end(), std::back_inserter(b));
+    std::copy(a.begin(), a.end(), std::back_inserter(b));
 
     std::sort(a.begin(), a.end());
     bubble_sort(b.begin(), b.end());
@@ -119,11 +115,7 @@ template<typename T>
     std::list<T> b;
 
     std::generate_n(std::back_inserter(a), N, random_value<T>);
-
-    b = a;
-
-    // ! back_inserter nie działa
-    //std::copy(a.begin, a.end(), std::back_inserter(b));
+    std::copy(a.begin(), a.end(), std::back_inserter(b));
 
     a.sort();
     bubble_sort(b.begin(), b.end());
@@ -141,11 +133,7 @@ template<>
     std::string b;
 
     std::generate_n(std::back_inserter(a), N, random_value<char>);
-
-    b = a;
-
-    // ! back_inserter nie działa
-    //std::copy(a.begin, a.end(), std::back_inserter(b));
+    std::copy(a.begin(), a.end(), std::back_inserter(b));
 
     std::sort(a.begin(), a.end());
     bubble_sort(b.begin(), b.end());
