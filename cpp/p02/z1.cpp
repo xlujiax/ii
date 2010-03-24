@@ -55,9 +55,26 @@ int stack = 0;
 template<typename Iter>
   void quick_sort(const Iter begin, const Iter end)
 {
-  // jeśli sekwencja ma 0 lub 1 element
-  if(begin == end || next(begin) == end || next(begin, 2) == end)
+  //std::copy(begin, end, std::ostream_iterator<int>(std::cout, " "));
+  //std::cout << std::endl;
+  
+  // jeśli sekwencja ma 0 lub 1 element;
+  // warunek begin == end powstaje przy jednym z wariantów podziału
+  if(begin == end || next(begin) == end)
     return;
+
+  if(next(begin, 2) == end)
+  {
+    Iter last = next(begin);
+    if(*last < *begin)
+    {
+      typename std::iterator_traits<Iter>::value_type tmp(*last);
+      *last = *begin;
+      *begin = tmp;
+      //std::swap(*last, *begin);
+    }
+    return;
+  }
 
   // podział na sekwencje (begin, pivot) i (pivot+1, end)
   Iter lo = begin;
@@ -74,7 +91,7 @@ template<typename Iter>
 
   do
   {
-    while(hi != lo && *lo < *pivot) ++lo;
+    while(hi != lo && *lo <= *pivot) ++lo;
     while(hi != lo && *hi > *pivot) --hi;
 
     if(hi != lo)
@@ -89,6 +106,9 @@ template<typename Iter>
     --hi;
   
   std::swap(*pivot, *hi);
+  
+  //std::copy(begin, end, std::ostream_iterator<int>(std::cout, " "));
+  //std::cout << std::endl;
   
   quick_sort(begin, hi);
   quick_sort(next(hi), end);
@@ -276,12 +296,6 @@ int main(int, char*[])
 {
   srand(time(0));
 
-  int arr[] = { 5, 6, 3, 7, 1, 2 };
-  int n = sizeof(arr) / sizeof(int);
-  quick_sort(arr, arr + n);
-  std::copy(arr, arr + n, std::ostream_iterator<int>(std::cout, " "));
-  std::cout << std::endl;
-  /*
   for(int size = 0; size < 10; ++size)
   {
     assert(( Test<int, int* >()(size)                               ));
@@ -304,6 +318,6 @@ int main(int, char*[])
   }
       
   std::cout << "Wszystkie testy zakończono powodzeniem" << std::endl;
-  */
+  
   return 0;
 }
