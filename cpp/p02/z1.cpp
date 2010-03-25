@@ -47,7 +47,6 @@ template<typename Iter>
 template<typename Iter>
   void quick_sort(const Iter begin, const Iter end)
 {
-  // podział na sekwencje (begin, pivot) i (pivot+1, end)
   Iter lo = begin;
   Iter hi = end;
 
@@ -82,7 +81,9 @@ template<typename Iter>
   typename std::iterator_traits<Iter>::value_type tmp(*pivot);
   *pivot = *hi;
   *hi = tmp;
-  
+
+  // sortowanie podsekwencji: (begin, pivot) i (pivot+1, end)
+    
   quick_sort(begin, hi);
   ++hi;
   quick_sort(hi, end);
@@ -118,11 +119,11 @@ template <>
 // testy
 // ---------------------
 
-template<typename T, typename Cont>
+template<typename Cont>
   struct Test;
 
 template<typename T>
-  struct Test<T, T*>
+  struct Test<T*>
 {
   bool operator()(const int N) const
   {
@@ -149,7 +150,7 @@ template<
     typename U,
     typename Alloc = std::allocator<U>
     > class Cont>
-  struct Test<T, Cont<T> >
+  struct Test<Cont<T> >
 {
   bool operator()(const int N) const
   {
@@ -171,7 +172,7 @@ template<
 };
 
 template<typename T>
-  struct Test<T, std::list<T> >
+  struct Test<std::list<T> >
 {
   bool operator()(const int N) const
   {
@@ -193,7 +194,7 @@ template<typename T>
 };
 
 template<>
-  struct Test<char, std::string >
+  struct Test<std::string >
 {
   bool operator()(const int N) const
   {
@@ -214,29 +215,33 @@ template<>
   }
 };
 
+// ---------------------
+// punkt startowy programu
+// ---------------------
+
 int main(int, char*[])
 {
   srand(time(0));
 
   for(int size = 0; size < 100; ++size)
   {
-    assert(( Test<int, int* >()(size)                               ));
-    assert(( Test<double, double* >()(size)                         ));
-    assert(( Test<std::string, std::string* >()(size)               ));
+    assert(( Test<int* >()(size)                       ));
+    assert(( Test<double* >()(size)                    ));
+    assert(( Test<std::string* >()(size)               ));
     
-    assert(( Test<int, std::list<int> >()(size)                     ));
-    assert(( Test<double, std::list<double> >()(size)               ));
-    assert(( Test<std::string, std::list<std::string> >()(size)     ));
+    assert(( Test<std::list<int> >()(size)             ));
+    assert(( Test<std::list<double> >()(size)          ));
+    assert(( Test<std::list<std::string> >()(size)     ));
     
-    assert(( Test<int, std::vector<int> >()(size)                   ));
-    assert(( Test<double, std::vector<double> >()(size)             ));
-    assert(( Test<std::string, std::vector<std::string> >()(size)   ));
+    assert(( Test<std::vector<int> >()(size)           ));
+    assert(( Test<std::vector<double> >()(size)        ));
+    assert(( Test<std::vector<std::string> >()(size)   ));
     
-    assert(( Test<int, std::deque<int> >()(size)                    ));
-    assert(( Test<double, std::deque<double> >()(size)              ));
-    assert(( Test<std::string, std::deque<std::string> >()(size)    ));
-      
-    assert(( Test<char, std::string>()(size)                        ));
+    assert(( Test<std::deque<int> >()(size)            ));
+    assert(( Test<std::deque<double> >()(size)         ));
+    assert(( Test<std::deque<std::string> >()(size)    ));
+    
+    assert(( Test<std::string>()(size)                 ));
   }
       
   std::cout << "Wszystkie testy zakończono powodzeniem" << std::endl;
