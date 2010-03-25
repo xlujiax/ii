@@ -1,3 +1,5 @@
+// Maciej Pacut
+
 #include <list>
 #include <vector>
 #include <deque>
@@ -9,6 +11,10 @@
 #include <complex>
 #include <ctime>
 #include <cassert>
+
+// ---------------------
+// procedury sortujące
+// ---------------------
 
 template<typename Iter>
   void bubble_sort(const Iter begin, const Iter end)
@@ -30,24 +36,12 @@ template<typename Iter>
 	typename std::iterator_traits<Iter>::value_type tmp(*a);
 	*a = *b;
 	*b = tmp;
-	
-	// lub prościej:
-	// std::swap(*a, *b);
       }
       
       ++a;
       ++b;
     }
   }
-}
-
-template<typename Iter>
-  Iter next(const Iter iter, const int delta = 1)
-{
-  Iter n = iter;
-  for(int i = 0; i < delta; ++i)
-    n++;
-  return n;
 }
 
 template<typename Iter>
@@ -78,9 +72,6 @@ template<typename Iter>
       typename std::iterator_traits<Iter>::value_type tmp(*lo);
       *lo = *hi;
       *hi = tmp;
-
-      // lub prościej:
-      // std::swap(*hi, *lo);
     }
   }
   while(hi != lo);
@@ -88,14 +79,18 @@ template<typename Iter>
   if(*hi > *pivot)
     --hi;
   
-  std::swap(*pivot, *hi);
+  typename std::iterator_traits<Iter>::value_type tmp(*pivot);
+  *pivot = *hi;
+  *hi = tmp;
   
   quick_sort(begin, hi);
-  quick_sort(next(hi), end);
+  ++hi;
+  quick_sort(hi, end);
 }
 
+// ---------------------
 // generatory losowych wartości
-// {
+// ---------------------
 
 template <typename T>
   T random_value();
@@ -119,8 +114,9 @@ template <>
   return s;
 }
 
-// }
-// generatory losowych wartości
+// ---------------------
+// testy
+// ---------------------
 
 template<typename T, typename Cont>
   struct Test;
@@ -146,60 +142,6 @@ template<typename T>
       && std::equal(source, source + N, quick);
   }
 };
-
-/*
-  Dlaczego nie można przekazywać do testu niepełnych typów,
-  np.
-  --------------------------------------------
-  Test<int, std::vector>()(5)
-  --------------------------------------------
-
-  zamiast
-  
-  --------------------------------------------
-  Test<int, std::vector<int> >()(5)
-  --------------------------------------------
-
-  Przykład. Szablon pierwotny #1:
-  
-  --------------------------------------------
-  template<typename U,
-  template<
-  typename U,
-  typename A = std::allocator<U>
-  > class T>
-  struct F;
-  --------------------------------------------
-
-  Szablon pierwotny #2:
-  
-  --------------------------------------------
-  template<typename U, typename T>
-  struct F;
-  --------------------------------------------
-
-  Ukonkretnenienie działające tylko z szablonem pierwotnym #1.
-  W przypadku szablonu bazowego #2 otrzymujemy błąd: redefinicja parametru szblonu - spodziewano się typu, otrzymano typ częściowo wyspecjalizowany
-
-  --------------------------------------------
-  template<typename U>
-  struct F<U, std::list>
-  {
-  void f() { std::list<U> l; }
-  };
-  --------------------------------------------
-
-  Ukonkretnienie działające tylko z szablonem pierwotnym #2.
-  W przypadku szalonu bazowego #1 typ U* nie jest prawidłowym ukonkretnieniem typu template<typename, typename>class T.
-
-  --------------------------------------------
-  template<typename U>
-  struct F<U, U*>
-  {
-  void f() { U* arr; }
-  }
-  --------------------------------------------
-*/
 
 template<
   typename T,
