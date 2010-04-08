@@ -1,10 +1,13 @@
 OPT=-Wall -std=c99 -pedantic
-OBJ=control.o modeling.o
+OBJ=control.o ncs.o modeling.o
 
 control:
 	gcc $(OPT) -c control.c
 
-modeling: control
+ncs: control
+	gcc $(OPT) -c ncs.c
+
+modeling: ncs
 	gcc $(OPT) -c modeling.c
 
 main: modeling

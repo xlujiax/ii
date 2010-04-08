@@ -4,11 +4,12 @@
 #include <GL/glut.h>
 #include <stdio.h>
 
+#include "ncs.h"
 #include "control.h"
 
 extern int main_menu;
-extern int mouse_x;
-extern int mouse_y;
+extern float mouse_x;
+extern float mouse_y;
 extern int window_width;
 extern int window_height;
 
