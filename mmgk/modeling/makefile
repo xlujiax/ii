@@ -1,11 +1,14 @@
-OPT=-Wall
-OBJ=modeling.o
+OPT=-Wall -std=c99 -pedantic
+OBJ=control.o modeling.o
 
-modeling:
-	g++ $(OPT) -c modeling.cpp
+control:
+	gcc $(OPT) -c control.c
+
+modeling: control
+	gcc $(OPT) -c modeling.c
 
 main: modeling
-	g++ $(OPT) $(OBJ) main.cpp -lglut -o modeling.e
+	gcc $(OPT) $(OBJ) main.c -lglut -o modeling.e
 
 all: main
 

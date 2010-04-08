@@ -1,6 +1,11 @@
 #ifndef MODELING_H
 #define MODELING_H
 
+#include <GL/glut.h>
+#include <stdio.h>
+
+#include "control.h"
+
 extern int main_menu;
 extern int mouse_x;
 extern int mouse_y;
