@@ -15,11 +15,14 @@ Curve** curves;
 int num_curves;
 float (*color_curves)[4];
 
+// sluzy do okreslenia krzywej z zadania C2.2
+float a = 0.4;
+
 void init()
 {
   glEnable(GL_MAP1_VERTEX_3);
 
-  num_curves = 2;
+  num_curves = 3;
   curves = malloc(sizeof(Curve*) * num_curves);
   color_curves = malloc(sizeof(float) * num_curves * 4);
 
@@ -50,6 +53,20 @@ void init()
     curves[1]->p[i][1] = cosf(i * 30.0f) * 100.0f + 400;
     curves[1]->p[i][2] = 0.0f;
   }
+  
+  color_curves[2][0] = 0.0;
+  color_curves[2][1] = 0.0;
+  color_curves[2][2] = 0.1;
+  color_curves[2][3] = 0.5;
+  curves[2] = curve_create(n);
+
+  for(int i = 0; i <= n; ++i)
+  {
+    const float b = 1.0 - a;
+
+    for(int j = 0; j < 3; ++j)
+      curves[2]->p[i][j] = a*curves[0]->p[i][j] + b*curves[1]->p[i][j];
+  }
 }
 
 void update() {}
@@ -58,15 +75,15 @@ void draw()
 {
   for(int c = 0; c < num_curves; ++c)
   {
-    Polygon* hull = curve_convex_hull(curves[c]);
+    //Polygon* hull = curve_convex_hull(curves[c]);
 
-    glColor4fv(color_curves[c]);
-    polygon_draw(hull);
+    //glColor4fv(color_curves[c]);
+    //polygon_draw(hull);
 
-    glColor3f(0.25, 0.25, 0.25);
-    polygon_draw_wire(hull);
+    //glColor3f(0.25, 0.25, 0.25);
+    //polygon_draw_wire(hull);
 
-    polygon_destroy(hull);
+    //polygon_destroy(hull);
 
     glColor3f(1,1,1);
     curve_draw(curves[c]);
@@ -74,8 +91,8 @@ void draw()
     glColor3f(1,1,1);
     curve_draw_control_points(curves[c]);
     
-    glColor3f(1,1,1);
-    curve_draw_control_line(curves[c]);
+    //glColor3f(1,1,1);
+    //curve_draw_control_line(curves[c]);
   }
   
   // mouse
@@ -94,6 +111,14 @@ void mouse_move()
   {
     *move_mod_x = getMouseX();
     *move_mod_y = getMouseY();
+
+    for(int i = 0; i <= curves[2]->n; ++i)
+    {
+      const float b = 1.0 - a;
+      
+      for(int j = 0; j < 3; ++j)
+	curves[2]->p[i][j] = a*curves[0]->p[i][j] + b*curves[1]->p[i][j];
+    }
   }
 }
 
