@@ -16,20 +16,28 @@ control** cs = 0;
 
 void new_curve(float x, float y)
 {
+  int inserter;
   if(0 == num_cs)
   {
     num_cs = 1;
     cs = malloc(sizeof(control*) * num_cs);
-
-    float (*pts)[2] = malloc(sizeof(float[2]));
-    pts[0][0] = x;
-    pts[0][1] = y;
-    
-    cs[0] = control_create(pts, 1);
-
-    active_pt = pts[0];
-    active_cs = cs[0];
+    inserter = 0;
   }
+  else
+  {
+    ++num_cs;
+    cs = realloc(cs, sizeof(control*) * num_cs);
+    inserter = num_cs - 1;
+  }
+  
+  float (*pts)[2] = malloc(sizeof(float[2]));
+  pts[0][0] = x;
+  pts[0][1] = y;
+  
+  cs[inserter] = control_create(pts, 1);
+  
+  active_pt = pts[0];
+  active_cs = cs[inserter];
 }
 
 void create()
@@ -144,6 +152,18 @@ void open_menu(int id)
       {
 	control_erase(active_cs, active_pt);
 	active_pt = 0;
+
+	if(active_cs->n == 0)
+	{
+	  /*
+	    usuwanie tej łamanej kontrolnej powoduje segfault
+
+	  control_destroy(active_cs);
+	  free(active_cs);
+	  */
+
+	  active_cs = 0;
+	}
       }
       break;
   }
