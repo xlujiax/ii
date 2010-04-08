@@ -3,6 +3,7 @@
 
 #include <GL/glut.h>
 #include <stdio.h>
+#include <math.h>
 
 #include "ncs.h"
 #include "control.h"
