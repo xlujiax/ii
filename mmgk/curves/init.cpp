@@ -22,6 +22,10 @@ void mouse_move_inverse_y(int x, int y)
 {
   mouse_move(x, 480 - y);
 }
+void mouse_passive_move_inverse_y(int x, int y)
+{
+  mouse_passive_move(x, 480 - y);
+}
 
 int main(int argc, char** argv)
 {
@@ -31,7 +35,8 @@ int main(int argc, char** argv)
     w.setMainFunc(loop);
     w.setKeyboardFunc(key_press);
     glutMouseFunc(mouse_click);
-    glutPassiveMotionFunc(mouse_move_inverse_y);
+    glutMotionFunc(mouse_move_inverse_y);
+    glutPassiveMotionFunc(mouse_passive_move_inverse_y);
     
     init();
     

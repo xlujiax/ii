@@ -25,8 +25,16 @@ int num_splines;
 
 float (*splines_color)[3];
 
+void selectMessage(int) {}
+
 void init()
 {
+  glutCreateMenu(selectMessage);
+  glutAddMenuEntry("abc", 1);
+  glutAddMenuEntry("ABC", 2);
+  glutAttachMenu(GLUT_RIGHT_BUTTON);
+
+	 
   num_splines = 2;
   splines = (ncs*)malloc(sizeof(ncs) * num_splines);
   splines_color = (float(*)[3])malloc(sizeof(float) * num_splines * 3);
@@ -88,7 +96,14 @@ void mouse_click(int button, int state, int x, int y)
 {
   if(GLUT_LEFT_BUTTON == button)
   {
-    for(int s = 0; s < num_splines; ++s)
+    if(GLUT_UP == state)
+    {
+      move_mod_x = 0;
+      move_mod_y = 0;
+    }
+    else
+    {
+      for(int s = 0; s < num_splines; ++s)
       for(int i = 0; i <= splines[s].n; ++i)
       {
 	float dx = mouse_x - splines[s].px[i];
@@ -118,11 +133,7 @@ void mouse_click(int button, int state, int x, int y)
 	  }
 	}
       }
-  }
-  else if(GLUT_RIGHT_BUTTON == button)
-  {
-    move_mod_x = 0;
-    move_mod_y = 0;
+    }
   }
 }
 
@@ -139,6 +150,11 @@ void mouse_move(int x, int y)
     for(int s = 0; s < num_splines; ++s)
       splines[s].calc();
   }
+}
+
+void mouse_passive_move(int x, int y)
+{
+  mouse_move(x,y);
 }
 
 void update()
