@@ -28,6 +28,14 @@ void curve_draw_control_points(Curve* c)
   glEnd();
 }
 
+void curve_draw_control_line(Curve* c)
+{
+  glBegin(GL_LINE_STRIP);
+  for (int i = 0; i <= c->n; i++)
+    glVertex3fv(&c->p[i][0]);
+  glEnd();
+}
+
 void curve_destroy(Curve* c)
 {
   free(c->p);

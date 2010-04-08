@@ -15,16 +15,10 @@ Curve** curves;
 int num_curves;
 float (*color_curves)[4];
 
-Line* l;
-
 void init()
 {
   glEnable(GL_MAP1_VERTEX_3);
 
-  float p1[] = {100, 100, 0};
-  float p2[] = {700, 200, 0};
-  l = line_create(p1, p2);
-  
   num_curves = 2;
   curves = malloc(sizeof(Curve*) * num_curves);
   color_curves = malloc(sizeof(float) * num_curves * 4);
@@ -62,9 +56,6 @@ void update() {}
 
 void draw()
 {
-  glColor3f(0.5,1,0.5);
-  line_draw(l);
-  
   for(int c = 0; c < num_curves; ++c)
   {
     Polygon* hull = curve_convex_hull(curves[c]);
@@ -80,21 +71,13 @@ void draw()
     glColor3f(1,1,1);
     curve_draw(curves[c]);
 
+    glColor3f(1,1,1);
     curve_draw_control_points(curves[c]);
-
-    float* roots;
-    int num_roots = curve_line_intersection(curves[c], l, &roots);
-
-    glColor3f(1,0,0);
-    glBegin(GL_POINTS);
-    for(int i = 0; i < num_roots; ++i)
-    {
-      float x, y;
-      curve_de_casteljau(curves[c], roots[i], &x, &y);
-      glVertex2f(x,y);
-    }
-    glEnd();
+    
+    glColor3f(1,1,1);
+    curve_draw_control_line(curves[c]);
   }
+  
   // mouse
   glColor3f(1,1,1);
   glBegin(GL_LINES);
