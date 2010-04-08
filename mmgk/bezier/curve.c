@@ -63,25 +63,3 @@ void curve_de_casteljau(Curve* c, float u, float *x, float* y)
 
   free(b);
 }
-
-void curve_degree_raise(Curve* c, int M)
-{
-  // zapamiętujemy zakres wielomianu
-  float min_x = c->p[0][0];
-  float max_x = c->p[c->n][0];
-
-  c->p = realloc(c->p, sizeof(float) * 3 * (M + 1));
-  
-  for(int m = c->n + 1; m <= M; ++m, ++c->n)
-  {
-    c->p[m][1] = c->p[c->n][1];
-    for(int i = c->n; i >= 1; --i)
-      c->p[i][1] = (i*c->p[i-1][1]+(m-i)*c->p[i][1])/((float)m);
-  }
-
-  for(int i = 0; i <= c->n; ++i)
-  {
-    c->p[i][0] = min_x + (max_x - min_x)*((float)i) / ((float)c->n);
-    c->p[i][2] = 0;
-  }
-}

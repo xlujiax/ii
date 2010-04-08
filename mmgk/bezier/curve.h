@@ -20,4 +20,3 @@ void curve_destroy(Curve* c);
 void curve_draw(Curve* c);
 void curve_draw_control_points(Curve* c);
 void curve_de_casteljau(Curve* c, float u, float *x, float* y);
-void curve_degree_raise(Curve* c, int n);

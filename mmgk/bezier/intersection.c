@@ -56,7 +56,7 @@ int bezier_roots(Curve* c, float **roots)
 
   recursive_root_finding(c, 0, 1, temp_roots, &num_roots);
   
-  temp_roots = realloc(temp_roots, num_roots * sizeof(float));
+  realloc(temp_roots, num_roots * sizeof(float));
   *roots = temp_roots;
   return num_roots;
 }

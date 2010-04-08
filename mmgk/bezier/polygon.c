@@ -56,7 +56,7 @@ int polygon_axis_intersection(Polygon* poly, float **ret_ints)
       ints[num_ints++] = root;
   }
   
-  ints = realloc(ints, sizeof(float) * num_ints);
+  realloc(ints, sizeof(float) * num_ints);
   *ret_ints = ints;
   return num_ints;
 }

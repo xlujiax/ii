@@ -5,8 +5,6 @@
 #include "line.h"
 #include "intersection.h"
 #include "hull.h"
-#include "utils.h"
-#include "reduction.h"
 
 const float mouse_size = 20;
 
@@ -17,18 +15,24 @@ Curve** curves;
 int num_curves;
 float (*color_curves)[4];
 
+Line* l;
+
 void init()
 {
   glEnable(GL_MAP1_VERTEX_3);
+
+  float p1[] = {100, 100, 0};
+  float p2[] = {700, 200, 0};
+  l = line_create(p1, p2);
   
-  num_curves = 3;
+  num_curves = 2;
   curves = malloc(sizeof(Curve*) * num_curves);
   color_curves = malloc(sizeof(float) * num_curves * 4);
 
-  int n = 4;
+  int n = 7;
 
-  color_curves[0][0] = 1.0;
-  color_curves[0][1] = 1.0;
+  color_curves[0][0] = 0.1;
+  color_curves[0][1] = 0.1;
   color_curves[0][2] = 0.0;
   color_curves[0][3] = 0.5;
   curves[0] = curve_create(n);
@@ -40,40 +44,56 @@ void init()
     curves[0]->p[i][2] = 0.0f;
   }
 
-  color_curves[1][0] = 1.0;
-  color_curves[1][1] = 0.0;
-  color_curves[1][2] = 1.0;
+  color_curves[1][0] = 0.0;
+  color_curves[1][1] = 0.1;
+  color_curves[1][2] = 0.1;
   color_curves[1][3] = 0.5;
   curves[1] = curve_create(n);
 
-  // kopia curves[0]
   for(int i = 0; i <= n; ++i)
   {
     curves[1]->p[i][0] = i * 30.0f + 300.0f;
-    curves[1]->p[i][1] = cosf(i * 30.0f) * 100.0f + 100;
+    curves[1]->p[i][1] = cosf(i * 30.0f) * 100.0f + 400;
     curves[1]->p[i][2] = 0.0f;
   }
-  curve_degree_raise(curves[1], 7);
-
-  color_curves[2][0] = 1.0;
-  color_curves[2][1] = 1.0;
-  color_curves[2][2] = 1.0;
-  color_curves[2][3] = 0.5;
-  curves[2] = curve_degree_reduction_rec(curves[0], 2);
 }
 
-void update()
-{
-}
+void update() {}
 
 void draw()
 {
+  glColor3f(0.5,1,0.5);
+  line_draw(l);
+  
   for(int c = 0; c < num_curves; ++c)
   {
-    glColor3fv(color_curves[c]);
+    Polygon* hull = curve_convex_hull(curves[c]);
+
+    glColor4fv(color_curves[c]);
+    polygon_draw(hull);
+
+    glColor3f(0.25, 0.25, 0.25);
+    polygon_draw_wire(hull);
+
+    polygon_destroy(hull);
+
+    glColor3f(1,1,1);
     curve_draw(curves[c]);
 
     curve_draw_control_points(curves[c]);
+
+    float* roots;
+    int num_roots = curve_line_intersection(curves[c], l, &roots);
+
+    glColor3f(1,0,0);
+    glBegin(GL_POINTS);
+    for(int i = 0; i < num_roots; ++i)
+    {
+      float x, y;
+      curve_de_casteljau(curves[c], roots[i], &x, &y);
+      glVertex2f(x,y);
+    }
+    glEnd();
   }
   // mouse
   glColor3f(1,1,1);
@@ -89,11 +109,9 @@ void mouse_move()
 {
   if(move_mod_x != NULL && move_mod_y != NULL)
   {
-    //*move_mod_x = getMouseX();
+    *move_mod_x = getMouseX();
     *move_mod_y = getMouseY();
   }
-  
-  //curves[1] = curve_degree_reduction(curves[0], curves[1]->n);
 }
 
 void mouse_left_click()
