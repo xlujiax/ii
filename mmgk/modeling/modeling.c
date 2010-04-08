@@ -10,6 +10,7 @@ const float effective_dist = 20;
 
 control* active_cs = 0;
 float *active_pt = 0;
+int move_pt = 0;
 
 int num_cs = 0;
 control** cs = 0;
@@ -109,6 +110,7 @@ void mouse_click(int button, int state, int x, int y)
 	    {
 	      active_cs = cs[c];
 	      active_pt = active_cs->pts[i];
+	      move_pt = 1;
 	    }
 	    else
 	    {
@@ -121,15 +123,27 @@ void mouse_click(int button, int state, int x, int y)
 	      {
 		active_cs = cs[c];
 		active_pt = active_cs->pts[i];
+		move_pt = 1;
 	      }
 	    }
 	  }
 	}
     }
+    else
+      move_pt = 0;
   }
 }
 
-void mouse_motion(int x, int y) { mouse_x = x; mouse_y = window_height - y; }
+void mouse_motion(int x, int y)
+{
+  mouse_x = x; mouse_y = window_height - y;
+  if(move_pt && active_pt)
+  {
+    active_pt[0] = mouse_x;
+    active_pt[1] = mouse_y;
+  }
+}
+
 void mouse_passive_motion(int x, int y) { mouse_x = x; mouse_y = window_height - y; }
 void open_menu(int id)
 {
@@ -162,7 +176,7 @@ void open_menu(int id)
 	  free(active_cs);
 	  */
 
-	  active_cs = 0;
+	  //active_cs = 0;
 	}
       }
       break;

@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
   glutIdleFunc(frame);
   glutMouseFunc(mouse_click);
   glutPassiveMotionFunc(mouse_passive_motion);
-  glutPassiveMotionFunc(mouse_motion);
+  glutMotionFunc(mouse_motion);
   
   glutCreateMenu(open_menu);
   
