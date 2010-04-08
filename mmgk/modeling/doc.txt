@@ -1,0 +1,6 @@
+tworzenie okna, obsluga myszy, menu
+
+krzywe: beziera, naturalne sklejane
+- rysowanie
+- zapis i odczyt z pliku (prawy klik)
+- niektore wlasnosci: np rysowanie otoczki

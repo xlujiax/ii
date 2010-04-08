@@ -176,7 +176,7 @@ void draw()
     glColor3fv(splines_color[s]);
 
     glBegin(GL_LINE_STRIP);
-    for(float arg = 0.0f; arg < 1.0f; arg += 0.01f)
+    for(float arg = 0.0f; arg < 1.0f; arg += 0.001f)
       glVertex2f(splines[s].eval_x(arg), splines[s].eval_y(arg));
     glEnd();
     
