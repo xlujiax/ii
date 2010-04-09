@@ -62,7 +62,7 @@ void frame()
     
     control_draw_line(ncss[i]->c);
 
-    const float prec = 0.1;
+    const float prec = 0.01;
 
     glBegin(GL_LINE_STRIP);
     for(float t = 0; t <= 1; t += prec)
