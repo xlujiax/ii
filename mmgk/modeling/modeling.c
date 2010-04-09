@@ -8,37 +8,37 @@ int window_height;
 
 const float effective_dist = 20;
 
-control* active_cs = 0;
+ncs* active_ncs = 0;
 float *active_pt = 0;
 int move_pt = 0;
 
-int num_cs = 0;
-control** cs = 0;
+int num_ncs = 0;
+ncs** ncss = 0;
 
 void new_curve(float x, float y)
 {
   int inserter;
-  if(0 == num_cs)
+  if(0 == num_ncs)
   {
-    num_cs = 1;
-    cs = malloc(sizeof(control*) * num_cs);
+    num_ncs = 1;
+    ncss = malloc(sizeof(ncs*) * num_ncs);
     inserter = 0;
   }
   else
   {
-    ++num_cs;
-    cs = realloc(cs, sizeof(control*) * num_cs);
-    inserter = num_cs - 1;
+    ++num_ncs;
+    ncss = realloc(ncss, sizeof(control*) * num_ncs);
+    inserter = num_ncs - 1;
   }
   
   float (*pts)[2] = malloc(sizeof(float[2]));
   pts[0][0] = x;
   pts[0][1] = y;
-  
-  cs[inserter] = control_create(pts, 1);
+
+  ncss[inserter] = ncs_create(control_create(pts, 1));
   
   active_pt = pts[0];
-  active_cs = cs[inserter];
+  active_ncs = ncss[inserter];
 }
 
 void create()
@@ -53,17 +53,24 @@ void frame()
   glLoadIdentity();
 
   glColor3f(1,1,1);
-  for(int i = 0; i < num_cs; ++i)
+  for(int i = 0; i < num_ncs; ++i)
   {
-    if(active_cs == cs[i])
+    if(active_ncs == ncss[i])
       glColor3f(1,0,0);
     else
       glColor3f(1,1,1);
     
-    control_draw_line(cs[i]);
+    control_draw_line(ncss[i]->c);
+
+    const float prec = 0.1;
+
+    glBegin(GL_LINE_STRIP);
+    for(float t = 0; t <= 1; t += prec)
+      glVertex2f(ncs_eval_x(ncss[i], t), ncs_eval_y(ncss[i], t));
+    glEnd();
 
     glPointSize(5);
-    control_draw_points(cs[i]);
+    control_draw_points(ncss[i]->c);
   }
 
   if(active_pt)
@@ -93,14 +100,14 @@ void mouse_click(int button, int state, int x, int y)
   {
     if(GLUT_DOWN == state)
     {
-      active_cs = 0;
+      active_ncs = 0;
       active_pt = 0;
   
-      for(int c = 0; c < num_cs; ++c)
-	for(int i = 0; i <= cs[c]->n; ++i)
+      for(int c = 0; c < num_ncs; ++c)
+	for(int i = 0; i <= ncss[c]->c->n; ++i)
 	{
-	  float dx = mouse_x - cs[c]->pts[i][0];
-	  float dy = mouse_y - cs[c]->pts[i][1];
+	  float dx = mouse_x - ncss[c]->c->pts[i][0];
+	  float dy = mouse_y - ncss[c]->c->pts[i][1];
       
 	  float dist = sqrt(dx*dx + dy*dy);
 
@@ -108,8 +115,8 @@ void mouse_click(int button, int state, int x, int y)
 	  {
 	    if(active_pt == 0)
 	    {
-	      active_cs = cs[c];
-	      active_pt = active_cs->pts[i];
+	      active_ncs = ncss[c];
+	      active_pt = active_ncs->c->pts[i];
 	      move_pt = 1;
 	    }
 	    else
@@ -121,8 +128,8 @@ void mouse_click(int button, int state, int x, int y)
 
 	      if(dist_old > dist)
 	      {
-		active_cs = cs[c];
-		active_pt = active_cs->pts[i];
+		active_ncs = ncss[c];
+		active_pt = active_ncs->c->pts[i];
 		move_pt = 1;
 	      }
 	    }
@@ -153,21 +160,22 @@ void open_menu(int id)
       new_curve(mouse_x, mouse_y);
       break;
     case 2:
-      if(active_cs)
+      if(active_ncs)
       {
 	float pt[] = { mouse_x, mouse_y };
-	control_push(active_cs, pt);
+	control_push(active_ncs->c, pt);
+	ncs_recalc(active_ncs);
 
-	active_pt = active_cs->pts[active_cs->n-1];
+	active_pt = active_ncs->c->pts[active_ncs->c->n-1];
       }
       break;
     case 3:
-      if(active_cs && active_pt)
+      if(active_ncs && active_pt)
       {
-	control_erase(active_cs, active_pt);
+	control_erase(active_ncs->c, active_pt);
 	active_pt = 0;
 
-	if(active_cs->n == 0)
+	if(active_ncs->c->n == 0)
 	{
 	  /*
 	    usuwanie tej łamanej kontrolnej powoduje segfault

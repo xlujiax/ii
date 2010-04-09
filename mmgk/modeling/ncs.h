@@ -6,10 +6,13 @@
 typedef struct
 {
   control* c;
-  float* M;
+  float* Mx;
+  float* My;
 } ncs;
 
 ncs* ncs_create(control*);
 void ncs_recalc(ncs*);
+float ncs_eval_x(ncs*, float);
+float ncs_eval_y(ncs*, float);
 
 #endif
