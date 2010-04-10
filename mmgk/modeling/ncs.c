@@ -15,15 +15,12 @@ void ncs_recalc(ncs* n)
   n->Mx = realloc(n->Mx, sizeof(float) * n->c->n);
   n->My = realloc(n->My, sizeof(float) * n->c->n);
 
-  float* q = malloc(sizeof(float) * (n->c->n+1));
-  float* p = malloc(sizeof(float) * (n->c->n+1));
-  float* ux = malloc(sizeof(float) * (n->c->n+1));
-  float* uy = malloc(sizeof(float) * (n->c->n+1));
-  float* dx = malloc(sizeof(float) * (n->c->n+1));
-  float* dy = malloc(sizeof(float) * (n->c->n+1));
-
-  // jednoczesne obliczanie Mx i My
-  // pomocncze wartosci pk i qk moga byc wspoldzielone, a uk sa zalezne od ilorazow roznicowych
+  float* q = malloc(sizeof(float) * n->c->n);
+  float* p = malloc(sizeof(float) * n->c->n);
+  float* ux = malloc(sizeof(float) * n->c->n);
+  float* uy = malloc(sizeof(float) * n->c->n);
+  float* dx = malloc(sizeof(float) * n->c->n);
+  float* dy = malloc(sizeof(float) * n->c->n);
 
   const float h = 1.0 / (float)n->c->n;
   const float lambda = 0.5;
@@ -31,8 +28,8 @@ void ncs_recalc(ncs* n)
   // iloczyny roznicowe
   for(int k = 1; k <= n->c->n-1; ++k)
   {
-    dx[k] = 6 * (n->c->pts[k-1][0] + n->c->pts[k][0] + n->c->pts[k+1][0]) / (h * h);
-    dx[k] = 6 * (n->c->pts[k-1][1] + n->c->pts[k][1] + n->c->pts[k+1][1]) / (h * h);
+    dx[k] = 6 * (0.5 * n->c->pts[k-1][0] + n->c->pts[k][0] + 0.5 * n->c->pts[k+1][0]) / (h * h);
+    dy[k] = 6 * (0.5 * n->c->pts[k-1][1] + n->c->pts[k][1] + 0.5 * n->c->pts[k+1][1]) / (h * h);
   }
 
   q[0] = 0;
@@ -68,7 +65,11 @@ void ncs_recalc(ncs* n)
 
 float ncs_eval_x(ncs* n, float t)
 {
-  const int k = (int)(t*n->c->n) + 1; // przedzial
+  const int k = floor(t*(n->c->n-1)) + 1; // przedzial
+
+  assert(k < n->c->n);
+  assert(k > 0);
+  
   const float h = 1.0 / (float)n->c->n;
 
   const float xk = (float)k / (float)n->c->n;
@@ -82,7 +83,11 @@ float ncs_eval_x(ncs* n, float t)
 
 float ncs_eval_y(ncs* n, float t)
 {
-  const int k = (int)(t*n->c->n) + 1; // przedzial
+  const int k = floor(t*(n->c->n-1)) + 1; // przedzial
+
+  assert(k < n->c->n);
+  assert(k > 0);
+
   const float h = 1.0 / (float)n->c->n;
 
   const float xk = (float)k / (float)n->c->n;

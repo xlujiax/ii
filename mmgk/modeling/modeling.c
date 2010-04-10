@@ -18,18 +18,10 @@ ncs** ncss = 0;
 void new_curve(float x, float y)
 {
   int inserter;
-  if(0 == num_ncs)
-  {
-    num_ncs = 1;
-    ncss = malloc(sizeof(ncs*) * num_ncs);
-    inserter = 0;
-  }
-  else
-  {
-    ++num_ncs;
-    ncss = realloc(ncss, sizeof(control*) * num_ncs);
-    inserter = num_ncs - 1;
-  }
+
+  ++num_ncs;
+  ncss = realloc(ncss, sizeof(control*) * num_ncs);
+  inserter = num_ncs - 1;
   
   float (*pts)[2] = malloc(sizeof(float[2]));
   pts[0][0] = x;
@@ -37,14 +29,34 @@ void new_curve(float x, float y)
 
   ncss[inserter] = ncs_create(control_create(pts, 1));
   
-  active_pt = pts[0];
+  active_pt = ncss[inserter]->c->pts[ncss[inserter]->c->n-1];
   active_ncs = ncss[inserter];
+
 }
 
 void create()
 {
   window_width = 800;
   window_height = 600;
+
+  new_curve(100, 100);
+
+  
+  printf("new curve %d\n", ncss[0]->c->n);
+  
+  {
+    float pt[] = { 200, 100 };
+    control_push(ncss[0]->c, pt);
+  }
+  printf("new curve %d\n", ncss[0]->c->n);
+  {
+    float pt[] = { 400, 200 };
+    control_push(ncss[0]->c, pt);
+  }
+  printf("new curve %d\n", ncss[0]->c->n);
+  
+  ncs_recalc(active_ncs);
+  printf("new curve %d\n", ncss[0]->c->n);
 }
 
 void frame()
@@ -62,13 +74,17 @@ void frame()
     
     control_draw_line(ncss[i]->c);
 
-    const float prec = 0.01;
-
-    glBegin(GL_LINE_STRIP);
-    for(float t = 0; t <= 1; t += prec)
-      glVertex2f(ncs_eval_x(ncss[i], t), ncs_eval_y(ncss[i], t));
-    glEnd();
-
+    const int segments = ncss[i]->c->n - 1;
+    if(segments >= 1)
+    {
+      const float prec = 0.01 / (float)segments;
+      
+      glBegin(GL_LINE_STRIP);
+      for(float t = 0; t <= 1; t += prec)
+	glVertex2f(ncs_eval_x(ncss[i], t), ncs_eval_y(ncss[i], t));
+      glEnd();
+    }
+    
     glPointSize(5);
     control_draw_points(ncss[i]->c);
   }

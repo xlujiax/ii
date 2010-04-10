@@ -1,6 +1,8 @@
 #ifndef NCS_H
 #define NCS_H
 
+#include <math.h>
+#include <assert.h>
 #include "control.h"
 
 typedef struct
