@@ -1,2 +1,2 @@
-- napraw usuwanie krzywych
-- krzywa ncs
+- punkt (0,0) nie powinien byc dodawany, wyswietlany i nie powinien miec wplywu na ksztalt krzywej
+- usuwanie ostatneigo punktu ncs powinno ją usuwać, zwalniać pamięć itp
