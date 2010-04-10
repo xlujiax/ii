@@ -12,21 +12,21 @@ ncs* ncs_create(control* c)
 
 void ncs_recalc(ncs* n)
 {
-  n->Mx = realloc(n->Mx, sizeof(float) * n->c->n);
-  n->My = realloc(n->My, sizeof(float) * n->c->n);
+  n->Mx = realloc(n->Mx, sizeof(float) * (n->c->n - 1));
+  n->My = realloc(n->My, sizeof(float) * (n->c->n - 1));
 
-  float* q = malloc(sizeof(float) * n->c->n);
-  float* p = malloc(sizeof(float) * n->c->n);
-  float* ux = malloc(sizeof(float) * n->c->n);
-  float* uy = malloc(sizeof(float) * n->c->n);
-  float* dx = malloc(sizeof(float) * n->c->n);
-  float* dy = malloc(sizeof(float) * n->c->n);
+  float* q = malloc(sizeof(float) * (n->c->n - 1));
+  float* p = malloc(sizeof(float) * (n->c->n - 1));
+  float* ux = malloc(sizeof(float) * (n->c->n - 1));
+  float* uy = malloc(sizeof(float) * (n->c->n - 1));
+  float* dx = malloc(sizeof(float) * (n->c->n - 1));
+  float* dy = malloc(sizeof(float) * (n->c->n - 1));
 
   const float h = 1.0 / (float)(n->c->n-1);
   const float lambda = 0.5;
 
   // iloczyny roznicowe
-  for(int k = 1; k <= n->c->n-1; ++k)
+  for(int k = 1; k <= n->c->n - 2; ++k)
   {
     dx[k] = 6 * (0.5 * n->c->pts[k-1][0] - n->c->pts[k][0] + 0.5 * n->c->pts[k+1][0]) / (h * h);
     dy[k] = 6 * (0.5 * n->c->pts[k-1][1] - n->c->pts[k][1] + 0.5 * n->c->pts[k+1][1]) / (h * h);
@@ -34,7 +34,7 @@ void ncs_recalc(ncs* n)
 
   q[0] = 0;
   ux[0] = uy[0] = 0;
-  for(int k = 1; k <= n->c->n - 1; ++k)
+  for(int k = 1; k <= n->c->n - 2; ++k)
   {
     // wartości p i q są współdzielone przy obliczaniu ux i uy
     p[k] = lambda*q[k-1]+2;
@@ -47,9 +47,9 @@ void ncs_recalc(ncs* n)
 
   // rozwiązanie układu dla momentów
 
-  n->Mx[n->c->n-1] = ux[n->c->n-1];
-  n->My[n->c->n-1] = uy[n->c->n-1];
-  for(int k = n->c->n - 2; k >= 0; --k)
+  n->Mx[n->c->n-2] = ux[n->c->n-2];
+  n->My[n->c->n-2] = uy[n->c->n-2];
+  for(int k = n->c->n - 3; k >= 0; --k)
   {
     n->Mx[k] = ux[k] + q[k]*n->Mx[k+1];
     n->My[k] = uy[k] + q[k]*n->My[k+1];
