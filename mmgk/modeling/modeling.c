@@ -15,6 +15,65 @@ int move_pt = 0;
 int num_ncs = 0;
 ncs** ncss = 0;
 
+void new_cycloide(float x, float y)
+{
+  int inserter;
+
+  ++num_ncs;
+  ncss = realloc(ncss, sizeof(control*) * num_ncs);
+  inserter = num_ncs - 1;
+
+  const int vertices = 20;
+  float (*pts)[2] = malloc(sizeof(float[2]) * vertices);
+
+  float p = 15;
+  float q = 30;
+  
+  float t = -5*3.1415;
+  
+  for(int i = 0; i < vertices; ++i)
+  {
+    t += 31.45 / (float)(vertices);
+    
+    pts[i][0] = p*t-q*sin(t) + x;
+    pts[i][1] = p-q*cos(t) + y;
+  }
+
+  ncss[inserter] = ncs_create(control_create(pts, vertices));
+  
+  active_pt = ncss[inserter]->c->pts[ncss[inserter]->c->n-1];
+  active_ncs = ncss[inserter];
+}
+
+void new_spiral(float x, float y)
+{
+  int inserter;
+
+  ++num_ncs;
+  ncss = realloc(ncss, sizeof(control*) * num_ncs);
+  inserter = num_ncs - 1;
+
+  const int vertices = 20;
+  float (*pts)[2] = malloc(sizeof(float[2]) * vertices);
+  
+  float r = 0;
+  float t = 0;
+  
+  for(int i = 0; i < vertices; ++i)
+  {
+    t += 3.14 / 4;
+    r += 5;
+    
+    pts[i][0] = r*cos(t) + x;
+    pts[i][1] = r*sin(t) + y;
+  }
+ 
+  ncss[inserter] = ncs_create(control_create(pts, vertices));
+  
+  active_pt = ncss[inserter]->c->pts[ncss[inserter]->c->n-1];
+  active_ncs = ncss[inserter];
+}
+
 void new_curve(float x, float y)
 {
   int inserter;
@@ -205,6 +264,12 @@ void open_menu(int id)
     case 3:
       erase_vertex(active_ncs, active_pt);
       break;
+    case 4:
+      new_cycloide(mouse_x, mouse_y);
+      break;
+    case 5:
+      new_spiral(mouse_x, mouse_y);
+      break;
   }
 }
 
@@ -213,6 +278,8 @@ void create_menu()
   glutAddMenuEntry("New curve", 1);
   glutAddMenuEntry("New vertex", 2);
   glutAddMenuEntry("Erase vertex", 3);
+  glutAddMenuEntry("Cycloide", 4);
+  glutAddMenuEntry("Spiral", 5);
 }
 
 void destroy() {}
