@@ -72,7 +72,7 @@ void frame()
     else
       glColor3f(1,1,1);
     
-    control_draw_line(ncss[i]->c);
+    //control_draw_line(ncss[i]->c);
 
     const int segments = ncss[i]->c->n - 1;
     if(segments >= 1)

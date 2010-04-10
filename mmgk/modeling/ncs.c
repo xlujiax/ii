@@ -22,7 +22,7 @@ void ncs_recalc(ncs* n)
   float* dx = malloc(sizeof(float) * n->c->n);
   float* dy = malloc(sizeof(float) * n->c->n);
 
-  const float h = 1.0 / (float)n->c->n;
+  const float h = 1.0 / (float)(n->c->n-1);
   const float lambda = 0.5;
 
   // iloczyny roznicowe
@@ -70,11 +70,14 @@ float ncs_eval_x(ncs* n, float t)
   assert(k < n->c->n);
   assert(k > 0);
   
-  const float h = 1.0 / (float)n->c->n;
+  const float h = 1.0 / (float)(n->c->n-1);
 
-  const float xk = (float)k / (float)n->c->n;
-  const float xkm1 = (float)(k-1) / (float)n->c->n;
+  const float xk = (float)k / (float)(n->c->n-1);
+  const float xkm1 = (float)(k-1) / (float)(n->c->n-1);
   
+  assert(t >= xkm1);
+  assert(t <= xk);
+
   return (n->Mx[k-1]*(xk - t)*(xk - t)*(xk - t)/6 +
     n->Mx[k]*(t - xkm1)*(t - xkm1)*(t - xkm1)/6 +
     (n->c->pts[k-1][0] - n->Mx[k-1]*h*h/6)*(xk - t) +
@@ -88,11 +91,14 @@ float ncs_eval_y(ncs* n, float t)
   assert(k < n->c->n);
   assert(k > 0);
 
-  const float h = 1.0 / (float)n->c->n;
+  const float h = 1.0 / (float)(n->c->n-1);
 
-  const float xk = (float)k / (float)n->c->n;
-  const float xkm1 = (float)(k-1) / (float)n->c->n;
-  
+  const float xk = (float)k / (float)(n->c->n-1);
+  const float xkm1 = (float)(k-1) / (float)(n->c->n-1);
+
+  assert(t >= xkm1);
+  assert(t <= xk);
+
   return (n->My[k-1]*(xk - t)*(xk - t)*(xk - t)/6 +
     n->My[k]*(t - xkm1)*(t - xkm1)*(t - xkm1)/6 +
     (n->c->pts[k-1][1] - n->My[k-1]*h*h/6)*(xk - t) +
