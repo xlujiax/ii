@@ -160,10 +160,11 @@ void mouse_click(int button, int state, int x, int y)
 void mouse_motion(int x, int y)
 {
   mouse_x = x; mouse_y = window_height - y;
-  if(move_pt && active_pt)
+  if(move_pt && active_pt && active_ncs)
   {
     active_pt[0] = mouse_x;
     active_pt[1] = mouse_y;
+    ncs_recalc(active_ncs);
   }
 }
 

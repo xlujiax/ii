@@ -28,8 +28,8 @@ void ncs_recalc(ncs* n)
   // iloczyny roznicowe
   for(int k = 1; k <= n->c->n-1; ++k)
   {
-    dx[k] = 6 * (0.5 * n->c->pts[k-1][0] + n->c->pts[k][0] + 0.5 * n->c->pts[k+1][0]) / (h * h);
-    dy[k] = 6 * (0.5 * n->c->pts[k-1][1] + n->c->pts[k][1] + 0.5 * n->c->pts[k+1][1]) / (h * h);
+    dx[k] = 6 * (0.5 * n->c->pts[k-1][0] - n->c->pts[k][0] + 0.5 * n->c->pts[k+1][0]) / (h * h);
+    dy[k] = 6 * (0.5 * n->c->pts[k-1][1] - n->c->pts[k][1] + 0.5 * n->c->pts[k+1][1]) / (h * h);
   }
 
   q[0] = 0;
