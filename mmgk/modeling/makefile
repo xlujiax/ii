@@ -1,4 +1,4 @@
-OPT=-Wall -std=c99 -pedantic
+OPT=-Wall -std=c99 -pedantic -g
 OBJ=control.o ncs.o modeling.o
 
 control:

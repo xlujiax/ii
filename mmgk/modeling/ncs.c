@@ -6,7 +6,10 @@ ncs* ncs_create(control* c)
   n->c = c;
   n->Mx = 0;
   n->My = 0;
-  ncs_recalc(n);
+  
+  if(n->c->n > 1)
+    ncs_recalc(n);
+  
   return n;
 }
 
@@ -47,9 +50,9 @@ void ncs_recalc(ncs* n)
 
   // rozwiązanie układu dla momentów
 
-  n->Mx[n->c->n-2] = ux[n->c->n-2];
-  n->My[n->c->n-2] = uy[n->c->n-2];
-  for(int k = n->c->n - 3; k >= 0; --k)
+  n->Mx[n->c->n-1] = ux[n->c->n-1];
+  n->My[n->c->n-1] = uy[n->c->n-1];
+  for(int k = n->c->n - 2; k >= 0; --k)
   {
     n->Mx[k] = ux[k] + q[k]*n->Mx[k+1];
     n->My[k] = uy[k] + q[k]*n->My[k+1];

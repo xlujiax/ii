@@ -45,25 +45,33 @@ void new_vertex()
   }
 }
 
+void erase_ncs()
+{
+  control_destroy(active_ncs->c);
+  
+  --num_ncs;
+  memcpy(active_ncs, ncss[num_ncs], sizeof(control*));
+  
+  ncss = realloc(ncss, sizeof(control*) * num_ncs);
+  
+  active_ncs = 0;
+  active_pt = 0;
+}
+
 void erase_vertex()
 {
-  assert(active_ncs);
-  assert(active_pt);
-
-  control_erase(active_ncs->c, active_pt);
-  active_pt = 0;
-  ncs_recalc(active_ncs);
-
-  if(active_ncs->c->n == 0)
+  if(active_ncs && active_pt)
   {
-    /*
-      usuwanie tej łamanej kontrolnej powoduje segfault
-      
-      control_destroy(active_cs);
-      free(active_cs);
-    */
-
-    //active_cs = 0;
+    if(active_ncs->c->n == 1)
+    {
+      erase_ncs();
+    }
+    else
+    {
+      control_erase(active_ncs->c, active_pt);
+      active_pt = 0;
+      ncs_recalc(active_ncs);
+    }
   }
 }
 
@@ -77,7 +85,7 @@ void frame()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
-
+  
   glColor3f(1,1,1);
   for(int i = 0; i < num_ncs; ++i)
   {
@@ -176,7 +184,9 @@ void mouse_motion(int x, int y)
   {
     active_pt[0] = mouse_x;
     active_pt[1] = mouse_y;
-    ncs_recalc(active_ncs);
+
+    if(active_ncs->c->n > 1)
+      ncs_recalc(active_ncs);
   }
 }
 
