@@ -12,8 +12,8 @@ ncs* ncs_create(control* c)
 
 void ncs_recalc(ncs* n)
 {
-  n->Mx = realloc(n->Mx, sizeof(float) * (n->c->n - 1));
-  n->My = realloc(n->My, sizeof(float) * (n->c->n - 1));
+  n->Mx = realloc(n->Mx, sizeof(float) * n->c->n);
+  n->My = realloc(n->My, sizeof(float) * n->c->n);
 
   float* q = malloc(sizeof(float) * (n->c->n - 1));
   float* p = malloc(sizeof(float) * (n->c->n - 1));

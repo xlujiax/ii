@@ -41,7 +41,7 @@ void new_vertex()
     control_push(active_ncs->c, pt);
     ncs_recalc(active_ncs);
 
-    //active_pt = active_ncs->c->pts[active_ncs->c->n-1];
+    active_pt = active_ncs->c->pts[active_ncs->c->n-1];
   }
 }
 
@@ -71,18 +71,6 @@ void create()
 {
   window_width = 800;
   window_height = 600;
-
-  new_curve(100, 100);
-
-  printf("%d\n", ncss[0]->c->n);
-  
-  {
-    float pt[] = { 200, 100 };
-    control_push(ncss[0]->c, pt);
-  }
-  printf("%d\n", ncss[0]->c->n);
-
-  ncs_recalc(active_ncs);
 }
 
 void frame()
@@ -132,8 +120,6 @@ void frame()
   glEnd();
 
   glutSwapBuffers();
-
-  printf("ap = %d\n", active_pt);
 }
 
 void mouse_click(int button, int state, int x, int y)
