@@ -62,7 +62,7 @@ int main(int argc, char** argv)
   glLoadIdentity();
   
   // antialiasing
-  glEnable (GL_LINE_SMOOTH);
+  //glEnable (GL_LINE_SMOOTH);
   glEnable (GL_BLEND);
   glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glHint (GL_LINE_SMOOTH_HINT, GL_DONT_CARE);

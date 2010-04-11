@@ -85,3 +85,14 @@ void curve_degree_raise(Curve* c, int M)
     c->p[i][2] = 0;
   }
 }
+
+float curve_max_diff(Curve* c1, Curve* c2)
+{
+  assert(c1->n == c2->n);
+
+  float diff = 0;
+  for(int i = 0; i <= c1->n; ++i)
+    diff = max(diff, c1->p[i][1] - c2->p[i][1]);
+
+  return diff;
+}

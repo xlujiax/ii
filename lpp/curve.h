@@ -4,6 +4,7 @@
 #include <math.h>
 #include <malloc.h>
 #include <string.h>
+#include <assert.h>
 #include <stdlib.h>
 
 #include "polygon.h"
@@ -21,3 +22,4 @@ void curve_draw(Curve* c);
 void curve_draw_control_points(Curve* c);
 void curve_de_casteljau(Curve* c, float u, float *x, float* y);
 void curve_degree_raise(Curve* c, int n);
+float curve_max_diff(Curve* c1, Curve* c2);
