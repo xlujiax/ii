@@ -17,5 +17,10 @@ Curve* curve_line_poly(Curve* c, Line* l)
 
 int curve_line_intersection(Curve* c, Line* l, float **pts)
 {
-  return bezier_clipping(curve_line_poly(c, l), pts);
+  return curve_bezclip(curve_line_poly(c, l), pts);
+}
+
+int curve_line_intersection_quad(Curve* c, Line* l, float **pts)
+{
+  return curve_quadclip(curve_line_poly(c, l), pts);
 }

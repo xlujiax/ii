@@ -49,7 +49,7 @@ void recursive_root_finding(Curve* c, float minu, float maxu, float roots[], int
 }
 
 // polynomial operations
-int bezier_clipping(Curve* c, float **roots)
+int curve_bezclip(Curve* c, float **roots)
 {
   float *temp_roots = malloc((c->n + 1) *sizeof(float));
   int num_roots = 0;

@@ -13,7 +13,10 @@ hull: utils polygon curve
 bezierclip: line curve
 	gcc -std=c99 -c bezierclip.c
 
-intersection: bezierclip
+quadclip: line curve
+	gcc -std=c99 -c quadclip.c
+
+intersection: bezierclip quadclip
 	gcc -std=c99 -c intersection.c
 
 polygon: utils
@@ -26,7 +29,7 @@ line: utils
 	gcc -std=c99 -c line.c
 
 init: intersection reduction curve polygon line hull game
-	gcc -std=c99 init.c curve.o reduction.o polygon.o bezierclip.o intersection.o utils.o line.o hull.o game.o -lglut -lpng -o game.e
+	gcc -std=c99 init.c curve.o reduction.o polygon.o quadclip.o bezierclip.o intersection.o utils.o line.o hull.o game.o -lglut -lpng -o game.e
 
 all: init
 clear:
