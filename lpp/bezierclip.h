@@ -5,7 +5,6 @@
 #include "hull.h"
 #include "bezierclip.h"
 
-int curve_line_intersection(Curve* c, Line* l, float **pts);
-Curve* curve_line_poly(Curve* c, Line* l);
+void recursive_root_finding(Curve* c, float minu, float maxu, float roots[], int *num_roots);
+int bezier_clipping(Curve* c, float **roots);
 void bezier_split(Curve* c, float u, Curve** left, Curve** right);
-

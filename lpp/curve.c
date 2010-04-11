@@ -13,7 +13,7 @@ void curve_draw(Curve* c)
 {
   glMap1f(GL_MAP1_VERTEX_3, 0.0, 1.0, 3, c->n+1, &c->p[0][0]);
 
-  // todo: ilość segmentów powinna zależeć od długości krzywej
+  // todo: liczba segmentów powinna zależeć od długości krzywej
   const int segments = 50;
   glMapGrid1f(segments, 0, 1);
   glEvalMesh1(GL_LINE, 0, segments);
