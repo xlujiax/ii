@@ -28,10 +28,10 @@ void init()
 
   int n = 7;
 
-  color_curves[0][0] = 0.1;
-  color_curves[0][1] = 0.1;
-  color_curves[0][2] = 0.0;
-  color_curves[0][3] = 0.5;
+  color_curves[0][0] = 0.5;
+  color_curves[0][1] = 1.0;
+  color_curves[0][2] = 1.0;
+  color_curves[0][3] = 1.0;
   curves[0] = curve_create(n);
 
   for(int i = 0; i <= n; ++i)
@@ -41,10 +41,10 @@ void init()
     curves[0]->p[i][2] = 0.0f;
   }
 
-  color_curves[1][0] = 0.0;
-  color_curves[1][1] = 0.1;
-  color_curves[1][2] = 0.1;
-  color_curves[1][3] = 0.5;
+  color_curves[1][0] = 1.0;
+  color_curves[1][1] = 0.5;
+  color_curves[1][2] = 1.0;
+  color_curves[1][3] = 1.0;
   curves[1] = curve_create(n);
 
   for(int i = 0; i <= n; ++i)
@@ -54,10 +54,10 @@ void init()
     curves[1]->p[i][2] = 0.0f;
   }
   
-  color_curves[2][0] = 0.0;
-  color_curves[2][1] = 0.0;
-  color_curves[2][2] = 0.1;
-  color_curves[2][3] = 0.5;
+  color_curves[2][0] = 1.0;
+  color_curves[2][1] = 1.0;
+  color_curves[2][2] = 0.5;
+  color_curves[2][3] = 1.0;
   curves[2] = curve_create(n);
 
   for(int i = 0; i <= n; ++i)
@@ -75,24 +75,23 @@ void draw()
 {
   for(int c = 0; c < num_curves; ++c)
   {
-    //Polygon* hull = curve_convex_hull(curves[c]);
+    Polygon* hull = curve_convex_hull(curves[c]);
 
-    //glColor4fv(color_curves[c]);
-    //polygon_draw(hull);
+    glColor4f(1, 1, 1, 0.05);
+    polygon_draw(hull);
 
-    //glColor3f(0.25, 0.25, 0.25);
     //polygon_draw_wire(hull);
 
     //polygon_destroy(hull);
-
-    glColor3f(1,1,1);
+    
+    glColor4fv(color_curves[c]);
     curve_draw(curves[c]);
 
-    glColor3f(1,1,1);
+    //glColor3f(1,1,1);
     curve_draw_control_points(curves[c]);
     
-    //glColor3f(1,1,1);
-    //curve_draw_control_line(curves[c]);
+    glColor3f(0.2,0.2,0.2);
+    curve_draw_control_line(curves[c]);
   }
   
   // mouse

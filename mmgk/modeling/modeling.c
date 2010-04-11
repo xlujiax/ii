@@ -121,15 +121,19 @@ void erase_vertex()
 {
   if(active_ncs && active_pt)
   {
-    if(active_ncs->c->n == 1)
+    /*if(active_ncs->c->n == 1)
     {
       erase_ncs();
+      }*/
+    if(active_ncs->c->n == 0)
+    {
     }
     else
     {
       control_erase(active_ncs->c, active_pt);
       active_pt = 0;
-      ncs_recalc(active_ncs);
+      if(active_ncs->c->n > 1)
+	ncs_recalc(active_ncs);
     }
   }
 }
