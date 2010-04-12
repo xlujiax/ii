@@ -29,6 +29,7 @@ void recalc()
   curves[2] = curve_degree_reduction_rec(curves[0], 2);
   const float diff = curve_max_diff(curves[1], curves[0]);
   
+ 
   curves[3] = curve_create(2);
   for(int i = 0; i <= 2; ++i)
   {

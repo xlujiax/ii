@@ -42,7 +42,7 @@ void ncs_recalc(ncs* n)
     // wartości p i q są współdzielone przy obliczaniu ux i uy
     p[k] = lambda*q[k-1]+2;
     q[k] = (lambda - 1)/p[k];
-
+ 
     // osobne obliczenia dla obu współrzędnych
     ux[k] = (dx[k] - lambda*ux[k-1])/p[k];
     uy[k] = (dy[k] - lambda*uy[k-1])/p[k];

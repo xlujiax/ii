@@ -15,6 +15,38 @@
   TODO: Zastanow sie nad obsluga bledow. jesli przekazany obiekt do callback jest NULL to zwracamy NULL. Czy po utworzeniu callback adres obiektu moze sie zmienic? Czy wywolanie callback moze zmienic adres obiektu? Jesli tak to mozemy propagowac wartosci NULL.
 */
 
+template<typename T>
+  struct type_op
+{
+  typedef T bare_type;
+  typedef T& ref_type;
+  typedef T& const_ref_type;
+};
+
+template<typename T>
+  struct type_op<T&>
+{
+  typedef typename type_op<T>::bare_type bare_type;
+  typedef typename type_op<T>::ref_type ref_type;
+  typedef typename type_op<T>::const_ref_type const_ref_type;
+};
+
+template<typename T>
+  struct type_op<const T>
+{
+  typedef T bare_type;
+  typedef T& ref_type;
+  typedef const T& const_ref_type;
+};
+
+template<typename T>
+  struct type_op<const T&>
+{
+  typedef typename type_op<T>::bare_type bare_type;
+  typedef typename type_op<T>::ref_type ref_type;
+  typedef typename type_op<T>::const_ref_type const_ref_type;
+};
+
 struct Callback
 {
   void call() { do_call(); };
@@ -32,31 +64,43 @@ public:
   virtual void do_call() { func(); }
 };
 
-template<typename Func, typename Arg>
+template<typename Arg>
   class UnaryCallback : public Callback
 {
-  template<typename Func_, typename Arg_>
-    friend Callback* make_callback(Func_, Arg_);
+  template<typename Arg_>
+    friend Callback* make_callback(void (*)(Arg_),
+      typename type_op<Arg_>::bare_type);
 
+  typedef typename type_op<Arg>::const_ref_type ArgRef;
+  typedef void (*Func)(Arg);
+  
   Func func;
-  Arg arg;
-  UnaryCallback(Func f, Arg a) : func(f), arg(a) {}
+  ArgRef arg;
+  UnaryCallback(Func f, ArgRef a) : func(f), arg(a) {}
 public:
   virtual void do_call() { func(arg); }
   virtual ~UnaryCallback() {}
 };
 
-template<typename Func, typename Arg1, typename Arg2>
+template<typename Arg1, typename Arg2>
   class BinaryCallback : public Callback
 {
-  template<typename Func_, typename Arg1_, typename Arg2_>
-    friend Callback* make_callback(Func_, Arg1_, Arg2_);
+  template<typename Arg1_, typename Arg2_>
+    friend Callback* make_callback(
+      void (*)(Arg1_, Arg2_),
+      typename type_op<Arg1_>::bare_type,
+      typename type_op<Arg2_>::bare_type
+				   );
 
+  typedef typename type_op<Arg1>::const_ref_type Arg1Ref;
+  typedef typename type_op<Arg2>::const_ref_type Arg2Ref;
+  typedef void (*Func)(Arg1, Arg2);
+  
   Func func;
-  Arg1 arg1;
-  Arg2 arg2;
+  Arg1Ref arg1;
+  Arg2Ref arg2;
 
-  BinaryCallback(Func f, Arg1 a, Arg2 b) : func(f), arg1(a), arg2(b) {}
+  BinaryCallback(Func f, Arg1Ref a, Arg2Ref b) : func(f), arg1(a), arg2(b) {}
 public:
   virtual void do_call() { func(arg1, arg2); }
   virtual ~BinaryCallback() {}
@@ -68,26 +112,33 @@ template<typename Obj>
   template<typename Obj_>
     friend Callback* make_callback(void (Obj_::*)(), Obj_*);
 
-  void (Obj::*func)();
+  typedef void (Obj::*Func)();
+  
+  Func func;
   Obj* obj;
 
-  ZeroaryMemberCallback(void (Obj::*f)(), Obj* o) : func(f), obj(o) {}
+  ZeroaryMemberCallback(Func f, Obj* o) : func(f), obj(o) {}
 public:
   virtual void do_call() { (obj->*func)(); }
   virtual ~ZeroaryMemberCallback() {}
 };
 
-template<typename Func, typename Obj, typename Arg>
+template<typename Obj, typename Arg>
   class UnaryMemberCallback : public Callback
 {
-  template<typename Func_, typename Obj_, typename Arg_>
-    friend Callback* make_callback(Func_, Obj_*, Arg_);
+  template<typename Obj_, typename Arg_>
+    friend Callback* make_callback(void (Obj_::*)(Arg_),
+      Obj_*,
+      typename type_op<Arg_>::bare_type);
 
+  typedef typename type_op<Arg>::const_ref_type ArgRef;
+  typedef void (Obj::*Func)(Arg);
+  
   Func func;
   Obj* obj;
-  Arg arg;
+  ArgRef arg;
 
-  UnaryMemberCallback(Func f, Obj* o, Arg a) : func(f), obj(o), arg(a) {}
+  UnaryMemberCallback(Func f, Obj* o, ArgRef a) : func(f), obj(o), arg(a) {}
 public:
   virtual void do_call() { (obj->*func)(arg); }
   virtual ~UnaryMemberCallback() {}
@@ -115,16 +166,19 @@ Callback* make_callback(void (*f)())
   return new ZeroaryCallback(f);
 }
 
-template<typename Func, typename Arg>
-  Callback* make_callback(Func f, Arg arg)
+template<typename Arg>
+  Callback* make_callback(void (*f)(Arg),
+    typename type_op<Arg>::bare_type arg)
 {
-  return new UnaryCallback<Func, Arg>(f, arg);
+  return new UnaryCallback<Arg>(f, arg);
 }
 
-template<typename Func, typename Arg1, typename Arg2>
-  Callback* make_callback(Func f, Arg1 arg1, Arg2 arg2)
+template<typename Arg1, typename Arg2>
+  Callback* make_callback(void (*f)(Arg1, Arg2),
+    typename type_op<Arg1>::bare_type arg1,
+    typename type_op<Arg2>::bare_type arg2)
 {
-  return new BinaryCallback<Func, Arg1, Arg2>(f, arg1, arg2);
+  return new BinaryCallback<Arg1, Arg2>(f, arg1, arg2);
 }
 
 template<typename Obj>
@@ -133,10 +187,12 @@ template<typename Obj>
   return new ZeroaryMemberCallback<Obj>(f, obj);
 }
 
-template<typename Func, typename Obj, typename Arg>
-  Callback* make_callback(Func f, Obj* obj, Arg arg)
+template<typename Obj, typename Arg>
+  Callback* make_callback(void (Obj::*f)(Arg),
+    Obj* obj,
+    typename type_op<Arg>::bare_type arg)
 {
-  return new UnaryMemberCallback<Func, Obj, Arg>(f, obj, arg);
+  return new UnaryMemberCallback<Obj, Arg>(f, obj, arg);
 }
 
 template<typename Func, typename Obj, typename Arg1, typename Arg2>
@@ -146,7 +202,7 @@ template<typename Func, typename Obj, typename Arg1, typename Arg2>
 }
 
 void test_const(const int x) { std::cout << "test_const(" << x << ")" << std::endl; }
-void test_ref(const int x) { std::cout << "test_ref(" << x << ")" << std::endl; }
+void test_ref(int& x) { std::cout << "test_ref(" << x << ")" << std::endl; }
 void test_const_ref(const int& x) { std::cout << "test_const_ref(" << x << ")" << std::endl; }
 
 void test1() { std::cout << "test1()" << std::endl; }
@@ -306,6 +362,9 @@ int main(int, char*[])
     // trzecia to przekazanie funkcji poprzednio zachowanej w zmiennej odpowiedniego typu
     void (*s)(std::vector<int>::iterator, std::vector<int>::iterator) = &std::sort;
     Callback* sort_vi = make_callback(s, vi.begin(), vi.end());
+    
+    //Callback* sort_vi2 = make_callback(&std::sort<std::vector<int>::iterator, std::vector<int>::iterator>, vi.begin(), vi.end());
+    //sort_vi2->call();
 
     sort_vi->call();
 
@@ -313,6 +372,7 @@ int main(int, char*[])
     std::copy(vi.begin(), vi.end(), std::ostream_iterator<int>(std::cout, " "));
     std::cout << std::endl;
   }
+  
   {
     std::list<int> li;
     li.push_back(10);
@@ -348,4 +408,3 @@ int main(int, char*[])
   }
   return 0;
 }
-
