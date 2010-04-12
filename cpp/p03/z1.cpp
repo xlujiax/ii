@@ -144,18 +144,25 @@ public:
   virtual ~UnaryMemberCallback() {}
 };
 
-template<typename Func, typename Obj, typename Arg1, typename Arg2>
+template<typename Obj, typename Arg1, typename Arg2>
   class BinaryMemberCallback : public Callback
 {
-  template<typename Func_, typename Obj_, typename Arg1_, typename Arg2_>
-    friend Callback* make_callback(Func_, Obj_*, Arg1_, Arg2_);
+  template<typename Obj_, typename Arg1_, typename Arg2_>
+    friend Callback* make_callback(void (Obj_::*)(Arg1_, Arg2_),
+      Obj_*,
+      typename type_op<Arg1_>::bare_type,
+      typename type_op<Arg2_>::bare_type);
 
+  typedef typename type_op<Arg1>::const_ref_type Arg1Ref;
+  typedef typename type_op<Arg2>::const_ref_type Arg2Ref;
+  typedef void (Obj::*Func)(Arg1, Arg2);
+  
   Func func;
   Obj* obj;
-  Arg1 arg1;
-  Arg2 arg2;
+  Arg1Ref arg1;
+  Arg2Ref arg2;
 
-  BinaryMemberCallback(Func f, Obj* o, Arg1 a, Arg2 b) : func(f), obj(o), arg1(a), arg2(b) {}
+  BinaryMemberCallback(Func f, Obj* o, Arg1Ref a, Arg2Ref b) : func(f), obj(o), arg1(a), arg2(b) {}
 public:
   virtual void do_call() { (obj->*func)(arg1, arg2); }
   virtual ~BinaryMemberCallback() {}
@@ -195,10 +202,13 @@ template<typename Obj, typename Arg>
   return new UnaryMemberCallback<Obj, Arg>(f, obj, arg);
 }
 
-template<typename Func, typename Obj, typename Arg1, typename Arg2>
-  Callback* make_callback(Func f, Obj* obj, Arg1 arg1, Arg2 arg2)
+template<typename Obj, typename Arg1, typename Arg2>
+  Callback* make_callback(void (Obj::*f)(Arg1, Arg2),
+    Obj* obj,
+    typename type_op<Arg1>::bare_type arg1,
+    typename type_op<Arg2>::bare_type arg2)
 {
-  return new BinaryMemberCallback<Func, Obj, Arg1, Arg2>(f, obj, arg1, arg2);
+  return new BinaryMemberCallback<Obj, Arg1, Arg2>(f, obj, arg1, arg2);
 }
 
 void test_const(const int x) { std::cout << "test_const(" << x << ")" << std::endl; }
