@@ -217,24 +217,19 @@ void test_const_ref(const int& x) { std::cout << "test_const_ref(" << x << ")" <
 
 void test1() { std::cout << "test1()" << std::endl; }
 void test2(int x) { std::cout << "test2(" << x << ")" << std::endl; }
-void test3(int x, int y) { std::cout << "test3(" << x << "," << y << ")" << std::endl; }
+void test3(float x) { std::cout << "test3(" << x << ")" << std::endl; }
+void test4(float x, int y) { std::cout << "test4(" << x << "," << y << ")" << std::endl; }
 
-void test_two(int s, int x) { std::cout << "test_two(" << s << "," << x << ")" << std::endl; }
-
-struct TestClass {
-  std::string id;
-  TestClass(const std::string& s) : id(s) {}
-
-  void test4(const std::string s) { std::cout << id << "::test4(" << s << ")" << std::endl; }
-  void test5() { std::cout << id << "::test5()" << std::endl; }
-  void test6(int s)  { std::cout << id << "::test6(" << s << ")" << std::endl; }
-  void test7(int x, int s)  { std::cout << id << "::test7(" << x << "," << s << ")" << std::endl; }
+struct test_class {
+  void test5() { std::cout << "::test5()" << std::endl; }
+  void test6(const std::string& s)  { std::cout << "::test6(" << s << ")" << std::endl; }
+  void test7(int x, const std::string& s)  { std::cout << "::test7(" << x << "," << s << ")" << std::endl; }
 };
 
 template<typename Obj>
   void test_call_member(Obj o, void (Obj::*f)()) { (o.*f)(); }
 
-struct base_test { virtual void greet() { std::cout << "base_est::greet()" << std::endl; } };
+struct base_test { virtual void greet() { std::cout << "base_test::greet()" << std::endl; } };
 struct derived_test : base_test { void greet() { std::cout << "derived_test::greet()" << std::endl; } };
 
 template<typename T>
@@ -266,27 +261,42 @@ template<int Ratio>
 int main(int, char*[])
 {
   {
-    TestClass tc("TC1");
+    test_class t;
 
     std::vector<callback*> calls;
 
-    calls.push_back(make_callback(&test_const, 9));
+    int a = 9; // dla test_ref
 
-    int a = 9;
+    calls.push_back(make_callback(&test_const, 9));
     calls.push_back(make_callback(&test_ref, a));
-    
     calls.push_back(make_callback(&test_const_ref, 9));
 
-    calls.push_back(make_callback(&test_two, 7, 90));
-    
     calls.push_back(make_callback(&test1));
     calls.push_back(make_callback(&test2, 10));
-    calls.push_back(make_callback(&test3, 20, 31));
-    calls.push_back(make_callback(&TestClass::test5, &tc));
+    calls.push_back(make_callback(&test3, 3.1415));
+    calls.push_back(make_callback(&test4, 2.81, 6));
+    calls.push_back(make_callback(&test_class::test5, &t));
 
-    //calls.push_back(make_callback(&TestClass::test4, &tc, std::string("asdf")));
-    calls.push_back(make_callback(&TestClass::test6, &tc, 6));
-    calls.push_back(make_callback(&TestClass::test7, &tc, 7, 8));
+    std::string h = "hello";
+    std::string hw = "hello world";
+    std::string& rh = h;
+    std::string& rhw = hw;
+    const std::string& crh = "hello";
+    const std::string& crhw = "hello world";
+    const std::string ch = "hello";
+    const std::string chw = "hello world";
+    
+    calls.push_back(make_callback(&test_class::test6, &t, h));
+    calls.push_back(make_callback(&test_class::test7, &t, 7, hw));
+    
+    calls.push_back(make_callback(&test_class::test6, &t, rh));
+    calls.push_back(make_callback(&test_class::test7, &t, 7, rhw));
+    
+    calls.push_back(make_callback(&test_class::test6, &t, ch));
+    calls.push_back(make_callback(&test_class::test7, &t, 7, chw));
+    
+    calls.push_back(make_callback(&test_class::test6, &t, crh));
+    calls.push_back(make_callback(&test_class::test7, &t, 7, crhw));
 
     for(std::vector<callback*>::iterator i = calls.begin(); i != calls.end(); ++i)
       (*i)->call();
