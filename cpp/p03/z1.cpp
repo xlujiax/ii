@@ -250,6 +250,17 @@ template<typename T>
 void call_callback(callback* c) { c->call(); }
 void test_callback(int x) { std::cout << "test_callback(" << x << ")" << std::endl; }
 
+
+void visit_9(std::vector<int>& v) { v.push_back(9); }
+void visit_8(std::vector<int>& v) { v.push_back(8); }
+
+void visit_arg(std::vector<int>& v, int arg) { v.push_back(arg); }
+
+template<int Ratio>
+  void visit_template(std::vector<int>& v) { v.push_back(Ratio); }
+
+
+
 /*
  * Wykonywanie testów
  */
@@ -396,6 +407,29 @@ int main(int, char*[])
     callback* b = make_callback(&call_callback, a);
 
     b->call();
+  }
+
+   {
+    std::vector<int> vis;
+
+    callback* a = make_callback(&visit_arg, vis, 3);
+    callback* c = make_callback(&visit_9, vis);
+    callback* d = make_callback(&visit_8, vis);
+
+    // szablonowa funkcja jako argument
+    callback* e = make_callback(&visit_template<11>, vis);
+
+    a->call();
+    c->call();
+    d->call();
+
+    // drugie wykorzystanie c
+    c->call();
+    e->call();
+
+    std::cout << "Visitor: ";
+    std::copy(vis.begin(), vis.end(), std::ostream_iterator<int>(std::cout, " "));
+    std::cout << std::endl;
   }
   
   return 0;
