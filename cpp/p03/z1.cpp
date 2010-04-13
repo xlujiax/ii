@@ -29,20 +29,18 @@ template<typename Arg>
 { return new unary<Arg>(f, arg); }
 
  */
-
-
    
 
 /*
  * Cecha pozwalająca wyciągnąć referencję do typu:
- * T        -> T const&
+ * T        -> const T&
  * T&       -> T&
- * T const  -> T const&
- * T const& -> T const&
+ * const T  -> const T&
+ * const T& -> const T&
 */
 template<typename T>
   struct ref_trait
-{ typedef T const& type; };
+{ typedef const T& type; };
 
 template<typename T>
   struct ref_trait<T&>
