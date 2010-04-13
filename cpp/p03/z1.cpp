@@ -30,48 +30,27 @@ template<typename Arg>
 
  */
 
-/*
-  pomysly na testy:
-  * jako argument funkcji wskaznik na funkcje (+skladowa)
-  * przekazuj do callback funkcje skladowe szablonowe
-  * przekazuj do callback funkcje skladowe szablonowych klas
-  * przekazuj do callback szablonowe skladowe szablonowych klas
 
-  TODO: Zastanow sie nad obsluga bledow. jesli przekazany obiekt do callback jest NULL to zwracamy NULL. Czy po utworzeniu callback adres obiektu moze sie zmienic? Czy wywolanie callback moze zmienic adres obiektu? Jesli tak to mozemy propagowac wartosci NULL.
+   
+
+/*
+ * Cecha pozwalająca wyciągnąć referencję do typu:
+ * T        -> T const&
+ * T&       -> T&
+ * T const  -> T const&
+ * T const& -> T const&
 */
+template<typename T>
+  struct ref_trait
+{ typedef T const& type; };
+
+template<typename T>
+  struct ref_trait<T&>
+{ typedef T& type; };
 
 /*
- * cecha pozwalająca wyciągnąć typ bez modyfikatorów:
- * - T           -> T
- * - T&          -> T
- * - const T     -> T
- * - const T&    -> T
- * - volatile T  -> T
- * - volatile T& -> T
-*/ 
-template<typename T>
-  struct copy_trait
-{ typedef T type; };
-
-template<typename T>
-  struct copy_trait<T&>
-{ typedef typename copy_trait<T>::type type; };
-
-template<typename T>
-  struct copy_trait<const T>
-{ typedef T type; };
-
-template<typename T>
-  struct copy_trait<const T&>
-{ typedef typename copy_trait<T>::type type; };
-
-template<typename T>
-  struct copy_trait<volatile T>
-{ typedef T type; };
-
-template<typename T>
-  struct copy_trait<volatile T&>
-{ typedef typename copy_trait<T>::type type; };
+ * Klasy przechowujące argumenty callback'ów
+ */
 
 struct callback
 {
@@ -79,8 +58,6 @@ struct callback
 protected:
   virtual void do_call() = 0;
 };
-
-// klasy przechowujące argumenty callback'ów
 
 class zeroary : public callback
 {
@@ -98,15 +75,15 @@ template<typename Arg>
 {
   template<typename Arg_>
     friend callback* make_callback(void (*)(Arg_),
-      typename copy_trait<Arg_>::type);
+      typename ref_trait<Arg_>::type);
 
-  typedef typename copy_trait<Arg>::type ArgCopy;
+  typedef typename ref_trait<Arg>::type ArgRef;
   typedef void (*Func)(Arg);
   
   Func func;
-  ArgCopy arg;
+  ArgRef arg;
   
-  unary(Func f, Arg a) : func(f), arg(a) {}
+  unary(Func f, ArgRef a) : func(f), arg(a) {}
 public:
   virtual void do_call() { func(arg); }
   virtual ~unary() {}
@@ -118,18 +95,18 @@ template<typename Arg1, typename Arg2>
   template<typename Arg1_, typename Arg2_>
     friend callback* make_callback(
       void (*)(Arg1_, Arg2_),
-      typename copy_trait<Arg1_>::type,
-      typename copy_trait<Arg2_>::type);
+      typename ref_trait<Arg1_>::type,
+      typename ref_trait<Arg2_>::type);
 
-  typedef typename copy_trait<Arg1>::type Arg1Copy;
-  typedef typename copy_trait<Arg2>::type Arg2Copy;
+  typedef typename ref_trait<Arg1>::type Arg1Ref;
+  typedef typename ref_trait<Arg2>::type Arg2Ref;
   typedef void (*Func)(Arg1, Arg2);
   
   Func func;
-  Arg1Copy arg1;
-  Arg2Copy arg2;
+  Arg1Ref arg1;
+  Arg2Ref arg2;
 
-  binary(Func f, Arg1 a, Arg2 b) : func(f), arg1(a), arg2(b) {}
+  binary(Func f, Arg1Ref a, Arg2Ref b) : func(f), arg1(a), arg2(b) {}
 public:
   virtual void do_call() { func(arg1, arg2); }
   virtual ~binary() {}
@@ -158,16 +135,16 @@ template<typename Obj, typename Arg>
   template<typename Obj_, typename Arg_>
     friend callback* make_callback(void (Obj_::*)(Arg_),
       Obj_*,
-      typename copy_trait<Arg_>::type);
+      typename ref_trait<Arg_>::type);
 
-  typedef typename copy_trait<Arg>::type ArgCopy;
+  typedef typename ref_trait<Arg>::type ArgRef;
   typedef void (Obj::*Func)(Arg);
   
   Func func;
   Obj* obj;
-  ArgCopy arg;
+  ArgRef arg;
 
-  unary_mem(Func f, Obj* o, Arg a) : func(f), obj(o), arg(a) {}
+  unary_mem(Func f, Obj* o, ArgRef a) : func(f), obj(o), arg(a) {}
 public:
   virtual void do_call() { (obj->*func)(arg); }
   virtual ~unary_mem() {}
@@ -179,38 +156,40 @@ template<typename Obj, typename Arg1, typename Arg2>
   template<typename Obj_, typename Arg1_, typename Arg2_>
     friend callback* make_callback(void (Obj_::*)(Arg1_, Arg2_),
       Obj_*,
-      typename copy_trait<Arg1_>::type,
-      typename copy_trait<Arg2_>::type);
+      typename ref_trait<Arg1_>::type,
+      typename ref_trait<Arg2_>::type);
 
-  typedef typename copy_trait<Arg1>::type Arg1Copy;
-  typedef typename copy_trait<Arg2>::type Arg2Copy;
+  typedef typename ref_trait<Arg1>::type Arg1Ref;
+  typedef typename ref_trait<Arg2>::type Arg2Ref;
   typedef void (Obj::*Func)(Arg1, Arg2);
   
   Func func;
   Obj* obj;
-  Arg1Copy arg1;
-  Arg2Copy arg2;
+  Arg1Ref arg1;
+  Arg2Ref arg2;
 
-  binary_mem(Func f, Obj* o, Arg1 a, Arg2 b) : func(f), obj(o), arg1(a), arg2(b) {}
+  binary_mem(Func f, Obj* o, Arg1Ref a, Arg2Ref b) : func(f), obj(o), arg1(a), arg2(b) {}
 public:
   virtual void do_call() { (obj->*func)(arg1, arg2); }
   virtual ~binary_mem() {}
 };
 
-// przeciążenia make_callback
+/*
+ * Przeciążenia make_callback
+ */
 
 callback* make_callback(void (*f)())
 { return new zeroary(f); }
 
 template<typename Arg>
   callback* make_callback(void (*f)(Arg),
-    typename copy_trait<Arg>::type arg)
+    typename ref_trait<Arg>::type arg)
 { return new unary<Arg>(f, arg); }
 
 template<typename Arg1, typename Arg2>
   callback* make_callback(void (*f)(Arg1, Arg2),
-    typename copy_trait<Arg1>::type arg1,
-    typename copy_trait<Arg2>::type arg2)
+    typename ref_trait<Arg1>::type arg1,
+    typename ref_trait<Arg2>::type arg2)
 { return new binary<Arg1, Arg2>(f, arg1, arg2); }
 
 template<typename Obj>
@@ -220,17 +199,19 @@ template<typename Obj>
 template<typename Obj, typename Arg>
   callback* make_callback(void (Obj::*f)(Arg),
     Obj* obj,
-    typename copy_trait<Arg>::type arg)
+    typename ref_trait<Arg>::type arg)
 { return new unary_mem<Obj, Arg>(f, obj, arg); }
 
 template<typename Obj, typename Arg1, typename Arg2>
   callback* make_callback(void (Obj::*f)(Arg1, Arg2),
     Obj* obj,
-    typename copy_trait<Arg1>::type arg1,
-    typename copy_trait<Arg2>::type arg2)
+    typename ref_trait<Arg1>::type arg1,
+    typename ref_trait<Arg2>::type arg2)
 { return new binary_mem<Obj, Arg1, Arg2>(f, obj, arg1, arg2); }
 
-// funkcje testowe
+/*
+ * Funkcje testowe
+ */
 
 void test_const(const int x) { std::cout << "test_const(" << x << ")" << std::endl; }
 void test_ref(int& x) { std::cout << "test_ref(" << x << ")" << std::endl; }
@@ -266,7 +247,12 @@ template<typename T>
   void push_two_weird(const T& a, T b) { v.push_back(a); v.push_back(b); }
 };
 
-// wykonywanie testów
+void call_callback(callback* c) { c->call(); }
+void test_callback(int x) { std::cout << "test_callback(" << x << ")" << std::endl; }
+
+/*
+ * Wykonywanie testów
+ */
 
 int main(int, char*[])
 {
@@ -276,7 +262,10 @@ int main(int, char*[])
     std::vector<callback*> calls;
 
     calls.push_back(make_callback(&test_const, 9));
-    calls.push_back(make_callback(&test_ref, 9));
+
+    int a = 9;
+    calls.push_back(make_callback(&test_ref, a));
+    
     calls.push_back(make_callback(&test_const_ref, 9));
 
     calls.push_back(make_callback(&test_two, 7, 90));
@@ -286,10 +275,10 @@ int main(int, char*[])
     calls.push_back(make_callback(&test3, 20, 31));
     calls.push_back(make_callback(&TestClass::test5, &tc));
 
-    calls.push_back(make_callback(&TestClass::test4, &tc, std::string("asdf")));
+    //calls.push_back(make_callback(&TestClass::test4, &tc, std::string("asdf")));
     calls.push_back(make_callback(&TestClass::test6, &tc, 6));
     calls.push_back(make_callback(&TestClass::test7, &tc, 7, 8));
-    
+
     for(std::vector<callback*>::iterator i = calls.begin(); i != calls.end(); ++i)
       (*i)->call();
   }
@@ -400,7 +389,14 @@ int main(int, char*[])
     std::cout << "List sorted: ";
     std::copy(li.begin(), li.end(), std::ostream_iterator<int>(std::cout, " "));
     std::cout << std::endl;
-
   }
+
+  {
+    callback* a = make_callback(&test_callback, 12345);
+    callback* b = make_callback(&call_callback, a);
+
+    b->call();
+  }
+  
   return 0;
 }
