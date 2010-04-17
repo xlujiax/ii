@@ -61,15 +61,31 @@ typedef list<double,
 	     char,
 	     bool> priority;
 
+
+template<typename T>
+  struct bare
+{ typedef T type; };
+
+template<typename T>
+  struct bare<T&>
+{ typedef T type; };
+
 template<typename T, typename U>
-  typename find_first<T, U, priority>::result max(T t, U u)
+  typename find_first<
+  typename bare<T>::type,
+  typename bare<U>::type, priority
+  >::result
+  max(T t, U u)
 {
   return (t > u) ? t : u;
 }
 
 int main(int, char*[])
 {
-  std::cout << max((bool)1, (unsigned long long)78798) << std::endl;
+  const double ci = 9;
+  int i = 1;
+  int& ri = i;
+  std::cout << max(ci, ri) << std::endl;
   return 0;
 }
   

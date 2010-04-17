@@ -38,9 +38,9 @@ template<typename Arg>
  * const T  -> const T&
  * const T& -> const T&
 */
-template<typename T>
-  struct ref_trait
-{ typedef const T& type; };
+   template<typename T>
+     struct ref_trait
+   { typedef const T& type; };
 
 template<typename T>
   struct ref_trait<T&>
