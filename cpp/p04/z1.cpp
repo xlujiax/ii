@@ -70,6 +70,18 @@ template<typename T>
   struct bare<T&>
 { typedef T type; };
 
+template<typename T>
+  struct bare<T*>
+{ typedef T type; };
+
+template<typename T>
+  inline typename bare<T>::type value(T t)
+{ return t; }
+
+template<typename T>
+  inline typename bare<T>::type value(T* t)
+{ return *t; }
+
 template<typename T, typename U>
   typename find_first<
   typename bare<T>::type,
@@ -77,15 +89,34 @@ template<typename T, typename U>
   >::result
   max(T t, U u)
 {
-  return (t > u) ? t : u;
+  return (value(t) > value(u)) ? value(t) : value(u);
 }
 
 int main(int, char*[])
 {
-  const double ci = 9;
-  int i = 1;
+  const double cd = 9;
+  double d = 9;
+  double& rd = d;
+  const double& crd = cd;
+  double* pd = &d;
+  const double* cpd = &cd;
+  
+  const float cf = 9;
+  float f = 9;
+  float& rf = f;
+  const float& crf = cf;
+  float* pf = &f;
+  const float* cpf = &cf;
+  
+  const int ci = 9;
+  int i = 9;
   int& ri = i;
+  const int& cri = ci;
+  int* pi = &i;
+  const int* cpi = &ci;
+  
   std::cout << max(ci, ri) << std::endl;
+  std::cout << max(pi, ri) << std::endl;
   return 0;
 }
   
