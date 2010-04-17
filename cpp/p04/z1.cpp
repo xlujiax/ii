@@ -96,7 +96,7 @@ template<typename T>
 { typedef T type; };
 
 /*
- * Właściwa wartość zmiennej - dereferencja, kiedy potrzebna
+ * Właściwa wartość zmiennej - wyłuskanie, kiedy potrzebne
  */
 
 template<typename T>
