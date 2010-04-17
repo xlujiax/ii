@@ -68,6 +68,8 @@ typedef list<long double,
  * T -> T
  * T& -> T
  * T* -> T
+ * const T* -> T
+ * const T& -> T
  */
 
 template<typename T>
@@ -91,7 +93,7 @@ template<typename T>
 { typedef T type; };
 
 /*
- * Właściwa wartość zmennej - dereferencja, kiedy potrzebna
+ * Właściwa wartość zmiennej - dereferencja, kiedy potrzebna
  */
 
 template<typename T>
