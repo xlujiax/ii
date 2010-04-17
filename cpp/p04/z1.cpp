@@ -1,8 +1,6 @@
 #include <iostream>
 
 struct empty {};
-struct found {};
-struct not_found {};
 
 template<typename...> struct
   list;
@@ -19,28 +17,59 @@ template<typename H, typename... T>
   typedef list<T...> tail;
 };
 
-template<typename El, typename lst>
-  struct find
+template<typename El1, typename El2, typename lst>
+  struct find_first
 {
-  static const bool result = find<El, typename lst::tail>::result;
+  typedef typename find_first<El1, El2, typename lst::tail>::result result;
+};
+
+template<typename El1, typename El2, typename... lst>
+  struct find_first<El1, El2, list<El1, lst...> >
+{
+  typedef El1 result;
+};
+
+template<typename El1, typename El2, typename... lst>
+  struct find_first<El1, El2, list<El2, lst...> >
+{
+  typedef El2 result;
 };
 
 template<typename El, typename... lst>
-  struct find<El, list<El, lst...> >
+  struct find_first<El, El, list<El, lst...> >
 {
-  static const bool result = true;
+  typedef El result;
 };
 
-template<typename El1>
-  struct find<El1, empty>
+template<typename El1, typename El2>
+  struct find_first<El1, El2, list<> >
 {
-  static const bool result = false;
+  typedef void result;
 };
+
+typedef list<double,
+	     float,
+	     unsigned long long,
+	     long long,
+	     unsigned long int,
+	     long int,
+	     unsigned int,
+	     int,
+	     unsigned short,
+	     short,
+	     unsigned char,
+	     char,
+	     bool> priority;
+
+template<typename T, typename U>
+  typename find_first<T, U, priority>::result max(T t, U u)
+{
+  return (t > u) ? t : u;
+}
 
 int main(int, char*[])
 {
-  std::cout << find<int, list<double, float, long, int> >::result << std::endl;
-  
+  std::cout << max((bool)1, (unsigned long long)78798) << std::endl;
   return 0;
 }
   
