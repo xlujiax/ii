@@ -1,4 +1,7 @@
 #include <iostream>
+#include <typeinfo>
+#include <limits>
+#include <cassert>
 
 // http://www.cplusplus.com/doc/tutorial/variables/
 
@@ -137,13 +140,17 @@ typedef unsigned short ushort;
   type* p_##type = &n_##type;	     \
   const type* cp_##type = &c_##type;
 
-#define TEST_AUX(type1, type2)                      \
-  std::cout << max(type1, c_##type2) << std::endl;  \
-  std::cout << max(type1, n_##type2) << std::endl;  \
-  std::cout << max(type1, r_##type2) << std::endl;  \
-  std::cout << max(type1, cr_##type2) << std::endl; \
-  std::cout << max(type1, p_##type2) << std::endl;  \
-  std::cout << max(type1, cp_##type2) << std::endl; \
+#define PRINT_TEST(var1, var2) \
+  std::cout << "max((" << typeid(var1).name() << ")" << value(var1) << ", (" << typeid(var2).name() << ")" <<  value(var2) << " = (" << typeid(max(var1, var2)).name() << ")" << max(var1, var2) << std::endl; \
+  assert(max(var1, var2) == value(var1) || max(var1, var2) == value(var2));
+
+#define TEST_AUX(type1, type2)  \
+  PRINT_TEST(type1, c_##type2)	\
+  PRINT_TEST(type1, n_##type2)  \
+  PRINT_TEST(type1, r_##type2)  \
+  PRINT_TEST(type1, cr_##type2) \
+  PRINT_TEST(type1, p_##type2)  \
+  PRINT_TEST(type1, cp_##type2) \
 
 #define TEST_ALL(type1, type2) \
   TEST_AUX(n_##type1, type2)   \
@@ -168,17 +175,17 @@ typedef unsigned short ushort;
 
 int main(int, char*[])
 {
-  VARIABLES(longdouble, 8.191919);
-  VARIABLES(double, 3.14);
-  VARIABLES(float, 2.81);
-  VARIABLES(ulonglong, 212);
-  VARIABLES(int, 3121);
-  VARIABLES(uint, 2121);
-  VARIABLES(short, 23);
-  VARIABLES(ushort, 13);
-  VARIABLES(char, 69);
-  VARIABLES(uchar, 67);
-  VARIABLES(bool, true);
+  VARIABLES(longdouble, std::numeric_limits<longdouble>::max());
+  VARIABLES(double,     std::numeric_limits<double>::max());
+  VARIABLES(float,      std::numeric_limits<float>::max());
+  VARIABLES(ulonglong,  std::numeric_limits<ulonglong>::max());
+  VARIABLES(int,        std::numeric_limits<int>::max());
+  VARIABLES(uint,       std::numeric_limits<uint>::max());
+  VARIABLES(short,      std::numeric_limits<short>::max());
+  VARIABLES(ushort,     std::numeric_limits<ushort>::max());
+  VARIABLES(char,       std::numeric_limits<char>::max());
+  VARIABLES(uchar,      std::numeric_limits<uchar>::max());
+  VARIABLES(bool,       std::numeric_limits<bool>::max());
 
   TEST(longdouble);
   TEST(double);
