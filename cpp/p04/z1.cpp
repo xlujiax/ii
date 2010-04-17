@@ -21,7 +21,7 @@ template<typename H, typename... T>
 
 /*
  * Wyszukiwanie w liście pierwszego z dwóch elementów El1, El2
- * Zwraca pierwszy napotkany typ
+ * Zwraca pierwszy napotkany typ lub void w przypadku nie znalezienia żadnego typu
  */
 
 template<typename El1, typename El2, typename lst>
