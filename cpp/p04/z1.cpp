@@ -11,16 +11,12 @@
 
 struct empty {};
 
-template<typename...> struct
-  list;
-
-template<>
-  struct list<>
-{ typedef empty T; };
-
-template<typename H, typename... T>
-  struct list<H, T...>
-{ typedef list<T...> tail; };
+template<typename T, typename U> struct
+  list
+{
+  typedef T head;
+  typedef U tail;
+};
 
 /*
  * Wyszukiwanie w liście pierwszego z dwóch elementów El1, El2
@@ -31,20 +27,20 @@ template<typename El1, typename El2, typename lst>
   struct find_first
 { typedef typename find_first<El1, El2, typename lst::tail>::result result; };
 
-template<typename El1, typename El2, typename... lst>
-  struct find_first<El1, El2, list<El1, lst...> >
+template<typename El1, typename El2, typename L>
+  struct find_first<El1, El2, list<El1, L> >
 { typedef El1 result; };
 
-template<typename El1, typename El2, typename... lst>
-  struct find_first<El1, El2, list<El2, lst...> >
+template<typename El1, typename El2, typename L>
+  struct find_first<El1, El2, list<El2, L> >
 { typedef El2 result; };
 
-template<typename El, typename... lst>
-  struct find_first<El, El, list<El, lst...> >
+template<typename El, typename L>
+  struct find_first<El, El, list<El, L> >
 { typedef El result; };
 
 template<typename El1, typename El2>
-  struct find_first<El1, El2, list<> >
+  struct find_first<El1, El2, empty>
 { typedef void result; };
 
 /*
@@ -52,19 +48,19 @@ template<typename El1, typename El2>
  */
 
 typedef list<long double,
-	     double,
-	     float,
-	     unsigned long long,
-	     long long,
-	     unsigned long int,
-	     long int,
-	     unsigned int,
-	     int,
-	     unsigned short,
-	     short,
-	     unsigned char,
-	     char,
-	     bool> priority;
+	list<double,
+	list<float,
+	list<unsigned long long,
+	list<long long,
+	list<unsigned long int,
+	list<long int,
+	list<unsigned int,
+	list<int,
+	list<unsigned short,
+	list<short,
+	list<unsigned char,
+	list<char,
+	list<bool, empty> > > > > > > > > > > > > > priority;
 /*
  * Cecha wyciągająca typ
  * Mapowanie:
