@@ -121,8 +121,6 @@ template<typename T, typename U>
  * Testy
  */
 
-typedef unsigned long long ulonglong;
-typedef long long longlong;
 typedef long double longdouble;
 typedef unsigned int uint;
 typedef unsigned char uchar;
@@ -134,9 +132,9 @@ typedef unsigned short ushort;
   type& r_##type = n_##type;	     \
   const type& cr_##type = c_##type;  \
   type* p_##type = &n_##type;	     \
-  type** pp_##type = &p_##type;	     \
+  const type* cp_##type = &c_##type; \
+  type** pp_##type = &p_##type;     \
   type*** ppp_##type = &pp_##type;    \
-  const type* cp_##type = &c_##type;
 
 #define PRINT_TEST(var1, var2) \
   std::cout << "max((" << typeid(var1).name() << ")" << value(var1) << ", (" << typeid(var2).name() << ")" <<  value(var2) << " = (" << typeid(max(var1, var2)).name() << ")" << max(var1, var2) << std::endl; \
@@ -144,29 +142,28 @@ typedef unsigned short ushort;
 
 #define TEST_AUX(type1, type2)  \
   PRINT_TEST(type1, c_##type2)	\
-  PRINT_TEST(type1, n_##type2)  \
-  PRINT_TEST(type1, r_##type2)  \
+  PRINT_TEST(type1, n_##type2)		\
+  PRINT_TEST(type1, r_##type2)	\
   PRINT_TEST(type1, cr_##type2) \
-  PRINT_TEST(type1, p_##type2)  \
+  PRINT_TEST(type1, p_##type2)		\
   PRINT_TEST(type1, cp_##type2) \
-  PRINT_TEST(type1, pp_##type2) \
+  PRINT_TEST(type1, pp_##type2)		\
   PRINT_TEST(type1, ppp_##type2)
 
 #define TEST_ALL(type1, type2) \
-  TEST_AUX(n_##type1, type2)   \
+  TEST_AUX(n_##type1, type2) \
   TEST_AUX(c_##type1, type2)   \
-  TEST_AUX(r_##type1, type2)   \
+  TEST_AUX(r_##type1, type2) \
   TEST_AUX(cr_##type1, type2)  \
-  TEST_AUX(p_##type1, type2)   \
+  TEST_AUX(p_##type1, type2) \
   TEST_AUX(cp_##type1, type2)  \
-  TEST_AUX(pp_##type1, type2)  \
+  TEST_AUX(pp_##type1, type2)			\
   TEST_AUX(ppp_##type1, type2)
 
 #define TEST(type)            \
   TEST_ALL(type, longdouble); \
   TEST_ALL(type, double);     \
   TEST_ALL(type, float);      \
-  TEST_ALL(type, ulonglong);  \
   TEST_ALL(type, int);        \
   TEST_ALL(type, uint);       \
   TEST_ALL(type, short);      \
@@ -180,7 +177,6 @@ int main(int, char*[])
   VARIABLES(longdouble, std::numeric_limits<longdouble>::max());
   VARIABLES(double,     std::numeric_limits<double>::max());
   VARIABLES(float,      std::numeric_limits<float>::max());
-  VARIABLES(ulonglong,  std::numeric_limits<ulonglong>::max());
   VARIABLES(int,        std::numeric_limits<int>::max());
   VARIABLES(uint,       std::numeric_limits<uint>::max());
   VARIABLES(short,      std::numeric_limits<short>::max());
@@ -192,7 +188,6 @@ int main(int, char*[])
   TEST(longdouble);
   TEST(double);
   TEST(float);
-  TEST(ulonglong);
   TEST(int);
   TEST(uint);
   TEST(short);
@@ -200,7 +195,7 @@ int main(int, char*[])
   TEST(char);
   TEST(uchar);
   TEST(bool);
-  
+
   return 0;
 }
   
