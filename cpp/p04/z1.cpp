@@ -50,8 +50,6 @@ template<typename El1, typename El2>
 typedef list<long double,
 	list<double,
 	list<float,
-	list<unsigned long long,
-	list<long long,
 	list<unsigned long int,
 	list<long int,
 	list<unsigned int,
@@ -60,7 +58,7 @@ typedef list<long double,
 	list<short,
 	list<unsigned char,
 	list<char,
-	list<bool, empty> > > > > > > > > > > > > > priority;
+	list<bool, empty> > > > > > > > > > > > priority;
 /*
  * Cecha wyciągająca typ
  * Mapowanie:
