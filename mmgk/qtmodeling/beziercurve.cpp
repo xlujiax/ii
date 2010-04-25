@@ -6,6 +6,7 @@ BezierCurve::BezierCurve()
 
 void BezierCurve::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+	painter->setRenderHint(QPainter::Antialiasing);
     painter->setBrush(Qt::red);
     painter->setPen(QPen(Qt::black, 0));
 
@@ -20,6 +21,8 @@ void BezierCurve::append_control(ControlPoint* cp)
 
 QRectF BezierCurve::boundingRect() const
 {
+	float adjust = 10;
+
 	if(controlPoints.empty())
 		return QRect(0,0,0,0);
 	else
@@ -42,6 +45,12 @@ QRectF BezierCurve::boundingRect() const
 				maxy = cp->y();
 		}
 
-		return QRect(minx, miny, maxx - minx, maxy - miny);
+		return QRect(minx - adjust, miny - adjust, maxx - minx + 2* adjust, maxy - miny + 2* adjust);
 	}
+}
+
+void BezierCurve::removePoint(ControlPoint* pt)
+{
+	controlPoints.remove(controlPoints.indexOf(pt));
+	update(boundingRect());
 }

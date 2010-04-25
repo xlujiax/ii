@@ -3,12 +3,14 @@
 
 #include <QGraphicsItem>
 #include <QVector>
+#include <QObject>
 #include "controlpoint.h"
 
 class ControlPoint;
 
-class BezierCurve : public QGraphicsItem
+class BezierCurve : public QObject, public QGraphicsItem
 {
+	Q_OBJECT
 private:
 	QVector<ControlPoint*> controlPoints;
 public:
@@ -17,6 +19,8 @@ public:
 	void append_control(ControlPoint*);
 
 	QRectF boundingRect() const;
+
+	void removePoint(ControlPoint*);
 };
 
 #endif // BEZIERCURVE_H

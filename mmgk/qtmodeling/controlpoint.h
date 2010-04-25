@@ -1,26 +1,35 @@
 #ifndef CONTROLPOINT_H
 #define CONTROLPOINT_H
 
+#include <QObject>
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QGraphicsItem>
 #include <QStyleOption>
 #include <QMenu>
-#include <QObject>
 #include <QDebug>
 
 #include "mainwindow.h"
 #include "beziercurve.h"
 
+class Reciver : public QObject
+{
+	Q_OBJECT
+public slots:
+	void recive() { qDebug("dkjahdksjhdkjashdkashdaskj\n"); }
+};
+
 class BezierCurve;
 
-class ControlPoint : public QGraphicsItem
+class ControlPoint : public QObject, public QGraphicsItem
 {
+	Q_OBJECT
 private:
 	BezierCurve* bezierCurve;
 public:
 	ControlPoint(BezierCurve* bezierCurve);
+	virtual ~ControlPoint() {}
 
     QRectF boundingRect() const;
     QPainterPath shape() const;
@@ -37,6 +46,9 @@ protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 	virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
+
+public slots:
+	void removeFromCurve();
 };
 
 #endif // CONTROLPOINT_H

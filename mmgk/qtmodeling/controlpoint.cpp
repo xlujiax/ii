@@ -7,9 +7,11 @@ ControlPoint::ControlPoint(BezierCurve* bc) : bezierCurve(bc)
      setAcceptHoverEvents(true);
      setAcceptDrops(true);
 
+	 setZValue(1);
+
      size = 15;
      hover = false;
-     selected = false;
+	 selected = false;
 }
 
 QRectF ControlPoint::boundingRect() const
@@ -27,12 +29,13 @@ QRectF ControlPoint::boundingRect() const
 
  void ControlPoint::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
  {
+	painter->setRenderHint(QPainter::Antialiasing);
      if(selected)
         painter->setBrush(Qt::red);
      else
      {
          if(hover)
-            painter->setBrush(Qt::darkGray);
+			painter->setBrush(Qt::yellow);
          else
             painter->setBrush(Qt::white);
      }
@@ -52,18 +55,22 @@ void ControlPoint::hoverLeaveEvent(QGraphicsSceneHoverEvent * )
 }
 void ControlPoint::mousePressEvent(QGraphicsSceneMouseEvent * event)
 {
-    selected = !selected;
-    update(-size / 2, -size / 2, size, size);
+	//selected = !selected;
+	//update(-size / 2, -size / 2, size, size);
 
 	event->accept();
 }
 
 void ControlPoint::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
-    QMenu menu;
-    QAction *removeAction = menu.addAction("Remove");
-    QAction *markAction = menu.addAction("Mark");
+	QMenu menu;
+	QAction *removeAction = menu.addAction("Remove");
     QAction *selectedAction = menu.exec(event->screenPos());
+
+	if(selectedAction == removeAction)
+	{
+		removeFromCurve();
+	}
 }
 
 void ControlPoint::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
@@ -71,4 +78,11 @@ void ControlPoint::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
 	QGraphicsItem::mouseMoveEvent(event);
 	bezierCurve->update(bezierCurve->boundingRect());
 	event->accept();
+}
+
+void ControlPoint::removeFromCurve()
+{
+	qDebug("dasdas\n");
+	bezierCurve->removePoint(this);
+	update(boundingRect());
 }
