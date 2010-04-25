@@ -2,17 +2,91 @@
 
 BezierCurve::BezierCurve(QGraphicsScene *s) : scene(s)
 {
+	drawControl = true;
+}
 
+QPoint BezierCurve::eval(float t)
+{
+	QPoint ret;
+
+	const int n = controlPoints.size();
+
+	float b[n][n];
+
+	{
+		for(int i = 0; i < n; ++i)
+			b[0][i] = controlPoints.at(i)->x();
+
+		for(int j = 1; j < n; ++j)
+			for(int i = 0; i < n - j; ++i)
+				b[j][i] = (1.0f - t) * b[j-1][i] + t * b[j-1][i+1];
+
+		ret.setX(b[n-1][0]);
+	}
+
+	{
+		for(int i = 0; i < n; ++i)
+			b[0][i] = controlPoints.at(i)->y();
+
+		for(int j = 1; j < n; ++j)
+			for(int i = 0; i < n - j; ++i)
+				b[j][i] = (1.0f - t) * b[j-1][i] + t * b[j-1][i+1];
+
+		ret.setY(b[n-1][0]);
+	}
+	return ret;
+}
+
+void BezierCurve::degreeRaise()
+{
+	const int n = controlPoints.size();
+	const int m = n + 1;
+
+
+	ControlPoint* t = new ControlPoint(this);
+	t->setPos(controlPoints.at(n - 1)->pos());
+	scene->addItem(t);
+	controlPoints.append(t);
+
+	for(int i = n-1; i >= 1; --i)
+	{
+		ControlPoint* t = new ControlPoint(this);
+
+		float xx = (i*controlPoints.at(i-1)->x()+(m-i)*controlPoints.at(i)->x())/((float)m);
+		float yy = (i*controlPoints.at(i-1)->y()+(m-i)*controlPoints.at(i)->y())/((float)m);
+		t->setPos(QPoint(xx, yy));
+
+		scene->removeItem(controlPoints.at(i));
+		scene->addItem(t);
+		controlPoints.replace(i, t);
+	}
+
+	qDebug("%d\n", controlPoints.size());
+
+	update(boundingRect());
 }
 
 void BezierCurve::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 	painter->setRenderHint(QPainter::Antialiasing);
-    painter->setBrush(Qt::red);
     painter->setPen(QPen(Qt::black, 0));
 
-    for (int i = 0; i < controlPoints.size() - 1; ++i)
-		painter->drawLine(controlPoints.at(i)->pos(), controlPoints.at(i + 1)->pos());
+	if(drawControl)
+	{
+		for (int i = 0; i < controlPoints.size() - 1; ++i)
+			painter->drawLine(controlPoints.at(i)->pos(), controlPoints.at(i + 1)->pos());
+	}
+
+	const float prec = 0.01;
+
+	QPoint bef = eval(0);
+	for(float t = prec; t < 1; t += prec)
+	{
+		QPoint act = eval(t);
+		painter->drawLine(bef, act);
+		bef = act;
+	}
+	painter->drawLine(bef, eval(1));
 }
 
 QRectF BezierCurve::boundingRect() const

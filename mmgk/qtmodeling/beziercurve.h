@@ -25,6 +25,11 @@ public:
 	void addPoint(ControlPoint*);
 
 	QGraphicsScene *scene;
+
+	QPoint eval(float t);
+	void degreeRaise();
+
+	bool drawControl;
 };
 
 #endif // BEZIERCURVE_H
