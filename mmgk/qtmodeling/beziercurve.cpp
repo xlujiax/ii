@@ -230,8 +230,12 @@ void BezierCurve::loadCurve()
 
 void BezierCurve::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
-	event->accept();
+	if(!hull.containsPoint(event->pos(), Qt::WindingFill))
+	{
+		event->ignore();
+		return;
 
+	}
 	QMenu menu;
 	QAction *controlAction = menu.addAction("Toggle control view");
 	QAction *hullAction = menu.addAction("Toggle hull view");
