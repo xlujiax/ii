@@ -52,16 +52,14 @@ void BezierCurve::degreeRaise()
 	{
 		ControlPoint* t = new ControlPoint(this);
 
-		float xx = (i*controlPoints.at(i-1)->x()+(m-i)*controlPoints.at(i)->x())/((float)m);
-		float yy = (i*controlPoints.at(i-1)->y()+(m-i)*controlPoints.at(i)->y())/((float)m);
+		float xx = (i*controlPoints.at(i-1)->x()+(m-i - 1)*controlPoints.at(i)->x())/((float)m - 1);
+		float yy = (i*controlPoints.at(i-1)->y()+(m-i - 1)*controlPoints.at(i)->y())/((float)m - 1);
 		t->setPos(QPoint(xx, yy));
 
 		scene->removeItem(controlPoints.at(i));
 		scene->addItem(t);
 		controlPoints.replace(i, t);
 	}
-
-	qDebug("%d\n", controlPoints.size());
 
 	update(boundingRect());
 }
