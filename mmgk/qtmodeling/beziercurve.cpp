@@ -197,7 +197,6 @@ void BezierCurve::loadCurve()
 	 for(int i = 0; i < sz; ++i)
 	 {
 		 in >> x >> y;
-		 qDebug("%f %f\n", x, y);
 
 		 ControlPoint *cp = new ControlPoint(this);
 		 addPoint(cp);
@@ -208,6 +207,8 @@ void BezierCurve::loadCurve()
 
 void BezierCurve::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
+	event->accept();
+
 	QMenu menu;
 	QAction *controlAction = menu.addAction("Toggle control view");
 	QAction *hullAction = menu.addAction("Toggle hull view");
