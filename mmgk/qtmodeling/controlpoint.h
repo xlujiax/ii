@@ -18,8 +18,6 @@ class BezierCurve;
 class ControlPoint : public QObject, public QGraphicsItem
 {
 	Q_OBJECT
-private:
-	BezierCurve* bezierCurve;
 public:
 	ControlPoint(BezierCurve* bezierCurve);
 	virtual ~ControlPoint() {}
@@ -32,6 +30,7 @@ public:
 
     bool selected;
     bool hover;
+	BezierCurve* bezierCurve;
 protected:
 
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent * event);

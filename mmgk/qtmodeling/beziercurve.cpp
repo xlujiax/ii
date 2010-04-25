@@ -3,7 +3,7 @@
 BezierCurve::BezierCurve(QGraphicsScene *s) : scene(s)
 {
 	drawControl = true;
-	drawHull = true;
+	drawHull = false;
 }
 
 QPoint BezierCurve::eval(float t)
@@ -68,10 +68,10 @@ void BezierCurve::degreeRaise()
 void BezierCurve::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 	painter->setRenderHint(QPainter::Antialiasing);
-    painter->setPen(QPen(Qt::black, 0));
 
 	if(drawControl)
 	{
+		painter->setPen(QPen(Qt::gray, 1));
 		for (int i = 0; i < controlPoints.size() - 1; ++i)
 			painter->drawLine(controlPoints.at(i)->pos(), controlPoints.at(i + 1)->pos());
 	}
@@ -82,7 +82,7 @@ void BezierCurve::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 		painter->drawPolyline(hull);
 	}
 
-	painter->setPen(QPen(Qt::black, 0));
+	painter->setPen(QPen(Qt::black, 2));
 	const float prec = 0.01;
 
 	QPoint bef = eval(0);

@@ -9,7 +9,7 @@ ControlPoint::ControlPoint(BezierCurve* bc) : bezierCurve(bc)
 
 	 setZValue(1);
 
-     size = 15;
+	 size = 10;
      hover = false;
 	 selected = false;
 }
@@ -39,7 +39,7 @@ QRectF ControlPoint::boundingRect() const
          else
             painter->setBrush(Qt::white);
      }
-    painter->setPen(QPen(Qt::black, 0));
+	painter->setPen(QPen(Qt::black, 0));
     painter->drawEllipse(-size / 2, -size / 2, size, size);
  }
 

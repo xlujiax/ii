@@ -6,7 +6,9 @@ TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
     controlpoint.cpp \
-    beziercurve.cpp
+    beziercurve.cpp \
+    backgroundscene.cpp
 HEADERS += mainwindow.h \
     controlpoint.h \
-    beziercurve.h
+    beziercurve.h \
+    backgroundscene.h

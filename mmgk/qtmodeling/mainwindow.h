@@ -6,6 +6,7 @@
 #include <QGraphicsView>
 #include "beziercurve.h"
 #include "controlpoint.h"
+#include "backgroundscene.h"
 
 class MainWindow : public QGraphicsView
 {
