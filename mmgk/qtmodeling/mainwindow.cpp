@@ -15,21 +15,21 @@ MainWindow::MainWindow()
 	BezierCurve* bc = new BezierCurve;
 
 	{
-		ControlPoint *cp1 = new ControlPoint();
+		ControlPoint *cp1 = new ControlPoint(bc);
 		scene->addItem(cp1);
 		cp1->setPos(-50, -50);
 		bc->append_control(cp1);
 	}
 
 	{
-		ControlPoint *cp1 = new ControlPoint();
+		ControlPoint *cp1 = new ControlPoint(bc);
 		scene->addItem(cp1);
 		cp1->setPos(0, -50);
 		bc->append_control(cp1);
 	}
 
 	{
-		ControlPoint *cp1 = new ControlPoint();
+		ControlPoint *cp1 = new ControlPoint(bc);
 		scene->addItem(cp1);
 		cp1->setPos(0, 0);
 		bc->append_control(cp1);

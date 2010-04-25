@@ -5,6 +5,8 @@
 #include <QVector>
 #include "controlpoint.h"
 
+class ControlPoint;
+
 class BezierCurve : public QGraphicsItem
 {
 private:

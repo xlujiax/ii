@@ -11,11 +11,16 @@
 #include <QDebug>
 
 #include "mainwindow.h"
+#include "beziercurve.h"
+
+class BezierCurve;
 
 class ControlPoint : public QGraphicsItem
 {
+private:
+	BezierCurve* bezierCurve;
 public:
-    ControlPoint();
+	ControlPoint(BezierCurve* bezierCurve);
 
     QRectF boundingRect() const;
     QPainterPath shape() const;
@@ -31,6 +36,7 @@ protected:
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent * event);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
+	virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
 };
 
 #endif // CONTROLPOINT_H

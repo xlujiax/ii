@@ -1,6 +1,6 @@
 #include "controlpoint.h"
 
-ControlPoint::ControlPoint()
+ControlPoint::ControlPoint(BezierCurve* bc) : bezierCurve(bc)
 {
      setFlag(ItemIsMovable);
      //setCacheMode(DeviceCoordinateCache);
@@ -50,10 +50,12 @@ void ControlPoint::hoverLeaveEvent(QGraphicsSceneHoverEvent * )
     hover = false;
     update(-size / 2, -size / 2, size, size);
 }
-void ControlPoint::mousePressEvent(QGraphicsSceneMouseEvent * )
+void ControlPoint::mousePressEvent(QGraphicsSceneMouseEvent * event)
 {
     selected = !selected;
     update(-size / 2, -size / 2, size, size);
+
+	event->accept();
 }
 
 void ControlPoint::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
@@ -62,4 +64,11 @@ void ControlPoint::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     QAction *removeAction = menu.addAction("Remove");
     QAction *markAction = menu.addAction("Mark");
     QAction *selectedAction = menu.exec(event->screenPos());
+}
+
+void ControlPoint::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
+{
+	QGraphicsItem::mouseMoveEvent(event);
+	bezierCurve->update(bezierCurve->boundingRect());
+	event->accept();
 }
