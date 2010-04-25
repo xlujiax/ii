@@ -7,6 +7,7 @@
 #include <QPolygon>
 #include <QFileDialog>
 #include <QString>
+#include <QtAlgorithms>
 #include <cassert>
 #include "controlpoint.h"
 

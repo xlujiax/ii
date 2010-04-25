@@ -3,7 +3,7 @@
 BezierCurve::BezierCurve(QGraphicsScene *s) : scene(s)
 {
 	drawControl = true;
-	drawHull = false;
+	drawHull = true;
 }
 
 QPoint BezierCurve::eval(float t)
@@ -63,6 +63,7 @@ void BezierCurve::degreeRaise()
 	}
 
 	update(boundingRect());
+	updateHull();
 }
 
 void BezierCurve::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -127,7 +128,28 @@ QRectF BezierCurve::boundingRect() const
 
 void BezierCurve::updateHull()
 {
-	hull = QPolygonF(boundingRect());
+	hull = QPolygonF();
+	ControlPoint* c1;
+	ControlPoint* c2;
+	ControlPoint* c3;
+	foreach(c1, controlPoints)
+	{
+		foreach(c2, controlPoints)
+		{
+			foreach(c3, controlPoints)
+			{
+				if(c1 != c2 && c2 != c3 && c1 != c3)
+				{
+					QVector<QPointF> p;
+					p.append(c1->pos());
+					p.append(c2->pos());
+					p.append(c3->pos());
+
+					hull = hull.united(QPolygonF(p));
+				}
+			}
+		}
+	}
 }
 
 void BezierCurve::removePoint(ControlPoint* pt)
@@ -156,6 +178,7 @@ void BezierCurve::removeCurve()
 	ControlPoint* cp;
 	foreach(cp, controlPoints)
 		scene->removeItem(cp);
+	updateHull();
 }
 
 void BezierCurve::saveCurve()
