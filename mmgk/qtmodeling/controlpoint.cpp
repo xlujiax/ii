@@ -65,28 +65,26 @@ void ControlPoint::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
 	QMenu menu;
 	QAction *removeAction = menu.addAction("Remove point");
-	QAction *addAction = menu.addAction("Add point");
     QAction *selectedAction = menu.exec(event->screenPos());
 
 	if(selectedAction == removeAction)
 	{
 		removeFromCurve();
 	}
-	else if(selectedAction == addAction)
-	{
-		bezierCurve->degreeRaise();
-	}
 }
 
 void ControlPoint::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
 {
 	QGraphicsItem::mouseMoveEvent(event);
+	bezierCurve->updateHull();
 	bezierCurve->update(bezierCurve->boundingRect());
+
 	event->accept();
 }
 
 void ControlPoint::removeFromCurve()
 {
 	bezierCurve->removePoint(this);
+	bezierCurve->updateHull();
 	update(boundingRect());
 }

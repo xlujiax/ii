@@ -4,6 +4,7 @@
 #include <QGraphicsItem>
 #include <QVector>
 #include <QObject>
+#include <QPolygon>
 #include <cassert>
 #include "controlpoint.h"
 
@@ -30,6 +31,13 @@ public:
 	void degreeRaise();
 
 	bool drawControl;
+	bool drawHull;
+
+	QPolygonF hull;
+	void updateHull();
+	void removeCurve();
+
+	void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
 };
 
 #endif // BEZIERCURVE_H

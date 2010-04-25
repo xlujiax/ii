@@ -3,6 +3,7 @@
 BezierCurve::BezierCurve(QGraphicsScene *s) : scene(s)
 {
 	drawControl = true;
+	drawHull = true;
 }
 
 QPoint BezierCurve::eval(float t)
@@ -75,6 +76,13 @@ void BezierCurve::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 			painter->drawLine(controlPoints.at(i)->pos(), controlPoints.at(i + 1)->pos());
 	}
 
+	if(drawHull)
+	{
+		painter->setPen(QPen(Qt::red, 0));
+		painter->drawPolyline(hull);
+	}
+
+	painter->setPen(QPen(Qt::black, 0));
 	const float prec = 0.01;
 
 	QPoint bef = eval(0);
@@ -117,19 +125,64 @@ QRectF BezierCurve::boundingRect() const
 	}
 }
 
+void BezierCurve::updateHull()
+{
+	hull = QPolygonF(boundingRect());
+}
+
 void BezierCurve::removePoint(ControlPoint* pt)
 {
 	assert(controlPoints.indexOf(pt) != -1);
 
 	scene->removeItem(pt);
 	controlPoints.remove(controlPoints.indexOf(pt));
+	updateHull();
 	update(boundingRect());
 }
+
 void BezierCurve::addPoint(ControlPoint* pt)
 {
 	assert(controlPoints.indexOf(pt) == -1);
 
 	scene->addItem(pt);
 	controlPoints.append(pt);
+	updateHull();
 	update(boundingRect());
+}
+
+void BezierCurve::removeCurve()
+{
+	scene->removeItem(this);
+	ControlPoint* cp;
+	foreach(cp, controlPoints)
+		scene->removeItem(cp);
+}
+
+void BezierCurve::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
+{
+	QMenu menu;
+	QAction *controlAction = menu.addAction("Toggle control view");
+	QAction *hullAction = menu.addAction("Toggle hull view");
+	QAction *removeAction = menu.addAction("Remove curve");
+	QAction *addAction = menu.addAction("Add control point");
+	QAction *selectedAction = menu.exec(event->screenPos());
+
+	if(selectedAction == controlAction)
+	{
+		drawControl = !drawControl;
+		update(boundingRect());
+	}
+	else if(selectedAction == hullAction)
+	{
+		drawHull = !drawHull;
+		update(boundingRect());
+	}
+	else if(selectedAction == removeAction)
+	{
+		removeCurve();
+	}
+	else if(selectedAction == addAction)
+	{
+		degreeRaise();
+	}
 }
