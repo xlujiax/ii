@@ -1,7 +1,8 @@
 #include "beziercurve.h"
 
-BezierCurve::BezierCurve()
+BezierCurve::BezierCurve(QGraphicsScene *s) : scene(s)
 {
+
 }
 
 void BezierCurve::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -12,11 +13,6 @@ void BezierCurve::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 
     for (int i = 0; i < controlPoints.size() - 1; ++i)
 		painter->drawLine(controlPoints.at(i)->pos(), controlPoints.at(i + 1)->pos());
-}
-
-void BezierCurve::append_control(ControlPoint* cp)
-{
-	controlPoints.append(cp);
 }
 
 QRectF BezierCurve::boundingRect() const
@@ -51,6 +47,17 @@ QRectF BezierCurve::boundingRect() const
 
 void BezierCurve::removePoint(ControlPoint* pt)
 {
+	assert(controlPoints.indexOf(pt) != -1);
+
+	scene->removeItem(pt);
 	controlPoints.remove(controlPoints.indexOf(pt));
+	update(boundingRect());
+}
+void BezierCurve::addPoint(ControlPoint* pt)
+{
+	assert(controlPoints.indexOf(pt) == -1);
+
+	scene->addItem(pt);
+	controlPoints.append(pt);
 	update(boundingRect());
 }

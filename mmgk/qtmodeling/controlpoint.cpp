@@ -82,7 +82,6 @@ void ControlPoint::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
 
 void ControlPoint::removeFromCurve()
 {
-	qDebug("dasdas\n");
 	bezierCurve->removePoint(this);
 	update(boundingRect());
 }

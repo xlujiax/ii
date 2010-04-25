@@ -13,13 +13,6 @@
 #include "mainwindow.h"
 #include "beziercurve.h"
 
-class Reciver : public QObject
-{
-	Q_OBJECT
-public slots:
-	void recive() { qDebug("dkjahdksjhdkjashdkashdaskj\n"); }
-};
-
 class BezierCurve;
 
 class ControlPoint : public QObject, public QGraphicsItem

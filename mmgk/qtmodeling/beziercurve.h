@@ -4,6 +4,7 @@
 #include <QGraphicsItem>
 #include <QVector>
 #include <QObject>
+#include <cassert>
 #include "controlpoint.h"
 
 class ControlPoint;
@@ -14,13 +15,16 @@ class BezierCurve : public QObject, public QGraphicsItem
 private:
 	QVector<ControlPoint*> controlPoints;
 public:
-    BezierCurve();
+	BezierCurve(QGraphicsScene *scene);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-	void append_control(ControlPoint*);
+
 
 	QRectF boundingRect() const;
 
 	void removePoint(ControlPoint*);
+	void addPoint(ControlPoint*);
+
+	QGraphicsScene *scene;
 };
 
 #endif // BEZIERCURVE_H
