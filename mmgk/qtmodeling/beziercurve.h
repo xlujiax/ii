@@ -5,6 +5,8 @@
 #include <QVector>
 #include <QObject>
 #include <QPolygon>
+#include <QFileDialog>
+#include <QString>
 #include <cassert>
 #include "controlpoint.h"
 
@@ -36,6 +38,9 @@ public:
 	QPolygonF hull;
 	void updateHull();
 	void removeCurve();
+
+	void saveCurve();
+	void loadCurve();
 
 	void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
 };

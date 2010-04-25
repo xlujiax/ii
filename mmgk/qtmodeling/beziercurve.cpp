@@ -158,6 +158,54 @@ void BezierCurve::removeCurve()
 		scene->removeItem(cp);
 }
 
+void BezierCurve::saveCurve()
+{
+	QString fileName = QFileDialog::getOpenFileName(0,
+	 tr("Open file"), "/home/foo", tr("*.cur"));
+
+
+	QFile file(fileName);
+	 if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+		 return;
+
+	 QTextStream out(&file);
+	 out << controlPoints.size() << '\n';
+	 ControlPoint* cp;
+	 foreach(cp, controlPoints)
+		 out << cp->x() << ' ' << cp->y() << '\n';
+}
+void BezierCurve::loadCurve()
+{
+	QString fileName = QFileDialog::getOpenFileName(0,
+	 tr("Open file"), "/home/foo", tr("*.cur"));
+
+	QFile file(fileName);
+	 if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+		 return;
+
+	 QTextStream in(&file);
+	 int sz;
+	 in >> sz;
+
+
+	 ControlPoint* cp;
+	 foreach(cp, controlPoints)
+		 scene->removeItem(cp);
+	 controlPoints.clear();
+
+	 qreal x, y;
+	 for(int i = 0; i < sz; ++i)
+	 {
+		 in >> x >> y;
+		 qDebug("%f %f\n", x, y);
+
+		 ControlPoint *cp = new ControlPoint(this);
+		 addPoint(cp);
+		 cp->setPos(QPoint(x, y));
+	 }
+	 update(boundingRect());
+}
+
 void BezierCurve::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
 	QMenu menu;
@@ -165,6 +213,8 @@ void BezierCurve::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 	QAction *hullAction = menu.addAction("Toggle hull view");
 	QAction *removeAction = menu.addAction("Remove curve");
 	QAction *addAction = menu.addAction("Add control point");
+	QAction *saveAction = menu.addAction("Save curve");
+	QAction *loadAction = menu.addAction("Load curve");
 	QAction *selectedAction = menu.exec(event->screenPos());
 
 	if(selectedAction == controlAction)
@@ -184,5 +234,13 @@ void BezierCurve::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 	else if(selectedAction == addAction)
 	{
 		degreeRaise();
+	}
+	else if(selectedAction == saveAction)
+	{
+		saveCurve();
+	}
+	else if(selectedAction == loadAction)
+	{
+		loadCurve();
 	}
 }
