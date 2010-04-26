@@ -27,6 +27,53 @@ QRectF ControlPoint::boundingRect() const
      return path;
  }
 
+ void ControlPoint::split()
+ {
+	 int find = bezierCurve->controlPoints.indexOf(this);
+	 assert(find != -1);
+	 ControlPoint* cp;
+
+	 BezierCurve* left = new BezierCurve(bezierCurve->scene);
+	 BezierCurve* right = new BezierCurve(bezierCurve->scene);
+
+	 QRectF r = bezierCurve->boundingRect();
+
+	 for(int i = 0; i < bezierCurve->controlPoints.size(); ++i)
+	 {
+		 if(i <= find)
+			 left->controlPoints.append(bezierCurve->controlPoints[i]);
+		 if(i >= find)
+			 right->controlPoints.append(bezierCurve->controlPoints[i]);
+		 bezierCurve->scene->removeItem(bezierCurve->controlPoints[i]);
+	 }
+
+	 bezierCurve->scene->removeItem(bezierCurve);
+	 bezierCurve->scene->update(r);
+
+	 foreach(cp, left->controlPoints)
+	 {
+		 cp->bezierCurve = left;
+		 bezierCurve->scene->addItem(cp);
+	 }
+	 left->updateHull();
+	 bezierCurve->scene->addItem(left);
+
+
+	 foreach(cp, right->controlPoints)
+	 {
+		 cp->bezierCurve = right;
+		 bezierCurve->scene->addItem(cp);
+	 }
+	 right->updateHull();
+	 bezierCurve->scene->addItem(right);
+
+	 qDebug("%d -> %d = %d\n", find, bezierCurve->controlPoints.size(), right->controlPoints.size());
+
+
+	 // ! naiwne
+	 bezierCurve = left;
+ }
+
  void ControlPoint::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
  {
 	painter->setRenderHint(QPainter::Antialiasing);
@@ -66,6 +113,7 @@ void ControlPoint::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 	QMenu menu;
 	QAction *removeAction = menu.addAction("Remove point");
 	QAction *addAction = menu.addAction("Add point");
+	QAction *splitAction = menu.addAction("Split and join");
     QAction *selectedAction = menu.exec(event->screenPos());
 
 	if(selectedAction == removeAction)
@@ -75,6 +123,10 @@ void ControlPoint::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 	else if(selectedAction == addAction)
 	{
 		bezierCurve->degreeRaise();
+	}
+	else if(selectedAction == splitAction)
+	{
+		split();
 	}
 }
 

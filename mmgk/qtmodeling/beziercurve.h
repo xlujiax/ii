@@ -17,7 +17,6 @@ class BezierCurve : public QObject, public QGraphicsItem
 {
 	Q_OBJECT
 private:
-	QVector<ControlPoint*> controlPoints;
 public:
 	BezierCurve(QGraphicsScene *scene);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
@@ -35,6 +34,7 @@ public:
 
 	bool drawControl;
 	bool drawHull;
+	QVector<ControlPoint*> controlPoints;
 
 	QPolygonF hull;
 	void updateHull();
