@@ -113,10 +113,17 @@ void ControlPoint::mousePressEvent(QGraphicsSceneMouseEvent * event)
 
 void ControlPoint::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
+	int find = bezierCurve->controlPoints.indexOf(this);
+	bool outer = false;
+	if(find == 0 || find == bezierCurve->controlPoints.size() - 1)
+		outer = true;
+
 	QMenu menu;
 	QAction *removeAction = menu.addAction("Remove point");
 	QAction *addAction = menu.addAction("Add point");
-	QAction *splitAction = menu.addAction("Split and join");
+	QAction *splitAction = 0;
+	if(!outer)
+		splitAction = menu.addAction("Split and join");
     QAction *selectedAction = menu.exec(event->screenPos());
 
 	if(selectedAction == removeAction)
@@ -127,7 +134,7 @@ void ControlPoint::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 	{
 		bezierCurve->degreeRaise();
 	}
-	else if(selectedAction == splitAction)
+	else if(selectedAction == splitAction && !outer)
 	{
 		split();
 	}
