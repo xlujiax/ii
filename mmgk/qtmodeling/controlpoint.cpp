@@ -9,6 +9,9 @@ ControlPoint::ControlPoint(BezierCurve* bc) : bezierCurve(bc)
 
 	 setZValue(1);
 
+	 secondBezierCurve = 0;
+	 linkedCp = 0;
+
 	 size = 10;
      hover = false;
 	 selected = false;
@@ -67,11 +70,11 @@ QRectF ControlPoint::boundingRect() const
 	 right->updateHull();
 	 bezierCurve->scene->addItem(right);
 
-	 qDebug("%d -> %d = %d\n", find, bezierCurve->controlPoints.size(), right->controlPoints.size());
-
-
-	 // ! naiwne
 	 bezierCurve = left;
+	 secondBezierCurve = right;
+
+	 left->controlPoints.at(left->controlPoints.size() - 2)->linkedCp = right->controlPoints.at(1);
+	 right->controlPoints.at(1)->linkedCp = left->controlPoints.at(left->controlPoints.size() - 2);
  }
 
  void ControlPoint::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
@@ -134,8 +137,13 @@ void ControlPoint::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
 {
 	QGraphicsItem::mouseMoveEvent(event);
 	bezierCurve->updateHull();
-	bezierCurve->update(bezierCurve->boundingRect());
+	bezierCurve->scene->update(bezierCurve->boundingRect());
 
+	if(secondBezierCurve)
+	{
+		secondBezierCurve->updateHull();
+		secondBezierCurve->scene->update(secondBezierCurve->boundingRect());
+	}
 	event->accept();
 }
 

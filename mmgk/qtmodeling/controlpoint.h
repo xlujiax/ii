@@ -30,8 +30,10 @@ public:
     float size;
 
     bool selected;
-    bool hover;
+	bool hover;
 	BezierCurve* bezierCurve;
+	BezierCurve* secondBezierCurve;
+	ControlPoint* linkedCp;
 protected:
 
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent * event);
