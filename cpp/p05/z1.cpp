@@ -163,18 +163,15 @@ template<typename T>
   class numeric
 {
   T v;
-  static int initializations;
   static int additions;
   static int multiplications;
   static int subtractions;
   static int divisions;
-  static int copies;
 public:
   numeric() {}
-  numeric(const T& t) : v(t) { ++initializations; }
+  numeric(const T& t) : v(t) {}
   numeric& operator=(const numeric<T>& n)
   {
-    ++copies;
     v = n.v;
     return *this;
   }
@@ -217,12 +214,10 @@ public:
 
   static void reset_report()
   {
-    initializations =
-      additions =
+    additions =
       multiplications =
       divisions =
-      subtractions =
-      copies = 0;
+      subtractions = 0;
   }
 
   static void usage_report()
@@ -232,14 +227,10 @@ public:
 	      << "multiplications: " << multiplications << std::endl
 	      << "divisions: " << divisions << std::endl
 	      << "subtractions: " << subtractions << std::endl
-	      << "copies: " << copies << std::endl
-	      << "initializations: " << initializations << std::endl
 	      << " *** " << std::endl;
   }
 };
 
-template<typename T>
-  int numeric<T>::initializations = 0;
 template<typename T>
   int numeric<T>::additions = 0;
 template<typename T>
@@ -248,8 +239,6 @@ template<typename T>
   int numeric<T>::subtractions = 0;
 template<typename T>
   int numeric<T>::divisions = 0;
-template<typename T>
-  int numeric<T>::copies = 0;
 
 int main(int, char*[])
 {
@@ -284,6 +273,26 @@ int main(int, char*[])
     w[2] = 200;
 
     std::cout << dot_product(v, w) << std::endl;
+  }
+  
+  numeric<int>::usage_report();
+  numeric<int>::reset_report();
+
+  {
+    vector<numeric<int>, 100> v;
+    for(int i = 0; i < 100; ++i)
+      v[i] = i * 100 + 9;
+
+    vector<numeric<int>, 100> w;
+    for(int i = 0; i < 100; ++i)
+      w[i] = i * 10 + 9;
+    
+    vector<numeric<int>, 100> u;
+    for(int i = 0; i < 100; ++i)
+      u[i] = i + 9;
+
+    vector<numeric<int>, 100> r;
+    r = u - v / w;
   }
   
   numeric<int>::usage_report();
