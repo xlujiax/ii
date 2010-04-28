@@ -112,7 +112,6 @@ template <typename T, int Sz, typename R1, typename R2>
   return vector<T, Sz, addition_operator<T,R1,R2> >(addition_operator<T,R1,R2>(a.get_rep(), b.get_rep()));
 }
 
-
 template <typename T, int Sz, typename R1, typename R2>
   vector<T, Sz, multiplication_operator<T, R1, R2> >
   operator*(const vector<T, Sz, R1>& a, const vector<T, Sz, R2>& b)
@@ -127,7 +126,6 @@ template <typename T, int Sz, typename R1, typename R2>
   return vector<T, Sz, division_operator<T,R1,R2> >(division_operator<T,R1,R2>(a.get_rep(), b.get_rep()));
 }
 
-
 template <typename T, int Sz, typename R1, typename R2>
   vector<T, Sz, subtraction_operator<T, R1, R2> >
   operator-(const vector<T, Sz, R1>& a, const vector<T, Sz, R2>& b)
@@ -135,7 +133,31 @@ template <typename T, int Sz, typename R1, typename R2>
   return vector<T, Sz, subtraction_operator<T,R1,R2> >(subtraction_operator<T,R1,R2>(a.get_rep(), b.get_rep()));
 }
 
+template<typename T, typename Rep1, typename Rep2, int Sz, int Get>
+  struct dp
+{
+  T operator()(const vector<T, Sz, Rep1>& a, const vector<T, Sz, Rep2>& b)
+  {
+    dp<T, Rep1, Rep2, Sz, Get + 1> dot;
+    return a[Get] * b[Get] + dot(a, b);
+  }
+};
 
+template<typename T, typename Rep1, typename Rep2, int Sz>
+  struct dp<T, Rep1, Rep2, Sz, Sz>
+{
+  T operator()(const vector<T, Sz, Rep1>& a, const vector<T, Sz, Rep2>& b)
+  {
+    return 0;
+  }
+};
+
+template<typename T, typename Rep1, typename Rep2, int Sz>
+  T dot_product(const vector<T, Sz, Rep1>& a, const vector<T, Sz, Rep2>& b)
+{
+  dp<T, Rep1, Rep2, Sz, 0> dot;
+  return dot(a, b);
+}
 
 template<typename T>
   class numeric
@@ -231,20 +253,39 @@ template<typename T>
 
 int main(int, char*[])
 {
-  vector<numeric<int>, 1> v;
-  v[0] = 5;
-
-  vector<numeric<int>, 1> u;
-  u[0] = 1;
-
-  vector<numeric<int>, 1> w;
-  w[0] = 7;
-
-  vector<numeric<int>, 1> r;
-  r = v + u * w;
+  {
+    vector<numeric<int>, 1> v;
+    v[0] = 5;
+    
+    vector<numeric<int>, 1> u;
+    u[0] = 1;
+    
+    vector<numeric<int>, 1> w;
+    w[0] = 7;
+    
+    vector<numeric<int>, 1> r;
+    r = v + u * w;
+    
+    std::cout << r[0] << std::endl;
+  }
   
-  std::cout << r[0] << std::endl;
+  numeric<int>::usage_report();
+  numeric<int>::reset_report();
 
+  {
+    vector<numeric<int>, 3> v;
+    v[0] = 1;
+    v[1] = 10;
+    v[2] = 100;
+    
+    vector<numeric<int>, 3> w;
+    w[0] = 2;
+    w[1] = 20;
+    w[2] = 200;
+
+    std::cout << dot_product(v, w) << std::endl;
+  }
+  
   numeric<int>::usage_report();
   numeric<int>::reset_report();
 
