@@ -43,11 +43,16 @@ void BezierCurve::degreeRaise()
 	const int n = controlPoints.size();
 	const int m = n + 1;
 
+	BezierCurve *right = controlPoints.at(n - 1)->secondBezierCurve;
+	BezierCurve *left = controlPoints.at(0)->secondBezierCurve;
 
-	ControlPoint* t = new ControlPoint(this);
-	t->setPos(controlPoints.at(n - 1)->pos());
-	scene->addItem(t);
-	controlPoints.append(t);
+	ControlPoint* tf = new ControlPoint(this);
+	tf->setPos(controlPoints.at(n - 1)->pos());
+	tf->secondBezierCurve = right;
+	if(right)
+		right->controlPoints.at(0)->secondBezierCurve = this;
+	scene->addItem(tf);
+	controlPoints.append(tf);
 
 	for(int i = n-1; i >= 1; --i)
 	{
@@ -61,6 +66,10 @@ void BezierCurve::degreeRaise()
 		scene->addItem(t);
 		controlPoints.replace(i, t);
 	}
+
+	controlPoints.at(0)->secondBezierCurve = left;
+	if(left)
+		left->controlPoints.at(left->controlPoints.size() - 1)->secondBezierCurve = this;
 
 	update(boundingRect());
 	updateHull();

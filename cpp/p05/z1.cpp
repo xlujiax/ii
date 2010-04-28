@@ -80,17 +80,75 @@ template <typename T, int Sz, typename R1, typename R2>
 }
 
 
+template<typename T>
+  class numeric
+{
+  T v;
+  static int initializations;
+  static int additions;
+  static int multiplications;
+  static int copies;
+public:
+  numeric() {}
+  numeric(const T& t) : v(t) { ++initializations; }
+  numeric& operator=(const numeric<T>& n)
+  {
+    ++copies;
+    v = n.v;
+    return *this;
+  }
+  friend numeric<T> operator+(const numeric<T>& a, const numeric<T>& b)
+  {
+    ++additions;
+    
+    numeric n;
+    n.v = a.v + b.v;
+    return n;
+  }
+  friend numeric<T>& operator*(const numeric<T>& a, const numeric<T>& b)
+  {
+    ++multiplications;
+    
+    numeric n;
+    n.v = a.v * b.v;
+    return n;
+  }
+  operator T()
+  {
+    return v;
+  }
+
+  static void usage_report()
+  {
+    std::cout << "additions: " << additions << std::endl
+	      << "multiplications: " << multiplications << std::endl
+	      << "copies: " << copies << std::endl
+	      << "initializations: " << initializations << std::endl;
+  }
+};
+
+template<typename T>
+  int numeric<T>::initializations = 0;
+template<typename T>
+  int numeric<T>::additions = 0;
+template<typename T>
+  int numeric<T>::multiplications = 0;
+template<typename T>
+  int numeric<T>::copies = 0;
+
 int main(int, char*[])
 {
-  vector<int, 1> v;
+  vector<numeric<int>, 1> v;
   v[0] = 5;
 
-  vector<int, 1> u;
+  vector<numeric<int>, 1> u;
   u[0] = 1;
 
-  vector<int, 1> w;
+  vector<numeric<int>, 1> w;
   w = v + u;
   
   std::cout << w[0] << std::endl;
+
+  numeric<int>::usage_report();
   return 0;
 }
