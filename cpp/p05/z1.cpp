@@ -133,20 +133,21 @@ template <typename T, int Sz, typename R1, typename R2>
   return vector<T, Sz, subtraction_operator<T,R1,R2> >(subtraction_operator<T,R1,R2>(a.get_rep(), b.get_rep()));
 }
 
-template<typename T, typename Rep1, typename Rep2, int Sz, int Get>
+template<typename T, int Sz, int Get,
+	 typename Rep1, typename Rep2>
   struct dp
 {
-  T operator()(const vector<T, Sz, Rep1>& a, const vector<T, Sz, Rep2>& b)
+  static T value(const vector<T, Sz, Rep1>& a, const vector<T, Sz, Rep1>& b)
   {
-    dp<T, Rep1, Rep2, Sz, Get + 1> dot;
-    return a[Get] * b[Get] + dot(a, b);
+    return a[Get] * b[Get] + dp<T, Sz, Get + 1, Rep1, Rep2>::value(a, b);
   }
 };
 
-template<typename T, typename Rep1, typename Rep2, int Sz>
-  struct dp<T, Rep1, Rep2, Sz, Sz>
+template<typename T, int Sz,
+	 typename Rep1, typename Rep2>
+  struct dp<T, Sz, Sz, Rep1, Rep2>
 {
-  T operator()(const vector<T, Sz, Rep1>& a, const vector<T, Sz, Rep2>& b)
+  static T value(const vector<T, Sz, Rep1>&, const vector<T, Sz, Rep1>&)
   {
     return 0;
   }
@@ -155,8 +156,7 @@ template<typename T, typename Rep1, typename Rep2, int Sz>
 template<typename T, typename Rep1, typename Rep2, int Sz>
   T dot_product(const vector<T, Sz, Rep1>& a, const vector<T, Sz, Rep2>& b)
 {
-  dp<T, Rep1, Rep2, Sz, 0> dot;
-  return dot(a, b);
+  return dp<T, Sz, 0, Rep1, Rep2>::value(a, b);
 }
 
 template<typename T>
