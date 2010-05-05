@@ -65,13 +65,12 @@ public:
   
   explicit smart_ptr(T* p)
   {
-    std::cout << "explicit" << std::endl;
     if(p != ptr)
       counter_policy::init(ptr);
     ptr = p;
   }
   smart_ptr(const smart_ptr& s)
-    : counter_policy(s), object_policy(s)
+    : counter_policy(s), object_policy(s), ptr(s.ptr)
   {
     counter_policy::increment(ptr);
   }
@@ -152,12 +151,16 @@ public:
   noisy(const std::string& i = std::string("array"))
     : id(i), safe_to_delete(false)
   {
+    for(int i = 0; i < instances_alive; ++i) std::cout << '.';
     ++instances_alive;
     std::cout << "noisy(" << id << ")" << std::endl;
   }
   ~noisy()
   {
     --instances_alive;
+
+    for(int i = 0; i < instances_alive; ++i) std::cout << '.';
+
     if(!safe_to_delete)
     {
       std::cout << "~noisy(" << id << ") - unsafe deletion" << std::endl;
@@ -165,7 +168,12 @@ public:
     }
     std::cout << "~noisy(" << id << ")" << std::endl;
   }
-  void greet() const { std::cout << "greet(" << id << ')' << std::endl; }
+  void greet() const
+  {
+    for(int i = 0; i < instances_alive; ++i) std::cout << '.';
+
+    std::cout << "greet(" << id << ')' << std::endl;
+  }
   void unlock_deletion() { safe_to_delete = true; }
 };
 
@@ -186,18 +194,25 @@ int main(int, char*[])
 {
   {
     smart_ptr<noisy> np(new noisy("main"));
+    np->greet();
+    
     smart_ptr<noisy> nf(factory("factory"));
+    nf->greet();
+    
     smart_ptr<noisy> ni(interface());
+    ni->greet();
     
     smart_ptr<noisy, external_counter_policy, standard_array_policy> na(new noisy[2]);
     
     smart_ptr<noisy> sn(new noisy("shared"));
     assert(sn.get_counter() == 1);
-    
+
     sn->greet();
     
     {
       smart_ptr<noisy> sn2(sn);
+      sn2->greet();
+    
       assert(sn.get_counter() == 2);
     }
     
@@ -205,6 +220,8 @@ int main(int, char*[])
     
     {
       smart_ptr<noisy> sn3(sn);
+      sn3->greet();
+
       assert(sn.get_counter() == 2);
     }
 
@@ -214,13 +231,15 @@ int main(int, char*[])
       smart_ptr<noisy> sn4;
       sn4 = sn;
 
+      sn4->greet();
+      
       assert(sn.get_counter() == 2);
     }
     
     assert(sn.get_counter() == 1);
     
     sn->greet();
-    
+
     np->unlock_deletion();
     nf->unlock_deletion();
     ni->unlock_deletion();
