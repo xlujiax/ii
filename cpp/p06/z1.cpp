@@ -1,13 +1,18 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
+#include <cassert>
 
 class external_counter_policy
 {
+  // todo: powinien być prywatny
+protected:
   int* counter;
 public:
   external_counter_policy()
     : counter(0) {}
+
+  external_counter_policy(const external_counter_policy& e) : counter(e.counter) {}
 
   template<typename T>
     void init(T*)
@@ -22,11 +27,11 @@ public:
     delete counter;
   }
   template<typename T> 
-    void increment(T*) { ++*counter; }
+    void increment(T*) { assert(counter != NULL); ++*counter; }
   template<typename T>
-    void decrement(T*) { --*counter; }
+    void decrement(T*) { assert(counter != NULL); --*counter; }
   template<typename T>
-    bool is_zero(T*) { return *counter == 0; }
+    bool is_zero(T*) { assert(counter != NULL); return *counter == 0; }
 };
 
 class standard_object_policy
@@ -48,11 +53,6 @@ public:
 };
 
 
-template<typename T,
-	 typename counter_policy,
-	 typename object_policy>
-  class transporter;
-
 template <typename T,
 	  typename counter_policy = external_counter_policy,
 	  typename object_policy = standard_object_policy>
@@ -62,89 +62,82 @@ template <typename T,
 public:
   smart_ptr()
     : ptr(0) {}
-
-  smart_ptr(const transporter<T, counter_policy, object_policy>& t)
-  {
-    ptr = t.ptr;
-    const_cast<transporter<T, counter_policy, object_policy>&>(t).ptr = 0; // zło
-  }
   
-  smart_ptr<T>& operator=(const transporter<T, counter_policy, object_policy>& t)
-  {
-    counter_policy::decrement(ptr);
-    if(counter_policy::is_zero(ptr))
-    {
-      counter_policy::dispose(ptr);
-      object_policy::dispose(ptr);
-    }
-    ptr = t.ptr;
-    const_cast<transporter<T, counter_policy, object_policy>&>(t).ptr = 0; // zło
-    return *this;
-  }
-
   explicit smart_ptr(T* p)
-    : ptr(p) {}
+  {
+    std::cout << "explicit" << std::endl;
+    if(p != ptr)
+      counter_policy::init(ptr);
+    ptr = p;
+  }
+  smart_ptr(const smart_ptr& s)
+    : counter_policy(s), object_policy(s)
+  {
+    counter_policy::increment(ptr);
+  }
   ~smart_ptr()
   {
-    counter_policy::decrement(ptr);
-    if(counter_policy::is_zero(ptr))
+    if(active())
     {
-      counter_policy::dispose(ptr);
-      object_policy::dispose(ptr);
+      assert(counter_policy::counter != NULL);
+
+      counter_policy::decrement(ptr);
+      if(counter_policy::is_zero(ptr))
+      {
+	counter_policy::dispose(ptr);
+	object_policy::dispose(ptr);
+      }
     }
   }
+    
+  smart_ptr& operator=(const smart_ptr& s)
+  {
+    counter_policy::operator=(s); // przypisanie polis
+    object_policy::operator=(s);
+
+    if(s.ptr != ptr)
+    {
+      // usuniecie aktualnego
+      if(active())
+      {
+	counter_policy::decrement(ptr);
+	if(counter_policy::is_zero(ptr))
+	{
+	  counter_policy::dispose(ptr);
+	  object_policy::dispose(ptr);
+	}
+      }
+      // i przejęcie nowego
+      ptr = s.ptr;
+      counter_policy::increment(ptr);
+    }
+  }
+  
   smart_ptr& operator= (T* p)
   {
-    counter_policy::decrement(ptr);
-    if(counter_policy::is_zero(ptr))
+    if(p != ptr)
     {
-      counter_policy::dispose(ptr);
-      object_policy::dispose(ptr);
+      if(active())
+      {
+	counter_policy::decrement(ptr);
+	if(counter_policy::is_zero(ptr))
+	{
+	  counter_policy::dispose(ptr);
+	  object_policy::dispose(ptr);
+	}
+      }
+      counter_policy::init(ptr);
+      ptr = p;
     }
-    ptr = p;
     return *this;
   }
   T& operator*() const { return *ptr; }
   T* operator->() const { return ptr; }
   T* get() const { return ptr; }
+  bool active() { return ptr != 0; }
   void release() { ptr = 0; }
-  void swap(smart_ptr& h) { std::swap(ptr,h.ptr); }
-  void swap(T*& p) { std::swap(ptr,p); }
-private:
-  smart_ptr(const smart_ptr&);               // blok
-  smart_ptr& operator= (const smart_ptr&); // blok
-};
 
-template <typename T,
-	  typename counter_policy = external_counter_policy,
-	  typename object_policy = standard_object_policy>
-  class transporter : private object_policy, private counter_policy
-{
-  T* ptr;
-public:
-  transporter(smart_ptr<T>& h )
-  {
-    ptr = h.get();
-    h.release();
-  }
-  transporter(const transporter<T>& t)
-  {
-    ptr = t.ptr;
-    const_cast<transporter<T>&>(t).ptr = 0; // zło
-  }
-  ~transporter()
-  {
-    counter_policy::decrement(ptr);
-    if(counter_policy::is_zero(ptr))
-    {
-      counter_policy::dispose(ptr);
-      object_policy::dispose(ptr);
-    }
-  }
-private:
-  transporter(transporter<T>&); // blok
-  transporter<T>& operator= (transporter<T>&); // blok
-  friend class smart_ptr<T>;
+  int get_counter() const { return *counter_policy::counter; }
 };
 
 class noisy
@@ -157,15 +150,16 @@ public:
     std::cout << "noisy(" << id << ")" << std::endl;
   }
   ~noisy() { std::cout << "~noisy(" << id << ")" << std::endl; }
+  void greet() const { std::cout << "greet(" << id << ')' << std::endl; }
 };
 
-transporter<noisy> factory(const std::string& id)
+smart_ptr<noisy> factory(const std::string& id)
 {
   smart_ptr<noisy> p(new noisy(id));
   return p;
 }
 
-transporter<noisy> interface()
+smart_ptr<noisy> interface()
 {
   return factory("interface");
 }
@@ -176,8 +170,36 @@ int main(int, char*[])
   smart_ptr<noisy> nf(factory("factory"));
   smart_ptr<noisy> ni(interface());
 
-  noisy* arr = new noisy[2];
-  smart_ptr<noisy, external_counter_policy, standard_array_policy> na(arr);
+  smart_ptr<noisy, external_counter_policy, standard_array_policy> na(new noisy[2]);
+
+  smart_ptr<noisy> sn(new noisy("shared"));
+  assert(sn.get_counter() == 1);
+  
+  sn->greet();
+
+  {
+    smart_ptr<noisy> sn2(sn);
+    assert(sn.get_counter() == 2);
+    std::cout << "nie usuwaj jeszcze shared " << std::endl;
+  }
+
+  assert(sn.get_counter() == 1);
+
+  std::cout << "in between " << sn.get_counter() << std::endl;
+
+  {
+    assert(sn.get_counter() == 1);
+    smart_ptr<noisy> sn3(sn);
+    assert(sn.get_counter() == 2);
+    std::cout << "nie usuwaj jeszcze shared" << std::endl;
+  }
+
+  std::cout << "mozna usunac shared" << std::endl;
+
+  sn->greet();
+
+  //smart_ptr<noisy> sn3;
+  //sn3 = sn;
   
   return 0;
 }
