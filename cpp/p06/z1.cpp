@@ -5,46 +5,70 @@
 
 class external_counter_policy
 {
-  // todo: powinien być prywatny
 protected:
-  int* counter;
+  int* strong_counter;
+  int* weak_counter;
 public:
   external_counter_policy()
-    : counter(0) {}
+    : strong_counter(0), weak_counter(0) {}
 
-  external_counter_policy(const external_counter_policy& e) : counter(e.counter) {}
+  external_counter_policy(const external_counter_policy& e)
+    : strong_counter(e.strong_counter), weak_counter(e.weak_counter) {}
 
   template<typename T>
     void init(T*)
   {
-    counter = new int;
-    *counter = 1;
+    strong_counter = new int;
+    *strong_counter = 1;
+
+    weak_counter = new int;
+    *weak_counter = 0;
   }
 
   template<typename T>
     void dispose(T*)
   {
-    delete counter;
+    delete strong_counter;
+    delete weak_counter;
   }
-  template<typename T> 
-    void increment(T*) { assert(counter != NULL); ++*counter; }
-  template<typename T>
-    void decrement(T*) { assert(counter != NULL); --*counter; }
-  template<typename T>
-    bool is_zero(T*) { assert(counter != NULL); return *counter == 0; }
-};
 
-template<typename ObjectType,
-          typename CountT,
-          CountT ObjectType::*CountPtr>
-class member_counter_policy
-{
-public:
-  void init(ObjectType* object) { object->*CountPtr = 1; }
-  void dispose (ObjectType*) {}
-  void increment(ObjectType* object) { ++(object->*CountPtr); }
-  void decrement(ObjectType* object) { --(object->*CountPtr); }
-  bool is_zero(ObjectType* object) { return (object->*CountPtr) == 0; }
+  template<typename T> 
+    void increment_strong(T*)
+  {
+    assert(strong_counter != NULL);
+    ++*strong_counter;
+  }
+  template<typename T>
+    void decrement_strong(T*)
+  {
+    assert(strong_counter != NULL);
+    --*strong_counter;
+  }
+  template<typename T>
+    bool strong_is_zero(T*)
+  {
+    assert(strong_counter != NULL);
+    return *strong_counter == 0;
+  }
+
+  template<typename T> 
+    void increment_weak(T*)
+  {
+    assert(weak_counter != NULL);
+    ++*weak_counter;
+  }
+  template<typename T>
+    void decrement_weak(T*)
+  {
+    assert(weak_counter != NULL);
+    --*weak_counter;
+  }
+  template<typename T>
+    bool weak_is_zero(T*)
+  {
+    assert(weak_counter != NULL);
+    return *weak_counter == 0;
+  }
 };
 
 class standard_object_policy
@@ -65,6 +89,10 @@ public:
   }
 };
 
+template<typename T,
+	 typename counter_policy,
+	 typename object_policy>
+  class weak_ptr;
 
 template <typename T,
 	  typename counter_policy = external_counter_policy,
@@ -72,6 +100,8 @@ template <typename T,
   class count_ptr : private object_policy, private counter_policy
 {
   T* ptr; // przechowywany obiekt
+
+  friend class weak_ptr<T, counter_policy, object_policy>;
 public:
   count_ptr()
     : ptr(0) {}
@@ -85,43 +115,31 @@ public:
     }
   }
   count_ptr(const count_ptr& s)
-    : object_policy(s), counter_policy(s), ptr(s.ptr)
+    : object_policy(s), counter_policy(s)
   {
-    counter_policy::increment(ptr);
+    counter_policy::strong_counter = s.strong_counter;
+    counter_policy::weak_counter = s.weak_counter;
+    ptr = s.ptr;
+    counter_policy::increment_strong(ptr);
   }
   ~count_ptr()
   {
-    if(active())
-    {
-      counter_policy::decrement(ptr);
-      if(counter_policy::is_zero(ptr))
-      {
-	counter_policy::dispose(ptr);
-	object_policy::dispose(ptr);
-      }
-    }
+    detach();
   }
     
   count_ptr& operator=(const count_ptr& s)
   {
-    counter_policy::operator=(s); // przypisanie polis
-    object_policy::operator=(s);
-
     if(s.ptr != ptr)
     {
-      // usuniecie aktualnego
-      if(active())
-      {
-	counter_policy::decrement(ptr);
-	if(counter_policy::is_zero(ptr))
-	{
-	  counter_policy::dispose(ptr);
-	  object_policy::dispose(ptr);
-	}
-      }
-      // i przejęcie nowego
+      detach();
+
+      counter_policy::operator=(s); // przypisanie polis
+      object_policy::operator=(s);
+
+      counter_policy::strong_counter = s.strong_counter;
+      counter_policy::weak_counter = s.weak_counter;
       ptr = s.ptr;
-      counter_policy::increment(ptr);
+      counter_policy::increment_strong(ptr);
     }
     return *this;
   }
@@ -130,15 +148,8 @@ public:
   {
     if(p != ptr)
     {
-      if(active())
-      {
-	counter_policy::decrement(ptr);
-	if(counter_policy::is_zero(ptr))
-	{
-	  counter_policy::dispose(ptr);
-	  object_policy::dispose(ptr);
-	}
-      }
+      detach();
+      
       ptr = p;
       counter_policy::init(ptr);
     }
@@ -152,7 +163,113 @@ public:
   bool active() { return ptr != 0; }
   void release() { ptr = 0; }
 
-  int get_counter() const { return *counter_policy::counter; }
+  int get_counter() const { return *counter_policy::strong_counter; }
+private:
+  void detach()
+  {
+    if(active())
+    {
+      counter_policy::decrement_strong(ptr);
+      if(counter_policy::strong_is_zero(ptr))
+      {
+	object_policy::dispose(ptr);
+	
+	if(counter_policy::weak_is_zero(ptr))
+	  counter_policy::dispose(ptr);
+      }
+    }
+  }
+};
+
+template<typename T,
+  typename counter_policy = external_counter_policy,
+  typename object_policy  = standard_object_policy>
+class weak_ptr : private counter_policy, private object_policy
+{
+  T* ptr;
+public:
+  weak_ptr() : ptr(0) {}
+  ~weak_ptr()
+  {
+    detach();
+  }
+  
+  weak_ptr(const weak_ptr& wp)
+    : counter_policy(wp), object_policy(wp)
+  {
+    detach();
+    
+    counter_policy::strong_counter = wp.strong_counter;
+    counter_policy::weak_counter = wp.weak_counter;
+    ptr = wp.ptr;
+
+    counter_policy::increment_weak();
+  }
+  
+  weak_ptr(const count_ptr<T,counter_policy,object_policy>& cp)
+    : counter_policy(cp), object_policy(cp)
+  {
+    detach();
+    
+    counter_policy::strong_counter = cp.strong_counter;
+    counter_policy::weak_counter = cp.weak_counter;
+    ptr = cp.ptr;
+
+    counter_policy::increment_weak();
+  }
+  weak_ptr& operator= (const weak_ptr& wp)
+  {
+    counter_policy::operator=(wp); // przypisanie polis
+    object_policy::operator=(wp);
+
+    detach();
+    
+    counter_policy::strong_counter = wp.strong_counter;
+    counter_policy::weak_counter = wp.weak_counter;
+    ptr = wp.ptr;
+
+    counter_policy::increment_weak(ptr);
+    return *this;
+  }
+  weak_ptr& operator= (const count_ptr<T,counter_policy,object_policy>& cp)
+  {
+    counter_policy::operator=(cp); // przypisanie polis
+    object_policy::operator=(cp);
+
+    detach();
+
+    counter_policy::strong_counter = cp.strong_counter;
+    counter_policy::weak_counter = cp.weak_counter;
+    ptr = cp.ptr;
+
+    counter_policy::increment_weak(ptr);
+    return *this;
+  }
+  count_ptr<T,counter_policy,object_policy> lock() const
+  {
+    if(expired)
+      return count_ptr<T, counter_policy, object_policy>();
+    else
+    {
+      count_ptr<T, counter_policy, object_policy> cp(ptr);
+      cp.strong_counter = counter_policy::strong_counter;
+      cp.weak_counter = counter_policy::weak_counter;
+    }
+  }
+  bool expired() const
+  {
+    return *counter_policy::strong_counter == 0;
+  }
+private:
+  void detach()
+  {
+    if(ptr != 0)
+    {
+      counter_policy::decrement_weak(ptr);
+      if(counter_policy::strong_is_zero(ptr) && counter_policy::weak_is_zero(ptr))
+	counter_policy::dispose(ptr);
+    }
+  }
 };
 
 class noisy
@@ -193,23 +310,6 @@ public:
 
 int noisy::instances_alive = 0;
 
-class noisy_member : public noisy
-{
-public:
-  int ref_count;
-  
-  typedef count_ptr<
-    noisy_member,
-    member_counter_policy<
-      noisy_member,
-      int,
-      &noisy_member::ref_count
-      >
-    > pointer;
-
-  noisy_member(const std::string& s = std::string("array_member")) : noisy(s) {}
-};
-
 count_ptr<noisy> factory(const std::string& id)
 {
   count_ptr<noisy> p(new noisy(id));
@@ -219,17 +319,6 @@ count_ptr<noisy> factory(const std::string& id)
 count_ptr<noisy> interface()
 {
   return factory("interface");
-}
-
-noisy_member::pointer factory_member(const std::string& id)
-{
-  noisy_member::pointer p(new noisy_member(id));
-  return p;
-}
-
-noisy_member::pointer interface_member()
-{
-  return factory_member("interface");
 }
 
 int main(int, char*[])
@@ -269,7 +358,7 @@ int main(int, char*[])
     
       assert(sn.get_counter() == 2);
     }
-    
+
     assert(sn.get_counter() == 1);
     
     {
@@ -298,43 +387,19 @@ int main(int, char*[])
   }
 
   {
-    noisy_member::pointer sn(new noisy_member("shared member"));
-    assert(sn->ref_count == 1);
-
-    sn->greet();
-    
-    {
-      noisy_member::pointer sn2(sn);
-      sn2->greet();
-    
-      assert(sn->ref_count == 2);
-    }
-    
-    assert(sn->ref_count == 1);
-    
-    {
-      noisy_member::pointer sn3(sn);
-      sn3->greet();
-
-      assert(sn->ref_count == 2);
-    }
-
-    assert(sn->ref_count == 1);
+    weak_ptr<noisy> wp;
 
     {
-      noisy_member::pointer sn4;
-      sn4 = sn;
+      count_ptr<noisy> np(new noisy("weak"));
 
-      sn4->greet();
+      wp = np;
+
+      assert(!wp.expired());
       
-      assert(sn->ref_count == 2);
+      np->unlock_deletion();
     }
-    
-    assert(sn->ref_count == 1);
-    
-    sn->greet();
 
-    sn->unlock_deletion();
+    assert(wp.expired());
   }
 
   std::cout << "Pozostało " << noisy::instances_alive << " instancji noisy" << std::endl;
