@@ -133,6 +133,8 @@ public:
   }
   T& operator*() const { return *ptr; }
   T* operator->() const { return ptr; }
+  T& operator[](int i) { return ptr[i]; }
+  const T& operator[](int i) const { return ptr[i]; }
   T* get() const { return ptr; }
   bool active() { return ptr != 0; }
   void release() { ptr = 0; }
@@ -143,15 +145,31 @@ public:
 class noisy
 {
   std::string id;
+  bool safe_to_delete;
+public:
+  static int instances_alive;
 public:
   noisy(const std::string& i = std::string("array"))
-    : id(i)
+    : id(i), safe_to_delete(false)
   {
+    ++instances_alive;
     std::cout << "noisy(" << id << ")" << std::endl;
   }
-  ~noisy() { std::cout << "~noisy(" << id << ")" << std::endl; }
+  ~noisy()
+  {
+    --instances_alive;
+    if(!safe_to_delete)
+    {
+      std::cout << "~noisy(" << id << ") - unsafe deletion" << std::endl;
+      exit(0);
+    }
+    std::cout << "~noisy(" << id << ")" << std::endl;
+  }
   void greet() const { std::cout << "greet(" << id << ')' << std::endl; }
+  void unlock_deletion() { safe_to_delete = true; }
 };
+
+int noisy::instances_alive = 0;
 
 smart_ptr<noisy> factory(const std::string& id)
 {
@@ -166,40 +184,52 @@ smart_ptr<noisy> interface()
 
 int main(int, char*[])
 {
-  smart_ptr<noisy> np(new noisy("main"));
-  smart_ptr<noisy> nf(factory("factory"));
-  smart_ptr<noisy> ni(interface());
-
-  smart_ptr<noisy, external_counter_policy, standard_array_policy> na(new noisy[2]);
-
-  smart_ptr<noisy> sn(new noisy("shared"));
-  assert(sn.get_counter() == 1);
-  
-  sn->greet();
-
   {
-    smart_ptr<noisy> sn2(sn);
-    assert(sn.get_counter() == 2);
-    std::cout << "nie usuwaj jeszcze shared " << std::endl;
-  }
-
-  assert(sn.get_counter() == 1);
-
-  std::cout << "in between " << sn.get_counter() << std::endl;
-
-  {
+    smart_ptr<noisy> np(new noisy("main"));
+    smart_ptr<noisy> nf(factory("factory"));
+    smart_ptr<noisy> ni(interface());
+    
+    smart_ptr<noisy, external_counter_policy, standard_array_policy> na(new noisy[2]);
+    
+    smart_ptr<noisy> sn(new noisy("shared"));
     assert(sn.get_counter() == 1);
-    smart_ptr<noisy> sn3(sn);
-    assert(sn.get_counter() == 2);
-    std::cout << "nie usuwaj jeszcze shared" << std::endl;
+    
+    sn->greet();
+    
+    {
+      smart_ptr<noisy> sn2(sn);
+      assert(sn.get_counter() == 2);
+    }
+    
+    assert(sn.get_counter() == 1);
+    
+    {
+      smart_ptr<noisy> sn3(sn);
+      assert(sn.get_counter() == 2);
+    }
+
+    assert(sn.get_counter() == 1);
+
+    {
+      smart_ptr<noisy> sn4;
+      sn4 = sn;
+
+      assert(sn.get_counter() == 2);
+    }
+    
+    assert(sn.get_counter() == 1);
+    
+    sn->greet();
+    
+    np->unlock_deletion();
+    nf->unlock_deletion();
+    ni->unlock_deletion();
+    sn->unlock_deletion();
+    na[0].unlock_deletion();
+    na[1].unlock_deletion();
   }
 
-  std::cout << "mozna usunac shared" << std::endl;
-
-  sn->greet();
-
-  //smart_ptr<noisy> sn3;
-  //sn3 = sn;
+  std::cout << "Pozostało " << noisy::instances_alive << " instancji noisy" << std::endl;
   
   return 0;
 }
