@@ -40,10 +40,10 @@ template<typename ObjectType,
 class member_counter_policy
 {
 public:
-  member_counter_policy() { std::cout << "mcp" << std::endl; }
-  void init(ObjectType* object) { std::cout << "init" << std::endl; object->*CountPtr = 1; }
+  member_counter_policy() {}
+  void init(ObjectType* object) { object->*CountPtr = 1; }
   void dispose (ObjectType*) {}
-  void increment(ObjectType* object) { std::cout << "inc" << std::endl; ++(object->*CountPtr); }
+  void increment(ObjectType* object) { ++(object->*CountPtr); }
   void decrement(ObjectType* object) { --(object->*CountPtr); }
   bool is_zero(ObjectType* object) { return (object->*CountPtr) == 0; }
 };
@@ -86,7 +86,7 @@ public:
     }
   }
   smart_ptr(const smart_ptr& s)
-    : counter_policy(s), object_policy(s), ptr(s.ptr)
+    : object_policy(s), counter_policy(s), ptr(s.ptr)
   {
     counter_policy::increment(ptr);
   }
@@ -124,6 +124,7 @@ public:
       ptr = s.ptr;
       counter_policy::increment(ptr);
     }
+    return *this;
   }
   
   smart_ptr& operator= (T* p)
@@ -207,7 +208,7 @@ public:
     >
   > pointer;
 
-  noisy_member(const std::string& s) : noisy(s) {}
+  noisy_member(const std::string& s = std::string("array_member")) : noisy(s) {}
 };
 
 smart_ptr<noisy> factory(const std::string& id)
@@ -219,6 +220,17 @@ smart_ptr<noisy> factory(const std::string& id)
 smart_ptr<noisy> interface()
 {
   return factory("interface");
+}
+
+noisy_member::pointer factory_member(const std::string& id)
+{
+  noisy_member::pointer p(new noisy_member(id));
+  return p;
+}
+
+noisy_member::pointer interface_member()
+{
+  return factory_member("interface");
 }
 
 int main(int, char*[])
@@ -283,12 +295,24 @@ int main(int, char*[])
   }
 
   {
-    noisy_member::pointer nm(new noisy_member("member"));
-    nm->greet();
-    assert(nm->ref_count == 1);
+    noisy_member::pointer mp(new noisy_member("main_member"));
+    mp->greet();
+    
+    assert(mp->ref_count == 1);
+    
+    noisy_member::pointer mf(factory_member("factory_member"));
+    mf->greet();
 
-    nm->unlock_deletion();
+    assert(mf->ref_count == 1);
+    
+    noisy_member::pointer mi(interface_member());
+    mi->greet();
+
+    mp->unlock_deletion();
+    mf->unlock_deletion();
+    mi->unlock_deletion();
   }
+
 
   std::cout << "Pozostało " << noisy::instances_alive << " instancji noisy" << std::endl;
   
