@@ -2,6 +2,33 @@
 #include <iostream>
 #include <string>
 
+class external_counter_policy
+{
+  int* counter;
+public:
+  external_counter_policy()
+    : counter(0) {}
+
+  template<typename T>
+    void init(T*)
+  {
+    counter = new int;
+    *counter = 1;
+  }
+
+  template<typename T>
+    void dispose(T*)
+  {
+    delete counter;
+  }
+  template<typename T> 
+    void increment(T*) { ++*counter; }
+  template<typename T>
+    void decrement(T*) { --*counter; }
+  template<typename T>
+    bool is_zero(T*) { return *counter == 0; }
+};
+
 class standard_object_policy
 {
 public:
@@ -21,38 +48,59 @@ public:
 };
 
 
-template<typename T, typename object_policy>
+template<typename T,
+	 typename counter_policy,
+	 typename object_policy>
   class transporter;
 
 template <typename T,
+	  typename counter_policy = external_counter_policy,
 	  typename object_policy = standard_object_policy>
-class smart_ptr : private object_policy
+  class smart_ptr : private object_policy, private counter_policy
 {
   T* ptr; // przechowywany obiekt
 public:
   smart_ptr()
     : ptr(0) {}
 
-  smart_ptr(const transporter<T, object_policy>& t)
+  smart_ptr(const transporter<T, counter_policy, object_policy>& t)
   {
     ptr = t.ptr;
-    const_cast<transporter<T, object_policy>&>(t).ptr = 0; // zło
+    const_cast<transporter<T, counter_policy, object_policy>&>(t).ptr = 0; // zło
   }
   
-  smart_ptr<T>& operator=(const transporter<T, object_policy>& t)
+  smart_ptr<T>& operator=(const transporter<T, counter_policy, object_policy>& t)
   {
-    dispose(ptr);
+    counter_policy::decrement(ptr);
+    if(counter_policy::is_zero(ptr))
+    {
+      counter_policy::dispose(ptr);
+      object_policy::dispose(ptr);
+    }
     ptr = t.ptr;
-    const_cast<transporter<T, object_policy>&>(t).ptr = 0; // zło
+    const_cast<transporter<T, counter_policy, object_policy>&>(t).ptr = 0; // zło
     return *this;
   }
 
   explicit smart_ptr(T* p)
     : ptr(p) {}
-  ~smart_ptr() { dispose(ptr); }
-  smart_ptr<T>& operator= (T* p)
+  ~smart_ptr()
   {
-    dispose(ptr);
+    counter_policy::decrement(ptr);
+    if(counter_policy::is_zero(ptr))
+    {
+      counter_policy::dispose(ptr);
+      object_policy::dispose(ptr);
+    }
+  }
+  smart_ptr& operator= (T* p)
+  {
+    counter_policy::decrement(ptr);
+    if(counter_policy::is_zero(ptr))
+    {
+      counter_policy::dispose(ptr);
+      object_policy::dispose(ptr);
+    }
     ptr = p;
     return *this;
   }
@@ -60,16 +108,17 @@ public:
   T* operator->() const { return ptr; }
   T* get() const { return ptr; }
   void release() { ptr = 0; }
-  void swap(smart_ptr<T>& h) { std::swap(ptr,h.ptr); }
+  void swap(smart_ptr& h) { std::swap(ptr,h.ptr); }
   void swap(T*& p) { std::swap(ptr,p); }
 private:
-  smart_ptr (const smart_ptr<T>&);               // blok
-  smart_ptr<T>& operator= (const smart_ptr<T>&); // blok
+  smart_ptr(const smart_ptr&);               // blok
+  smart_ptr& operator= (const smart_ptr&); // blok
 };
 
 template <typename T,
+	  typename counter_policy = external_counter_policy,
 	  typename object_policy = standard_object_policy>
-  class transporter : private object_policy
+  class transporter : private object_policy, private counter_policy
 {
   T* ptr;
 public:
@@ -83,7 +132,15 @@ public:
     ptr = t.ptr;
     const_cast<transporter<T>&>(t).ptr = 0; // zło
   }
-  ~transporter() { delete ptr; }
+  ~transporter()
+  {
+    counter_policy::decrement(ptr);
+    if(counter_policy::is_zero(ptr))
+    {
+      counter_policy::dispose(ptr);
+      object_policy::dispose(ptr);
+    }
+  }
 private:
   transporter(transporter<T>&); // blok
   transporter<T>& operator= (transporter<T>&); // blok
@@ -120,7 +177,7 @@ int main(int, char*[])
   smart_ptr<noisy> ni(interface());
 
   noisy* arr = new noisy[2];
-  smart_ptr<noisy, standard_array_policy> na(arr);
+  smart_ptr<noisy, external_counter_policy, standard_array_policy> na(arr);
   
   return 0;
 }
