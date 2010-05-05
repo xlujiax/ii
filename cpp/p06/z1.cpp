@@ -247,13 +247,14 @@ public:
   }
   count_ptr<T,counter_policy,object_policy> lock() const
   {
-    if(expired)
+    if(expired())
       return count_ptr<T, counter_policy, object_policy>();
     else
     {
       count_ptr<T, counter_policy, object_policy> cp(ptr);
       cp.strong_counter = counter_policy::strong_counter;
       cp.weak_counter = counter_policy::weak_counter;
+      return cp;
     }
   }
   bool expired() const
@@ -390,7 +391,7 @@ int main(int, char*[])
     weak_ptr<noisy> wp;
 
     {
-      count_ptr<noisy> np(new noisy("weak"));
+      count_ptr<noisy> np(new noisy("expire please"));
 
       wp = np;
 
@@ -400,6 +401,19 @@ int main(int, char*[])
     }
 
     assert(wp.expired());
+  }
+
+  {
+    weak_ptr<noisy> wp;
+    
+    count_ptr<noisy> np(new noisy("get strong pointer"));
+    
+    wp = np;
+    
+    count_ptr<noisy> w2c = wp.lock();
+    w2c->greet();
+    
+    np->unlock_deletion();
   }
 
   std::cout << "Pozostało " << noisy::instances_alive << " instancji noisy" << std::endl;
