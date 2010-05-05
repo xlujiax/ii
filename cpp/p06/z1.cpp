@@ -34,6 +34,20 @@ public:
     bool is_zero(T*) { assert(counter != NULL); return *counter == 0; }
 };
 
+template<typename ObjectType,
+          typename CountT,
+          CountT ObjectType::*CountPtr>
+class member_counter_policy
+{
+public:
+  member_counter_policy() { std::cout << "mcp" << std::endl; }
+  void init(ObjectType* object) { std::cout << "init" << std::endl; object->*CountPtr = 1; }
+  void dispose (ObjectType*) {}
+  void increment(ObjectType* object) { std::cout << "inc" << std::endl; ++(object->*CountPtr); }
+  void decrement(ObjectType* object) { --(object->*CountPtr); }
+  bool is_zero(ObjectType* object) { return (object->*CountPtr) == 0; }
+};
+
 class standard_object_policy
 {
 public:
@@ -66,8 +80,10 @@ public:
   explicit smart_ptr(T* p)
   {
     if(p != ptr)
+    {
+      ptr = p;
       counter_policy::init(ptr);
-    ptr = p;
+    }
   }
   smart_ptr(const smart_ptr& s)
     : counter_policy(s), object_policy(s), ptr(s.ptr)
@@ -78,8 +94,6 @@ public:
   {
     if(active())
     {
-      assert(counter_policy::counter != NULL);
-
       counter_policy::decrement(ptr);
       if(counter_policy::is_zero(ptr))
       {
@@ -125,8 +139,8 @@ public:
 	  object_policy::dispose(ptr);
 	}
       }
-      counter_policy::init(ptr);
       ptr = p;
+      counter_policy::init(ptr);
     }
     return *this;
   }
@@ -179,6 +193,23 @@ public:
 
 int noisy::instances_alive = 0;
 
+class noisy_member : public noisy
+{
+public:
+  int ref_count;
+  
+  typedef smart_ptr<
+  noisy_member,
+  member_counter_policy<
+    noisy_member,
+    int,
+    &noisy_member::ref_count
+    >
+  > pointer;
+
+  noisy_member(const std::string& s) : noisy(s) {}
+};
+
 smart_ptr<noisy> factory(const std::string& id)
 {
   smart_ptr<noisy> p(new noisy(id));
@@ -204,6 +235,14 @@ int main(int, char*[])
     
     smart_ptr<noisy, external_counter_policy, standard_array_policy> na(new noisy[2]);
     
+    np->unlock_deletion();
+    nf->unlock_deletion();
+    ni->unlock_deletion();
+    na[0].unlock_deletion();
+    na[1].unlock_deletion();
+  }
+  
+  {
     smart_ptr<noisy> sn(new noisy("shared"));
     assert(sn.get_counter() == 1);
 
@@ -240,12 +279,15 @@ int main(int, char*[])
     
     sn->greet();
 
-    np->unlock_deletion();
-    nf->unlock_deletion();
-    ni->unlock_deletion();
     sn->unlock_deletion();
-    na[0].unlock_deletion();
-    na[1].unlock_deletion();
+  }
+
+  {
+    noisy_member::pointer nm(new noisy_member("member"));
+    nm->greet();
+    assert(nm->ref_count == 1);
+
+    nm->unlock_deletion();
   }
 
   std::cout << "Pozostało " << noisy::instances_alive << " instancji noisy" << std::endl;
