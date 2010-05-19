@@ -183,12 +183,53 @@ composer<OutsideFunctor, unary_function_wrapper<R, T>, 1>
     return composer<OutsideFunctor, unary_function_wrapper<R, T>, 1>(out_f, in_f);
 }
 
-
 template<typename OutsideFunctor, typename R, typename T, typename U>
 composer<OutsideFunctor, binary_function_wrapper<R, T, U>, 2>
         compose(const OutsideFunctor& out_f, R (*in_f)(T, U))
 {
     return composer<OutsideFunctor, binary_function_wrapper<R, T, U>, 2>(out_f, in_f);
+}
+
+template<typename R1, typename T1, typename InsideFunctor>
+  composer<unary_function_wrapper<R1, T1>, InsideFunctor, InsideFunctor::args>
+        compose(R1 (*out_f)(T1), const InsideFunctor& in_f)
+{
+  return composer<unary_function_wrapper<R1, T1>, InsideFunctor, InsideFunctor::args>(out_f, in_f);
+}
+
+template<typename R1, typename T1, typename R2, typename T2>
+composer<unary_function_wrapper<R1, T1>, unary_function_wrapper<R2, T2>, 1>
+  compose(R1 (*out_f)(T1), R2 (*in_f)(T2))
+{
+    return composer<unary_function_wrapper<R1, T1>, unary_function_wrapper<R2, T2>, 1>(out_f, in_f);
+}
+
+template<typename R1, typename T1, typename R2, typename T2, typename U2>
+  composer<unary_function_wrapper<R1, T1>, binary_function_wrapper<R2, T2, U2>, 2>
+        compose(R1 (*out_f)(T1), R2 (*in_f)(T2, U2))
+{
+  return composer<unary_function_wrapper<R1, T1>, binary_function_wrapper<R2, T2, U2>, 2>(out_f, in_f);
+}
+
+template<typename R1, typename T1, typename U1, typename InsideFunctor>
+  composer<binary_function_wrapper<R1, T1, U1>, InsideFunctor, InsideFunctor::args>
+        compose(R1 (*out_f)(T1, U1), const InsideFunctor& in_f)
+{
+  return composer<binary_function_wrapper<R1, T1, U1>, InsideFunctor, InsideFunctor::args>(out_f, in_f);
+}
+
+template<typename R1, typename T1, typename U1, typename R2, typename T2>
+composer<binary_function_wrapper<R1, T1, U1>, unary_function_wrapper<R2, T2>, 1>
+  compose(R1 (*out_f)(T1, U1), R2 (*in_f)(T2))
+{
+    return composer<binary_function_wrapper<R1, T1, U1>, unary_function_wrapper<R2, T2>, 1>(out_f, in_f);
+}
+
+template<typename R1, typename T1, typename U1, typename R2, typename T2, typename U2>
+  composer<binary_function_wrapper<R1, T1, U1>, binary_function_wrapper<R2, T2, U2>, 2>
+        compose(R1 (*out_f)(T1, U1), R2 (*in_f)(T2, U2))
+{
+  return composer<binary_function_wrapper<R1, T1, U1>, binary_function_wrapper<R2, T2, U2>, 2>(out_f, in_f);
 }
 
 template<typename T>
