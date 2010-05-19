@@ -262,9 +262,9 @@ int main(int, char*[])
     TEST(bind2nd(greater_functor<int>(), 4)(7));
     TEST(bind2nd(greater_functor<int>(), 7)(4));
 
-    //CAPTION("Porownanie, wiazanie obu argumentow");
-    //TEST(bind1st(bind1st(greater_function<int>, 4), 7)());
-    //TEST(bind1st(bind2nd(greater_function<int>, 4), 7)());
+    CAPTION("Wiazanie obu argumentow");
+    TEST(bind1st(bind1st(greater_function<int>, 4), 7)());
+    TEST(bind1st(bind2nd(greater_function<int>, 4), 7)());
 
     CAPTION("Operacje arytmetyczne");
     TEST(bind1st(div_function<float>, 2.0f)(3.0f));
