@@ -274,22 +274,12 @@ int main(int, char*[])
     TEST(bind1st(div_functor<float>(), 2.0f)(3.0f));
     TEST(bind2nd(div_functor<float>(), 2.0f)(3.0f));
 
+    CAPTION("Wiazanie funkcji i funktorow jednoargumentowych");
+    TEST(bind1st(add_5_function, 1.0f)());
+    TEST(bind1st(add_5_functor(), 1.0f)());
+    
     CAPTION("Kompozycja");
     TEST(compose(add_5_functor(), add_5_functor())(1.0f));
-
-    /*
-    std::cout << bind1st(compose(functor2(), functor()), 15)(13) << std::endl;
-    std::cout << bind1st(compose(functor2(), functor2()), 15)() << std::endl;
-
-    std::cout << bind1st(f, 15)(1) << std::endl;
-    std::cout << bind1st(functor(), 15)(1) << std::endl;
-    std::cout << bind1st(functor2(), 15)() << std::endl;
-    std::cout << bind1st(g, 15)() << std::endl;
-
-    std::cout << bind2nd(f, 15)(1) << std::endl;
-    std::cout << bind2nd(functor(), 15)(1) << std::endl;
-    */
-    std::cin.get();
 
     return 0;
 }
