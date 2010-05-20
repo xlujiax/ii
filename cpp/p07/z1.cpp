@@ -40,7 +40,7 @@ template<typename Functor>
 class binder1st<Functor, 2>
 {
 private:
-    const Functor& f;
+    Functor f;
     const typename Functor::param1& t;
 public:
     binder1st(const Functor& f_, const typename Functor::param1& t_) : f(f_), t(t_) {}
@@ -58,7 +58,7 @@ template<typename Functor>
 class binder1st<Functor, 1>
 {
 private:
-    const Functor& f;
+    Functor f;
     const typename Functor::param1& t;
 public:
     binder1st(const Functor& f_, const typename Functor::param1& t_) : f(f_), t(t_) {}
@@ -95,7 +95,7 @@ template<typename Functor>
 class binder2nd
 {
 private:
-    const Functor& f;
+    Functor f;
     const typename Functor::param2& t;
 public:
     binder2nd(const Functor& f_, const typename Functor::param2& t_) : f(f_), t(t_) {}
@@ -134,8 +134,8 @@ template<typename OutsideFunctor, typename InsideFunctor>
 struct composer<OutsideFunctor, InsideFunctor, 2>
 {
 private:
-    const OutsideFunctor& out_f;
-    const InsideFunctor& in_f;
+    OutsideFunctor out_f;
+    InsideFunctor in_f;
 public:
     static const int args = 2;
     typedef typename OutsideFunctor::return_type return_type;
@@ -154,8 +154,8 @@ template<typename OutsideFunctor, typename InsideFunctor>
 struct composer<OutsideFunctor, InsideFunctor, 1>
 {
 private:
-    const OutsideFunctor& out_f;
-    const InsideFunctor& in_f;
+    OutsideFunctor out_f;
+    InsideFunctor in_f;
 public:
     static const int args = 1;
     typedef typename OutsideFunctor::return_type return_type;
@@ -165,7 +165,7 @@ public:
         : out_f(out_f_), in_f(in_f_) {}
     return_type operator()(const param1& p1) const
     {
-        return out_f(in_f(p1));
+      return out_f(in_f(p1));
     }
 };
 
@@ -287,7 +287,7 @@ struct add_5_functor
 
 int main(int, char*[])
 {
-    CAPTION("Porownanie, wiazanie pierwszego argumentu");
+  CAPTION("Porownanie, wiazanie pierwszego argumentu");
 
     TEST(bind1st(greater_function<int>, 4)(7));
     TEST(bind1st(greater_function<int>, 7)(4));
@@ -321,6 +321,9 @@ int main(int, char*[])
     
     CAPTION("Kompozycja");
     TEST(compose(add_5_functor(), add_5_functor())(1.0f));
+    TEST(compose(add_5_functor(), add_5_function)(1.0f));
+  TEST(compose(add_5_function, add_5_function)(1.0f));
+  TEST(compose(add_5_function, add_5_functor())(1.0f));
 
     return 0;
 }
