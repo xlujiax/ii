@@ -328,6 +328,6 @@ int main(int, char*[])
 
   CAPTION("Zlozenie kompozycji");
   TEST(compose(add_5_function, compose(add_5_function, add_5_function))(7.0f));
-  TEST(compose(add_5_function, compose(bind2nd(div_function<float>, 7.0f), add_5_function))(7.0f));
+  TEST(compose(add_n_functor(8.0f), compose(bind2nd(div_function<float>, 7.0f), add_5_function))(7.0f));
     return 0;
 }
