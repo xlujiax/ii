@@ -319,11 +319,15 @@ int main(int, char*[])
     TEST(bind1st(add_5_function, 1.0f)());
     TEST(bind1st(add_5_functor(), 1.0f)());
     
-    CAPTION("Kompozycja");
-    TEST(compose(add_5_functor(), add_5_functor())(1.0f));
-    TEST(compose(add_5_functor(), add_5_function)(1.0f));
+    CAPTION("Kompozycja przyjmuje funkcje i funktory");
+    TEST(compose(add_n_functor(3.0f), add_5_functor())(1.0f));
+    TEST(compose(add_n_functor(3.0f), add_5_function)(1.0f));
   TEST(compose(add_5_function, add_5_function)(1.0f));
-  TEST(compose(add_5_function, add_5_functor())(1.0f));
+  TEST(compose(add_5_function, add_n_functor(3.0f))(1.0f));
 
+
+  CAPTION("Zlozenie kompozycji");
+  TEST(compose(add_5_function, compose(add_5_function, add_5_function))(7.0f));
+  TEST(compose(add_5_function, compose(bind2nd(div_function<float>, 7.0f), add_5_function))(7.0f));
     return 0;
 }
