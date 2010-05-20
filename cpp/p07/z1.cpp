@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 template<typename R, typename T, typename U>
 struct binary_function_wrapper {
@@ -260,6 +261,8 @@ struct div_functor
     typedef T param2;
 };
 
+bool not_function(bool a) { return !a; }
+
 float add_5_function(float a) { return a + 5.0f; }
 struct add_n_functor
 {
@@ -272,6 +275,21 @@ struct add_n_functor
     typedef float return_type;
     typedef float param1;
 };
+
+template<typename T, typename Pred>
+  void print_filtered(std::vector<T>& v, Pred pred)
+{
+  for(typename std::vector<T>::iterator i = v.begin(); i != v.end(); ++i)
+    if(pred(*i))
+      std::cout << *i << std::endl;
+}
+
+template<typename T, typename Pred>
+  void print_modified(const std::vector<T>& v, Pred pred)
+{
+  for(typename std::vector<T>::const_iterator i = v.begin(); i != v.end(); ++i)
+    std::cout << pred(*i) << std::endl;
+}
 
 struct add_5_functor
 {
@@ -333,5 +351,22 @@ int main(int, char*[])
   CAPTION("Compose zwracajacy funktor dwuargumentowy");
   TEST(compose(add_5_function, div_function<float>)(1.0f, 3.0f));
   TEST(compose(add_n_functor(5.0f), div_functor<float>())(1.0f, 3.0f));
-    return 0;
+
+  CAPTION("Algorytmy z funktorami - przekazanie funkcji");
+  std::vector<int> v;
+  v.push_back(1);
+  v.push_back(5);
+  v.push_back(2);
+  v.push_back(7);
+
+  print_modified(v, add_5_function);
+
+  CAPTION("Algorytmy z funktorami - przekazanie funktora bind");
+
+  print_filtered(v, bind2nd(greater_function<int>, 3));
+
+  CAPTION("Algorytmy z funktorami - przekazanie funktora compose");
+
+  print_filtered(v, compose(not_function, bind2nd(greater_function<int>, 3)));
+  return 0;
 }
