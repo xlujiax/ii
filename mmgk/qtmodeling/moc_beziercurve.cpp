@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'beziercurve.h'
 **
-** Created: Sat May 29 17:44:05 2010
+** Created: Sat May 29 21:46:31 2010
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.2)
 **
 ** WARNING! All changes made in this file will be lost!

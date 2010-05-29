@@ -33,7 +33,6 @@ public:
     BackgroundScene *scene;
 
     QPointF eval(float t);
-    void degreeRaise();
 
     bool drawControl;
     bool drawHull;

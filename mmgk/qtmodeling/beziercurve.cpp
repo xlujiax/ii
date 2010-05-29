@@ -8,11 +8,9 @@ BSplineCurve::BSplineCurve(BackgroundScene *s) : scene(s)
 
 QPointF BSplineCurve::eval(float t)
 {
-    QPointF ret;
-
     const int n = controlPoints.size();
 
-    float c[4][4];
+    QPointF c[4][4];
 
     int j;
     for(j = 0; j < n; ++j)
@@ -25,11 +23,11 @@ QPointF BSplineCurve::eval(float t)
     {
         int index = i + j - 3;
         if(index < 0)
-            c[i][0] = controlPoints[0]->x();
+            c[i][0] = controlPoints[0]->pos();
         else
         {
             assert(0 <= index && index <= n);
-            c[i][0] = controlPoints[index]->x();
+            c[i][0] = controlPoints[index]->pos();
         }
     }
 
@@ -41,38 +39,9 @@ QPointF BSplineCurve::eval(float t)
         c[i][k] = ((t - tleft) * c[i][k-1] + (tright - t)*c[i-1][k-1]) / (tright - tleft);
     }
 
-    ret.setX(c[3][3]);
-
-    // y
-
-    for(int i = 0; i <= 3; ++i)
-    {
-        int index = i + j - 3;
-        if(index < 0)
-            c[i][0] = controlPoints[0]->y();
-        else
-        {
-            assert(0 <= index && index <= n);
-            c[i][0] = controlPoints[index]->y();
-        }
-    }
-
-    for(int k = 1; k <= 3; ++k)
-        for(int i = k; i <= 3; ++i)
-        {
-        float tleft = std::max(0.0f, float(j - 3 + i) / float(n));
-        float tright = std::min(1.0f, float(j + i + 1 - k) / float(n));
-        c[i][k] = ((t - tleft) * c[i][k-1] + (tright - t)*c[i-1][k-1]) / (tright - tleft);
-    }
-
-    ret.setY(c[3][3]);
-    return ret;
+    return c[3][3];
 }
 
-void BSplineCurve::degreeRaise()
-{
-    assert(false);
-}
 
 void BSplineCurve::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
@@ -110,20 +79,65 @@ QVector<QPointF> BSplineCurve::pointsOnCurve()
 
     if(intervals > 0)
     {
-        const float segments = 50; // segments per interval
+        const float segments = 20; // segments per interval
 
         QVector<QPointF> pts;
         pts.resize(intervals * segments + 1);
 
+
         for(int s = 0; s < segments; ++s)
         {
             float eps = float(s) / float(intervals * segments);
-            for(int i = 0; i < intervals; ++i)
+
+
+            const int n = controlPoints.size();
+            QPointF c[8 + intervals][4];
+
+            int j;
+            for(j = 0; j < n; ++j)
+                if(float(j) <= float(eps * intervals) && float(eps * intervals) < float(j+1))
+                    break;
+
+            assert(j == 0);
+
+
+            // wypełnienie całego pierwszego wiersza
+            for(int i = 0; i <= 7 + intervals; ++i)
             {
-                float t = float(i) / float(intervals) + eps;
+                int index = i + j - 3;
+                if(index < 0)
+                    c[i][0] = controlPoints[0]->pos();
+                else if(index > n - 1)
+                    c[i][0] = controlPoints[n-1]->pos();
+                else
+                {
+                    assert(0 <= index && index < n);
+                    c[i][0] = controlPoints[index]->pos();
+                }
+            }
+
+            // wypełnienie górnego trójkąta
+            for(int k = 1; k <= 3; ++k)
+                for(int i = k; i <= 2; ++i)
+                {
+                float tleft = std::max(0.0f, float(j - 3 + i) / float(n));
+                float tright = std::min(1.0f, float(j + i + 1 - k) / float(n));
+                c[i][k] = ((eps - tleft) * c[i][k-1] + (tright - eps)*c[i-1][k-1]) / (tright - tleft);
+            }
+
+            for(int it = 0; it < intervals; ++it)
+            {
+                float t = float(it) / float(intervals) + eps;
                 assert(0.0f <= t && t <= 1.0f);
-                assert(i*segments + s < intervals * segments + 1);
-                pts[i*segments + s] = eval(t);
+                assert(it*segments + s < intervals * segments + 1);
+                for(int k = 1; k <= 3; ++k)
+                {
+                    float tleft = std::max(0.0f, float(j - 3 + 3) / float(n));
+                    float tright = std::min(1.0f, float(j + 3 + 1 - k) / float(n));
+                    c[3 + it][k] = ((t - tleft) * c[3 + it][k-1] + (tright - t)*c[3-it-1][k-1]) / (tright - tleft);
+                }
+
+                pts[it*segments + s] = c[3+it][3];
             }
         }
 
@@ -133,15 +147,6 @@ QVector<QPointF> BSplineCurve::pointsOnCurve()
     }
     else
         return QVector<QPointF>();
-
-    /*
-    const float prec = 0.01;
-    QVector<QPointF> pts;
-    pts.append(eval(0));
-    for(float t = prec; t < 1; t += prec)
-        pts.append(eval(t));
-    pts.append(eval(1));
-    return pts;*/
 }
 
 QRectF BSplineCurve::boundingRect() const
@@ -227,30 +232,6 @@ void BSplineCurve::updateHull()
             hull = hull.united(convex(p));
         }
     }
-    /*
-        hull = QPolygonF();
-        ControlPoint* c1;
-        ControlPoint* c2;
-        ControlPoint* c3;
-        foreach(c1, controlPoints)
-        {
-                foreach(c2, controlPoints)
-                {
-                        foreach(c3, controlPoints)
-                        {
-                                if(c1 != c2 && c2 != c3 && c1 != c3)
-                                {
-                                        QVector<QPointF> p;
-                                        p.append(c1->pos());
-                                        p.append(c2->pos());
-                                        p.append(c3->pos());
-
-                                        hull = hull.united(QPolygonF(p));
-                                }
-                        }
-                }
-        }
-        */
 }
 
 void BSplineCurve::removePoint(ControlPoint* pt)
@@ -341,7 +322,6 @@ void BSplineCurve::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     QAction *controlAction = menu.addAction("Toggle control view");
     QAction *hullAction = menu.addAction("Toggle hull view");
     QAction *removeAction = menu.addAction("Remove curve");
-    QAction *addAction = menu.addAction("Add control point");
     QAction *saveAction = menu.addAction("Save curve");
     QAction *loadAction = menu.addAction("Load curve");
     QAction *selectedAction = menu.exec(event->screenPos());
@@ -359,10 +339,6 @@ void BSplineCurve::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     else if(selectedAction == removeAction)
     {
         removeCurve();
-    }
-    else if(selectedAction == addAction)
-    {
-        degreeRaise();
     }
     else if(selectedAction == saveAction)
     {
