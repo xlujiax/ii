@@ -6,9 +6,9 @@ BSplineCurve::BSplineCurve(BackgroundScene *s) : scene(s)
 	drawHull = true;
 }
 
-QPoint BSplineCurve::eval(float t)
+QPointF BSplineCurve::eval(float t)
 {
-    QPoint ret;
+    QPointF ret;
 
     const int n = controlPoints.size() - 1;
 
@@ -18,6 +18,8 @@ QPoint BSplineCurve::eval(float t)
     for(j = 0; j < n; ++j)
         if(j <= t * n && t * n <= j+1)
             break;
+
+    assert(j <= t * n && t * n <= j+1);
 
     for(int i = 0; i <= 3; ++i)
     {
@@ -34,26 +36,12 @@ QPoint BSplineCurve::eval(float t)
     for(int k = 1; k <= 3; ++k)
         for(int i = k; i <= 3; ++i)
         {
-            float tleft;
-            if(j - 3 + i < 0)
-                tleft = controlPoints[0]->x();
-            else
-            {
-                assert(0 <= j-3+i && j-3+i <= n);
-                tleft = controlPoints[j-3+i]->x();
-            }
-            float tright;
-            if(j + i + 1 - k > n)
-                tright = controlPoints[n]->x();
-            else
-            {
-                assert(0 <= j + i + 1 - k && j + i + 1 - k <= n);
-                float tright = controlPoints[j + i + 1 - k]->x();
-            }
+            float tleft = std::max(0.0f, float(j - 3 + i) / float(n));
+            float tright = std::min(1.0f, float(j + i + 1 - k) / float(n));
             c[i][k] = ((t - tleft) * c[i][k-1] + (tright - t)*c[i-1][k-1]) / (tright - tleft);
         }
 
-    ret.setX(c[j][3]);
+    ret.setX(c[3][3]);
 
     // y
 
@@ -72,26 +60,18 @@ QPoint BSplineCurve::eval(float t)
     for(int k = 1; k <= 3; ++k)
         for(int i = k; i <= 3; ++i)
         {
-            float tleft;
-            if(j - 3 + i < 0)
-                tleft = controlPoints[0]->y();
-            else
-            {
-                assert(0 <= j-3+i && j-3+i <= n);
-                tleft = controlPoints[j-3+i]->y();
-            }
-            float tright;
-            if(j + i + 1 - k > n)
-                tright = controlPoints[n]->y();
-            else
-            {
-                assert(0 <= j + i + 1 - k && j + i + 1 - k <= n);
-                float tright = controlPoints[j + i + 1 - k]->y();
-            }
+            float tleft = std::max(0.0f, float(j - 3 + i) / float(n));
+            float tright = std::min(1.0f, float(j + i + 1 - k) / float(n));
             c[i][k] = ((t - tleft) * c[i][k-1] + (tright - t)*c[i-1][k-1]) / (tright - tleft);
         }
 
-    ret.setY(c[j][3]);
+    ret.setY(c[3][3]);
+
+
+
+    QTextStream cout(stdout);
+    cout << ret.x() << ',' << ret.y() << endl;
+
 
     return ret;
 }
@@ -121,10 +101,10 @@ void BSplineCurve::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 	painter->setPen(QPen(Qt::black, 2));
 	const float prec = 0.01;
 
-	QPoint bef = eval(0);
+        QPointF bef = eval(0);
 	for(float t = prec; t < 1; t += prec)
 	{
-		QPoint act = eval(t);
+                QPointF act = eval(t);
 		painter->drawLine(bef, act);
 		bef = act;
 	}

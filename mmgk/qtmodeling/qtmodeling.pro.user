@@ -62,7 +62,7 @@
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList" >
-    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-xnNwaXJTRP,guid=53ab79e96b0af2fc3569aa3b4bfffcb2</value>
+    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-32Inaw8vrw,guid=ce4b4654b45e230b580e884f4c00db3b</value>
     <value type="QString" >DESKTOP_SESSION=gnome</value>
     <value type="QString" >DESKTOP_STARTUP_ID=</value>
     <value type="QString" >DISPLAY=:0.0</value>
@@ -70,7 +70,7 @@
     <value type="QString" >GDM_KEYBOARD_LAYOUT=pl</value>
     <value type="QString" >GDM_LANG=en_US.UTF-8</value>
     <value type="QString" >GNOME_DESKTOP_SESSION_ID=this-is-deprecated</value>
-    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-Fhq6Ta/socket</value>
+    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-USQH6c/socket</value>
     <value type="QString" >GTK_MODULES=canberra-gtk-module</value>
     <value type="QString" >GTK_RC_FILES=/etc/gtk/gtkrc:/home/maciek/.gtkrc-1.2-gnome2</value>
     <value type="QString" >HOME=/home/maciek</value>
@@ -81,16 +81,16 @@
     <value type="QString" >PATH=/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games</value>
     <value type="QString" >PWD=/home/maciek</value>
     <value type="QString" >QTDIR=/usr</value>
-    <value type="QString" >SESSION_MANAGER=local/pc:@/tmp/.ICE-unix/1352,unix/pc:/tmp/.ICE-unix/1352</value>
+    <value type="QString" >SESSION_MANAGER=local/pc:@/tmp/.ICE-unix/1357,unix/pc:/tmp/.ICE-unix/1357</value>
     <value type="QString" >SHELL=/bin/bash</value>
     <value type="QString" >SPEECHD_PORT=7560</value>
-    <value type="QString" >SSH_AGENT_PID=1392</value>
-    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-Fhq6Ta/socket.ssh</value>
+    <value type="QString" >SSH_AGENT_PID=1464</value>
+    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-USQH6c/socket.ssh</value>
     <value type="QString" >USER=maciek</value>
     <value type="QString" >USERNAME=maciek</value>
-    <value type="QString" >XAUTHORITY=/var/run/gdm/auth-for-maciek-iO7wBJ/database</value>
+    <value type="QString" >XAUTHORITY=/var/run/gdm/auth-for-maciek-ZxnOyn/database</value>
     <value type="QString" >XDG_DATA_DIRS=/usr/share/gnome:/usr/local/share/:/usr/share/</value>
-    <value type="QString" >XDG_SESSION_COOKIE=a22b6307fd4be0134e9bfb1a4b30d9d3-1275067569.480393-222148565</value>
+    <value type="QString" >XDG_SESSION_COOKIE=a22b6307fd4be0134e9bfb1a4b30d9d3-1275124538.450622-1546169903</value>
    </valuelist>
    <valuelist key="abstractProcess.arguments" type="QVariantList" >
     <value type="QString" >/home/maciek/Code/ii/mmgk/qtmodeling/qtmodeling.pro</value>
@@ -100,7 +100,7 @@
     <value type="QString" >CONFIG+=debug</value>
    </valuelist>
    <value key="abstractProcess.command" type="QString" >/usr/bin/qmake-qt4</value>
-   <value key="abstractProcess.enabled" type="bool" >true</value>
+   <value key="abstractProcess.enabled" type="bool" >false</value>
    <value key="abstractProcess.workingDirectory" type="QString" >/home/maciek/Code/ii/mmgk/qtmodeling</value>
    <value key="buildConfiguration" type="int" >2</value>
   </valuemap>
@@ -110,7 +110,7 @@
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList" >
-    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-xnNwaXJTRP,guid=53ab79e96b0af2fc3569aa3b4bfffcb2</value>
+    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-32Inaw8vrw,guid=ce4b4654b45e230b580e884f4c00db3b</value>
     <value type="QString" >DESKTOP_SESSION=gnome</value>
     <value type="QString" >DESKTOP_STARTUP_ID=</value>
     <value type="QString" >DISPLAY=:0.0</value>
@@ -118,7 +118,7 @@
     <value type="QString" >GDM_KEYBOARD_LAYOUT=pl</value>
     <value type="QString" >GDM_LANG=en_US.UTF-8</value>
     <value type="QString" >GNOME_DESKTOP_SESSION_ID=this-is-deprecated</value>
-    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-Fhq6Ta/socket</value>
+    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-USQH6c/socket</value>
     <value type="QString" >GTK_MODULES=canberra-gtk-module</value>
     <value type="QString" >GTK_RC_FILES=/etc/gtk/gtkrc:/home/maciek/.gtkrc-1.2-gnome2</value>
     <value type="QString" >HOME=/home/maciek</value>
@@ -129,16 +129,16 @@
     <value type="QString" >PATH=/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games</value>
     <value type="QString" >PWD=/home/maciek</value>
     <value type="QString" >QTDIR=/usr</value>
-    <value type="QString" >SESSION_MANAGER=local/pc:@/tmp/.ICE-unix/1352,unix/pc:/tmp/.ICE-unix/1352</value>
+    <value type="QString" >SESSION_MANAGER=local/pc:@/tmp/.ICE-unix/1357,unix/pc:/tmp/.ICE-unix/1357</value>
     <value type="QString" >SHELL=/bin/bash</value>
     <value type="QString" >SPEECHD_PORT=7560</value>
-    <value type="QString" >SSH_AGENT_PID=1392</value>
-    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-Fhq6Ta/socket.ssh</value>
+    <value type="QString" >SSH_AGENT_PID=1464</value>
+    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-USQH6c/socket.ssh</value>
     <value type="QString" >USER=maciek</value>
     <value type="QString" >USERNAME=maciek</value>
-    <value type="QString" >XAUTHORITY=/var/run/gdm/auth-for-maciek-iO7wBJ/database</value>
+    <value type="QString" >XAUTHORITY=/var/run/gdm/auth-for-maciek-ZxnOyn/database</value>
     <value type="QString" >XDG_DATA_DIRS=/usr/share/gnome:/usr/local/share/:/usr/share/</value>
-    <value type="QString" >XDG_SESSION_COOKIE=a22b6307fd4be0134e9bfb1a4b30d9d3-1275067569.480393-222148565</value>
+    <value type="QString" >XDG_SESSION_COOKIE=a22b6307fd4be0134e9bfb1a4b30d9d3-1275124538.450622-1546169903</value>
    </valuelist>
    <valuelist key="abstractProcess.arguments" type="QVariantList" >
     <value type="QString" >-w</value>

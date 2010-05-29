@@ -1,6 +1,7 @@
 #ifndef BEZIERCURVE_H
 #define BEZIERCURVE_H
 
+#include <algorithm>
 #include <QGraphicsItem>
 #include <QVector>
 #include <QObject>
@@ -31,7 +32,7 @@ public:
 
     BackgroundScene *scene;
 
-    QPoint eval(float t);
+    QPointF eval(float t);
     void degreeRaise();
 
     bool drawControl;
