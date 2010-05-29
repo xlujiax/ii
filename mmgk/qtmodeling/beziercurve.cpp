@@ -134,8 +134,60 @@ QRectF BSplineCurve::boundingRect() const
     }
 }
 
+QPolygonF BSplineCurve::convex(QVector<QPointF> cp)
+{
+    QPolygonF poly;
+    QPointF c1;
+    QPointF c2;
+    QPointF c3;
+    foreach(c1, cp)
+    {
+        foreach(c2, cp)
+        {
+            foreach(c3, cp)
+            {
+                    QVector<QPointF> p;
+                    p.append(c1);
+                    p.append(c2);
+                    p.append(c3);
+
+                    poly = poly.united(QPolygonF(p));
+            }
+        }
+    }
+    return poly;
+}
+
 void BSplineCurve::updateHull()
 {
+    hull = QPolygonF();
+    if(controlPoints.size() < 3)
+    {
+    }
+    else if(controlPoints.size() == 3)
+    {
+        QVector<QPointF> p;
+        p.append(controlPoints[0]->pos());
+        p.append(controlPoints[1]->pos());
+        p.append(controlPoints[2]->pos());
+        p.append(controlPoints[0]->pos());
+        hull = QPolygonF(p);
+    }
+    else
+    {
+        for(int i = 0; i < controlPoints.size() - 3; ++i)
+        {
+            QVector<QPointF> p;
+            p.append(controlPoints[i]->pos());
+            p.append(controlPoints[i+1]->pos());
+            p.append(controlPoints[i+2]->pos());
+            p.append(controlPoints[i+3]->pos());
+            p.append(controlPoints[i]->pos());
+
+            hull = hull.united(convex(p));
+        }
+    }
+    /*
 	hull = QPolygonF();
 	ControlPoint* c1;
 	ControlPoint* c2;
@@ -158,6 +210,7 @@ void BSplineCurve::updateHull()
 			}
 		}
 	}
+        */
 }
 
 void BSplineCurve::removePoint(ControlPoint* pt)

@@ -40,6 +40,7 @@ public:
     QVector<ControlPoint*> controlPoints;
 
     QPolygonF hull;
+    QPolygonF convex(QVector<QPointF>);
     void updateHull();
     void removeCurve();
 
