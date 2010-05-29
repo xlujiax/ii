@@ -8,34 +8,92 @@ BSplineCurve::BSplineCurve(BackgroundScene *s) : scene(s)
 
 QPoint BSplineCurve::eval(float t)
 {
-	QPoint ret;
+    QPoint ret;
 
-	const int n = controlPoints.size();
+    const int n = controlPoints.size() - 1;
 
-	float b[n][n];
+    float c[4][4];
 
-	{
-		for(int i = 0; i < n; ++i)
-			b[0][i] = controlPoints.at(i)->x();
+    int j;
+    for(j = 0; j < n; ++j)
+        if(j <= t * n && t * n <= j+1)
+            break;
 
-		for(int j = 1; j < n; ++j)
-			for(int i = 0; i < n - j; ++i)
-				b[j][i] = (1.0f - t) * b[j-1][i] + t * b[j-1][i+1];
+    for(int i = 0; i <= 3; ++i)
+    {
+        int index = i + j - 3;
+        if(index < 0)
+            c[i][0] = controlPoints[0]->x();
+        else
+        {
+            assert(0 <= index && index <= n);
+            c[i][0] = controlPoints[index]->x();
+        }
+    }
 
-		ret.setX(b[n-1][0]);
-	}
+    for(int k = 1; k <= 3; ++k)
+        for(int i = k; i <= 3; ++i)
+        {
+            float tleft;
+            if(j - 3 + i < 0)
+                tleft = controlPoints[0]->x();
+            else
+            {
+                assert(0 <= j-3+i && j-3+i <= n);
+                tleft = controlPoints[j-3+i]->x();
+            }
+            float tright;
+            if(j + i + 1 - k > n)
+                tright = controlPoints[n]->x();
+            else
+            {
+                assert(0 <= j + i + 1 - k && j + i + 1 - k <= n);
+                float tright = controlPoints[j + i + 1 - k]->x();
+            }
+            c[i][k] = ((t - tleft) * c[i][k-1] + (tright - t)*c[i-1][k-1]) / (tright - tleft);
+        }
 
-	{
-		for(int i = 0; i < n; ++i)
-			b[0][i] = controlPoints.at(i)->y();
+    ret.setX(c[j][3]);
 
-		for(int j = 1; j < n; ++j)
-			for(int i = 0; i < n - j; ++i)
-				b[j][i] = (1.0f - t) * b[j-1][i] + t * b[j-1][i+1];
+    // y
 
-		ret.setY(b[n-1][0]);
-	}
-	return ret;
+    for(int i = 0; i <= 3; ++i)
+    {
+        int index = i + j - 3;
+        if(index < 0)
+            c[i][0] = controlPoints[0]->y();
+        else
+        {
+            assert(0 <= index && index <= n);
+            c[i][0] = controlPoints[index]->y();
+        }
+    }
+
+    for(int k = 1; k <= 3; ++k)
+        for(int i = k; i <= 3; ++i)
+        {
+            float tleft;
+            if(j - 3 + i < 0)
+                tleft = controlPoints[0]->y();
+            else
+            {
+                assert(0 <= j-3+i && j-3+i <= n);
+                tleft = controlPoints[j-3+i]->y();
+            }
+            float tright;
+            if(j + i + 1 - k > n)
+                tright = controlPoints[n]->y();
+            else
+            {
+                assert(0 <= j + i + 1 - k && j + i + 1 - k <= n);
+                float tright = controlPoints[j + i + 1 - k]->y();
+            }
+            c[i][k] = ((t - tleft) * c[i][k-1] + (tright - t)*c[i-1][k-1]) / (tright - tleft);
+        }
+
+    ret.setY(c[j][3]);
+
+    return ret;
 }
 
 void BSplineCurve::degreeRaise()
