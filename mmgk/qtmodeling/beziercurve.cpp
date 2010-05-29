@@ -10,7 +10,7 @@ QPointF BSplineCurve::eval(float t)
 {
     QPointF ret;
 
-    const int n = controlPoints.size() - 1;
+    const int n = controlPoints.size();
 
     float c[4][4];
 
@@ -66,13 +66,6 @@ QPointF BSplineCurve::eval(float t)
         }
 
     ret.setY(c[3][3]);
-
-
-
-    QTextStream cout(stdout);
-    cout << ret.x() << ',' << ret.y() << endl;
-
-
     return ret;
 }
 
