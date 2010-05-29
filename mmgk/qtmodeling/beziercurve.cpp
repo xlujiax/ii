@@ -1,6 +1,6 @@
 #include "beziercurve.h"
 
-BSplineCurve::BSplineCurve(QGraphicsScene *s) : scene(s)
+BSplineCurve::BSplineCurve(BackgroundScene *s) : scene(s)
 {
 	drawControl = true;
 	drawHull = true;

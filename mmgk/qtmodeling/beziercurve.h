@@ -10,7 +10,9 @@
 #include <QtAlgorithms>
 #include <cassert>
 #include "controlpoint.h"
+#include "backgroundscene.h"
 
+class BackgroundScene;
 class ControlPoint;
 
 class BSplineCurve : public QObject, public QGraphicsItem
@@ -18,7 +20,7 @@ class BSplineCurve : public QObject, public QGraphicsItem
 	Q_OBJECT
 private:
 public:
-    BSplineCurve(QGraphicsScene *scene);
+    BSplineCurve(BackgroundScene *scene);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 
@@ -27,7 +29,7 @@ public:
     void removePoint(ControlPoint*);
     void addPoint(ControlPoint*);
 
-    QGraphicsScene *scene;
+    BackgroundScene *scene;
 
     QPoint eval(float t);
     void degreeRaise();

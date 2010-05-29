@@ -31,9 +31,7 @@ public:
 
     bool selected;
     bool hover;
-    BSplineCurve* bezierCurve;
-    BSplineCurve* secondBezierCurve;
-    ControlPoint* linkedCp;
+    BSplineCurve* bsplineCurve;
 protected:
 
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent * event);

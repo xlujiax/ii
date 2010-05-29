@@ -17,14 +17,14 @@ class ControlPoint;
 
 class BackgroundScene : public QGraphicsScene
 {
-	QGraphicsView* view;
+    QGraphicsView* view;
 public:
-	BackgroundScene(QGraphicsView* view);
+    BackgroundScene(QGraphicsView* view);
 
-	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* mouseEvent);
-	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-	void mousePressEvent(QGraphicsSceneMouseEvent *event);
-	ControlPoint* secondPoint;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
+    ControlPoint* secondPoint;
 };
 
 #endif // BACKGROUNDSCENE_H
