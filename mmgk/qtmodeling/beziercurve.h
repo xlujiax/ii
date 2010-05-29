@@ -44,6 +44,8 @@ public:
     void updateHull();
     void removeCurve();
 
+    QVector<QPointF> pointsOnCurve();
+
     void saveCurve();
     void loadCurve();
 

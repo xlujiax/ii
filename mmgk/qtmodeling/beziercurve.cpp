@@ -2,8 +2,8 @@
 
 BSplineCurve::BSplineCurve(BackgroundScene *s) : scene(s)
 {
-	drawControl = true;
-	drawHull = true;
+    drawControl = true;
+    drawHull = true;
 }
 
 QPointF BSplineCurve::eval(float t)
@@ -36,10 +36,10 @@ QPointF BSplineCurve::eval(float t)
     for(int k = 1; k <= 3; ++k)
         for(int i = k; i <= 3; ++i)
         {
-            float tleft = std::max(0.0f, float(j - 3 + i) / float(n));
-            float tright = std::min(1.0f, float(j + i + 1 - k) / float(n));
-            c[i][k] = ((t - tleft) * c[i][k-1] + (tright - t)*c[i-1][k-1]) / (tright - tleft);
-        }
+        float tleft = std::max(0.0f, float(j - 3 + i) / float(n));
+        float tright = std::min(1.0f, float(j + i + 1 - k) / float(n));
+        c[i][k] = ((t - tleft) * c[i][k-1] + (tright - t)*c[i-1][k-1]) / (tright - tleft);
+    }
 
     ret.setX(c[3][3]);
 
@@ -60,10 +60,10 @@ QPointF BSplineCurve::eval(float t)
     for(int k = 1; k <= 3; ++k)
         for(int i = k; i <= 3; ++i)
         {
-            float tleft = std::max(0.0f, float(j - 3 + i) / float(n));
-            float tright = std::min(1.0f, float(j + i + 1 - k) / float(n));
-            c[i][k] = ((t - tleft) * c[i][k-1] + (tright - t)*c[i-1][k-1]) / (tright - tleft);
-        }
+        float tleft = std::max(0.0f, float(j - 3 + i) / float(n));
+        float tright = std::min(1.0f, float(j + i + 1 - k) / float(n));
+        c[i][k] = ((t - tleft) * c[i][k-1] + (tright - t)*c[i-1][k-1]) / (tright - tleft);
+    }
 
     ret.setY(c[3][3]);
     return ret;
@@ -76,32 +76,43 @@ void BSplineCurve::degreeRaise()
 
 void BSplineCurve::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-	painter->setRenderHint(QPainter::Antialiasing);
+    painter->setRenderHint(QPainter::Antialiasing);
 
-	if(drawControl)
-	{
-		painter->setPen(QPen(Qt::gray, 1));
-		for (int i = 0; i < controlPoints.size() - 1; ++i)
-			painter->drawLine(controlPoints.at(i)->pos(), controlPoints.at(i + 1)->pos());
-	}
+    if(drawControl)
+    {
+        painter->setPen(QPen(Qt::gray, 1));
+        for (int i = 0; i < controlPoints.size() - 1; ++i)
+            painter->drawLine(controlPoints.at(i)->pos(), controlPoints.at(i + 1)->pos());
+    }
 
-	if(drawHull)
-	{
-		painter->setPen(QPen(Qt::red, 0));
-		painter->drawPolyline(hull);
-	}
+    if(drawHull)
+    {
+        painter->setPen(QPen(Qt::red, 0));
+        painter->drawPolyline(hull);
+    }
 
-	painter->setPen(QPen(Qt::black, 2));
-	const float prec = 0.01;
+    painter->setPen(QPen(Qt::black, 2));
 
-        QPointF bef = eval(0);
-	for(float t = prec; t < 1; t += prec)
-	{
-                QPointF act = eval(t);
-		painter->drawLine(bef, act);
-		bef = act;
-	}
-	painter->drawLine(bef, eval(1));
+    QVector<QPointF> pts = pointsOnCurve();
+
+    QPainterPath path;
+    path.moveTo(pts[0]);
+    QPointF p;
+    foreach(p, pts)
+        path.lineTo(p);
+
+    painter->drawPath(path);
+}
+
+QVector<QPointF> BSplineCurve::pointsOnCurve()
+{
+    const float prec = 0.01;
+    QVector<QPointF> pts;
+    pts.append(eval(0));
+    for(float t = prec; t < 1; t += prec)
+        pts.append(eval(t));
+    pts.append(eval(1));
+    return pts;
 }
 
 QRectF BSplineCurve::boundingRect() const
@@ -146,12 +157,12 @@ QPolygonF BSplineCurve::convex(QVector<QPointF> cp)
         {
             foreach(c3, cp)
             {
-                    QVector<QPointF> p;
-                    p.append(c1);
-                    p.append(c2);
-                    p.append(c3);
+                QVector<QPointF> p;
+                p.append(c1);
+                p.append(c2);
+                p.append(c3);
 
-                    poly = poly.united(QPolygonF(p));
+                poly = poly.united(QPolygonF(p));
             }
         }
     }
@@ -188,148 +199,148 @@ void BSplineCurve::updateHull()
         }
     }
     /*
-	hull = QPolygonF();
-	ControlPoint* c1;
-	ControlPoint* c2;
-	ControlPoint* c3;
-	foreach(c1, controlPoints)
-	{
-		foreach(c2, controlPoints)
-		{
-			foreach(c3, controlPoints)
-			{
-				if(c1 != c2 && c2 != c3 && c1 != c3)
-				{
-					QVector<QPointF> p;
-					p.append(c1->pos());
-					p.append(c2->pos());
-					p.append(c3->pos());
+        hull = QPolygonF();
+        ControlPoint* c1;
+        ControlPoint* c2;
+        ControlPoint* c3;
+        foreach(c1, controlPoints)
+        {
+                foreach(c2, controlPoints)
+                {
+                        foreach(c3, controlPoints)
+                        {
+                                if(c1 != c2 && c2 != c3 && c1 != c3)
+                                {
+                                        QVector<QPointF> p;
+                                        p.append(c1->pos());
+                                        p.append(c2->pos());
+                                        p.append(c3->pos());
 
-					hull = hull.united(QPolygonF(p));
-				}
-			}
-		}
-	}
+                                        hull = hull.united(QPolygonF(p));
+                                }
+                        }
+                }
+        }
         */
 }
 
 void BSplineCurve::removePoint(ControlPoint* pt)
 {
-	assert(controlPoints.indexOf(pt) != -1);
+    assert(controlPoints.indexOf(pt) != -1);
 
-	scene->removeItem(pt);
-	controlPoints.remove(controlPoints.indexOf(pt));
-	updateHull();
-	update(boundingRect());
+    scene->removeItem(pt);
+    controlPoints.remove(controlPoints.indexOf(pt));
+    updateHull();
+    update(boundingRect());
 }
 
 void BSplineCurve::addPoint(ControlPoint* pt)
 {
-	assert(controlPoints.indexOf(pt) == -1);
+    assert(controlPoints.indexOf(pt) == -1);
 
-	scene->addItem(pt);
-	controlPoints.append(pt);
-	updateHull();
-	update(boundingRect());
+    scene->addItem(pt);
+    controlPoints.append(pt);
+    updateHull();
+    update(boundingRect());
 }
 
 void BSplineCurve::removeCurve()
 {
-	scene->removeItem(this);
-	ControlPoint* cp;
-	foreach(cp, controlPoints)
-		scene->removeItem(cp);
-	updateHull();
+    scene->removeItem(this);
+    ControlPoint* cp;
+    foreach(cp, controlPoints)
+        scene->removeItem(cp);
+    updateHull();
 }
 
 void BSplineCurve::saveCurve()
 {
-	QString fileName = QFileDialog::getOpenFileName(0,
-	 tr("Open file"), "/home/foo", tr("*.cur"));
+    QString fileName = QFileDialog::getOpenFileName(0,
+                                                    tr("Open file"), "/home/foo", tr("*.cur"));
 
 
-	QFile file(fileName);
-	 if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-		 return;
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        return;
 
-	 QTextStream out(&file);
-	 out << controlPoints.size() << '\n';
-	 ControlPoint* cp;
-	 foreach(cp, controlPoints)
-		 out << cp->x() << ' ' << cp->y() << '\n';
+    QTextStream out(&file);
+    out << controlPoints.size() << '\n';
+    ControlPoint* cp;
+    foreach(cp, controlPoints)
+        out << cp->x() << ' ' << cp->y() << '\n';
 }
 void BSplineCurve::loadCurve()
 {
-	QString fileName = QFileDialog::getOpenFileName(0,
-	 tr("Open file"), "/home/foo", tr("*.cur"));
+    QString fileName = QFileDialog::getOpenFileName(0,
+                                                    tr("Open file"), "/home/foo", tr("*.cur"));
 
-	QFile file(fileName);
-	 if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-		 return;
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
 
-	 QTextStream in(&file);
-	 int sz;
-	 in >> sz;
+    QTextStream in(&file);
+    int sz;
+    in >> sz;
 
 
-	 ControlPoint* cp;
-	 foreach(cp, controlPoints)
-		 scene->removeItem(cp);
-	 controlPoints.clear();
+    ControlPoint* cp;
+    foreach(cp, controlPoints)
+        scene->removeItem(cp);
+    controlPoints.clear();
 
-	 qreal x, y;
-	 for(int i = 0; i < sz; ++i)
-	 {
-		 in >> x >> y;
+    qreal x, y;
+    for(int i = 0; i < sz; ++i)
+    {
+        in >> x >> y;
 
-		 ControlPoint *cp = new ControlPoint(this);
-		 addPoint(cp);
-		 cp->setPos(QPoint(x, y));
-	 }
-	 update(boundingRect());
+        ControlPoint *cp = new ControlPoint(this);
+        addPoint(cp);
+        cp->setPos(QPoint(x, y));
+    }
+    update(boundingRect());
 }
 
 void BSplineCurve::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
-	if(!hull.containsPoint(event->pos(), Qt::WindingFill))
-	{
-		event->ignore();
-		return;
+    if(!hull.containsPoint(event->pos(), Qt::WindingFill))
+    {
+        event->ignore();
+        return;
 
-	}
-	QMenu menu;
-	QAction *controlAction = menu.addAction("Toggle control view");
-	QAction *hullAction = menu.addAction("Toggle hull view");
-	QAction *removeAction = menu.addAction("Remove curve");
-	QAction *addAction = menu.addAction("Add control point");
-	QAction *saveAction = menu.addAction("Save curve");
-	QAction *loadAction = menu.addAction("Load curve");
-	QAction *selectedAction = menu.exec(event->screenPos());
+    }
+    QMenu menu;
+    QAction *controlAction = menu.addAction("Toggle control view");
+    QAction *hullAction = menu.addAction("Toggle hull view");
+    QAction *removeAction = menu.addAction("Remove curve");
+    QAction *addAction = menu.addAction("Add control point");
+    QAction *saveAction = menu.addAction("Save curve");
+    QAction *loadAction = menu.addAction("Load curve");
+    QAction *selectedAction = menu.exec(event->screenPos());
 
-	if(selectedAction == controlAction)
-	{
-		drawControl = !drawControl;
-		update(boundingRect());
-	}
-	else if(selectedAction == hullAction)
-	{
-		drawHull = !drawHull;
-		update(boundingRect());
-	}
-	else if(selectedAction == removeAction)
-	{
-		removeCurve();
-	}
-	else if(selectedAction == addAction)
-	{
-		degreeRaise();
-	}
-	else if(selectedAction == saveAction)
-	{
-		saveCurve();
-	}
-	else if(selectedAction == loadAction)
-	{
-		loadCurve();
-	}
+    if(selectedAction == controlAction)
+    {
+        drawControl = !drawControl;
+        update(boundingRect());
+    }
+    else if(selectedAction == hullAction)
+    {
+        drawHull = !drawHull;
+        update(boundingRect());
+    }
+    else if(selectedAction == removeAction)
+    {
+        removeCurve();
+    }
+    else if(selectedAction == addAction)
+    {
+        degreeRaise();
+    }
+    else if(selectedAction == saveAction)
+    {
+        saveCurve();
+    }
+    else if(selectedAction == loadAction)
+    {
+        loadCurve();
+    }
 }

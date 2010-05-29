@@ -34,7 +34,7 @@ void BackgroundScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     if(!event->isAccepted())
     {
         QMenu menu;
-        QAction *addAction = menu.addAction("New curve...");
+        QAction *addAction = menu.addAction("Begin curve");
         QAction *selectedAction = menu.exec(event->screenPos());
 
         if(selectedAction == addAction)

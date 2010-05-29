@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'controlpoint.h'
 **
-** Created: Sat May 29 15:55:07 2010
+** Created: Sat May 29 17:44:02 2010
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.2)
 **
 ** WARNING! All changes made in this file will be lost!
