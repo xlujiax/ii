@@ -106,13 +106,42 @@ void BSplineCurve::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 
 QVector<QPointF> BSplineCurve::pointsOnCurve()
 {
+    const int intervals = controlPoints.size() - 1;
+
+    if(intervals > 0)
+    {
+        const float segments = 50; // segments per interval
+
+        QVector<QPointF> pts;
+        pts.resize(intervals * segments + 1);
+
+        for(int s = 0; s < segments; ++s)
+        {
+            float eps = float(s) / float(intervals * segments);
+            for(int i = 0; i < intervals; ++i)
+            {
+                float t = float(i) / float(intervals) + eps;
+                assert(0.0f <= t && t <= 1.0f);
+                assert(i*segments + s < intervals * segments + 1);
+                pts[i*segments + s] = eval(t);
+            }
+        }
+
+        pts[intervals * segments] = eval(1);
+
+        return pts;
+    }
+    else
+        return QVector<QPointF>();
+
+    /*
     const float prec = 0.01;
     QVector<QPointF> pts;
     pts.append(eval(0));
     for(float t = prec; t < 1; t += prec)
         pts.append(eval(t));
     pts.append(eval(1));
-    return pts;
+    return pts;*/
 }
 
 QRectF BSplineCurve::boundingRect() const
