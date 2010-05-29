@@ -1,6 +1,6 @@
 #include "controlpoint.h"
 
-ControlPoint::ControlPoint(BezierCurve* bc) : bezierCurve(bc)
+ControlPoint::ControlPoint(BSplineCurve* bc) : bezierCurve(bc)
 {
      setFlag(ItemIsMovable);
      //setCacheMode(DeviceCoordinateCache);
@@ -32,49 +32,7 @@ QRectF ControlPoint::boundingRect() const
 
  void ControlPoint::split()
  {
-	 int find = bezierCurve->controlPoints.indexOf(this);
-	 assert(find != -1);
-	 ControlPoint* cp;
-
-	 BezierCurve* left = new BezierCurve(bezierCurve->scene);
-	 BezierCurve* right = new BezierCurve(bezierCurve->scene);
-
-	 QRectF r = bezierCurve->boundingRect();
-
-	 for(int i = 0; i < bezierCurve->controlPoints.size(); ++i)
-	 {
-		 if(i <= find)
-			 left->controlPoints.append(bezierCurve->controlPoints[i]);
-		 if(i >= find)
-			 right->controlPoints.append(bezierCurve->controlPoints[i]);
-		 bezierCurve->scene->removeItem(bezierCurve->controlPoints[i]);
-	 }
-
-	 bezierCurve->scene->removeItem(bezierCurve);
-	 bezierCurve->scene->update(r);
-
-	 foreach(cp, left->controlPoints)
-	 {
-		 cp->bezierCurve = left;
-		 bezierCurve->scene->addItem(cp);
-	 }
-	 left->updateHull();
-	 bezierCurve->scene->addItem(left);
-
-
-	 foreach(cp, right->controlPoints)
-	 {
-		 cp->bezierCurve = right;
-		 bezierCurve->scene->addItem(cp);
-	 }
-	 right->updateHull();
-	 bezierCurve->scene->addItem(right);
-
-	 bezierCurve = left;
-	 secondBezierCurve = right;
-
-	 left->controlPoints.at(left->controlPoints.size() - 2)->linkedCp = right->controlPoints.at(1);
-	 right->controlPoints.at(1)->linkedCp = left->controlPoints.at(left->controlPoints.size() - 2);
+     assert(false);
  }
 
  void ControlPoint::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)

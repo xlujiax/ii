@@ -12,7 +12,7 @@
 #include "beziercurve.h"
 #include "controlpoint.h"
 
-class BezierCurve;
+class BSplineCurve;
 class ControlPoint;
 
 class BackgroundScene : public QGraphicsScene

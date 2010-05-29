@@ -1,12 +1,12 @@
 #include "beziercurve.h"
 
-BezierCurve::BezierCurve(QGraphicsScene *s) : scene(s)
+BSplineCurve::BSplineCurve(QGraphicsScene *s) : scene(s)
 {
 	drawControl = true;
 	drawHull = true;
 }
 
-QPoint BezierCurve::eval(float t)
+QPoint BSplineCurve::eval(float t)
 {
 	QPoint ret;
 
@@ -38,44 +38,12 @@ QPoint BezierCurve::eval(float t)
 	return ret;
 }
 
-void BezierCurve::degreeRaise()
+void BSplineCurve::degreeRaise()
 {
-	const int n = controlPoints.size();
-	const int m = n + 1;
-
-	BezierCurve *right = controlPoints.at(n - 1)->secondBezierCurve;
-	BezierCurve *left = controlPoints.at(0)->secondBezierCurve;
-
-	ControlPoint* tf = new ControlPoint(this);
-	tf->setPos(controlPoints.at(n - 1)->pos());
-	tf->secondBezierCurve = right;
-	if(right)
-		right->controlPoints.at(0)->secondBezierCurve = this;
-	scene->addItem(tf);
-	controlPoints.append(tf);
-
-	for(int i = n-1; i >= 1; --i)
-	{
-		ControlPoint* t = new ControlPoint(this);
-
-		float xx = (i*controlPoints.at(i-1)->x()+(m-i - 1)*controlPoints.at(i)->x())/((float)m - 1);
-		float yy = (i*controlPoints.at(i-1)->y()+(m-i - 1)*controlPoints.at(i)->y())/((float)m - 1);
-		t->setPos(QPoint(xx, yy));
-
-		scene->removeItem(controlPoints.at(i));
-		scene->addItem(t);
-		controlPoints.replace(i, t);
-	}
-
-	controlPoints.at(0)->secondBezierCurve = left;
-	if(left)
-		left->controlPoints.at(left->controlPoints.size() - 1)->secondBezierCurve = this;
-
-	update(boundingRect());
-	updateHull();
+    assert(false);
 }
 
-void BezierCurve::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void BSplineCurve::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 	painter->setRenderHint(QPainter::Antialiasing);
 
@@ -105,37 +73,37 @@ void BezierCurve::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 	painter->drawLine(bef, eval(1));
 }
 
-QRectF BezierCurve::boundingRect() const
+QRectF BSplineCurve::boundingRect() const
 {
-	float adjust = 10;
+    float adjust = 10;
 
-	if(controlPoints.empty())
-		return QRect(0,0,0,0);
-	else
-	{
-		float minx = controlPoints.at(0)->x();
-		float maxx = controlPoints.at(0)->x();
-		float miny = controlPoints.at(0)->y();
-		float maxy = controlPoints.at(0)->y();
+    if(controlPoints.empty())
+        return QRect(0,0,0,0);
+    else
+    {
+        float minx = controlPoints.at(0)->x();
+        float maxx = controlPoints.at(0)->x();
+        float miny = controlPoints.at(0)->y();
+        float maxy = controlPoints.at(0)->y();
 
-		ControlPoint* cp;
-		foreach(cp, controlPoints)
-		{
-			if(cp->x() < minx)
-				minx = cp->x();
-			if(cp->x() > maxx)
-				maxx = cp->x();
-			if(cp->y() < miny)
-				miny = cp->y();
-			if(cp->y() > maxy)
-				maxy = cp->y();
-		}
+        ControlPoint* cp;
+        foreach(cp, controlPoints)
+        {
+            if(cp->x() < minx)
+                minx = cp->x();
+            if(cp->x() > maxx)
+                maxx = cp->x();
+            if(cp->y() < miny)
+                miny = cp->y();
+            if(cp->y() > maxy)
+                maxy = cp->y();
+        }
 
-		return QRect(minx - adjust, miny - adjust, maxx - minx + 2* adjust, maxy - miny + 2* adjust);
-	}
+        return QRect(minx - adjust, miny - adjust, maxx - minx + 2* adjust, maxy - miny + 2* adjust);
+    }
 }
 
-void BezierCurve::updateHull()
+void BSplineCurve::updateHull()
 {
 	hull = QPolygonF();
 	ControlPoint* c1;
@@ -161,7 +129,7 @@ void BezierCurve::updateHull()
 	}
 }
 
-void BezierCurve::removePoint(ControlPoint* pt)
+void BSplineCurve::removePoint(ControlPoint* pt)
 {
 	assert(controlPoints.indexOf(pt) != -1);
 
@@ -171,7 +139,7 @@ void BezierCurve::removePoint(ControlPoint* pt)
 	update(boundingRect());
 }
 
-void BezierCurve::addPoint(ControlPoint* pt)
+void BSplineCurve::addPoint(ControlPoint* pt)
 {
 	assert(controlPoints.indexOf(pt) == -1);
 
@@ -181,7 +149,7 @@ void BezierCurve::addPoint(ControlPoint* pt)
 	update(boundingRect());
 }
 
-void BezierCurve::removeCurve()
+void BSplineCurve::removeCurve()
 {
 	scene->removeItem(this);
 	ControlPoint* cp;
@@ -190,7 +158,7 @@ void BezierCurve::removeCurve()
 	updateHull();
 }
 
-void BezierCurve::saveCurve()
+void BSplineCurve::saveCurve()
 {
 	QString fileName = QFileDialog::getOpenFileName(0,
 	 tr("Open file"), "/home/foo", tr("*.cur"));
@@ -206,7 +174,7 @@ void BezierCurve::saveCurve()
 	 foreach(cp, controlPoints)
 		 out << cp->x() << ' ' << cp->y() << '\n';
 }
-void BezierCurve::loadCurve()
+void BSplineCurve::loadCurve()
 {
 	QString fileName = QFileDialog::getOpenFileName(0,
 	 tr("Open file"), "/home/foo", tr("*.cur"));
@@ -237,7 +205,7 @@ void BezierCurve::loadCurve()
 	 update(boundingRect());
 }
 
-void BezierCurve::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
+void BSplineCurve::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
 	if(!hull.containsPoint(event->pos(), Qt::WindingFill))
 	{

@@ -8,7 +8,7 @@ BackgroundScene::BackgroundScene(QGraphicsView* v) : QGraphicsScene(v)
 
 void BackgroundScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
-	BezierCurve* bc = new BezierCurve(this);
+        BSplineCurve* bc = new BSplineCurve(this);
 
 	ControlPoint *cp1 = new ControlPoint(bc);
 	bc->addPoint(cp1);

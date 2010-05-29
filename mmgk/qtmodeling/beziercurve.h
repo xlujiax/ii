@@ -13,37 +13,37 @@
 
 class ControlPoint;
 
-class BezierCurve : public QObject, public QGraphicsItem
+class BSplineCurve : public QObject, public QGraphicsItem
 {
 	Q_OBJECT
 private:
 public:
-	BezierCurve(QGraphicsScene *scene);
+    BSplineCurve(QGraphicsScene *scene);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 
-	QRectF boundingRect() const;
+    QRectF boundingRect() const;
 
-	void removePoint(ControlPoint*);
-	void addPoint(ControlPoint*);
+    void removePoint(ControlPoint*);
+    void addPoint(ControlPoint*);
 
-	QGraphicsScene *scene;
+    QGraphicsScene *scene;
 
-	QPoint eval(float t);
-	void degreeRaise();
+    QPoint eval(float t);
+    void degreeRaise();
 
-	bool drawControl;
-	bool drawHull;
-	QVector<ControlPoint*> controlPoints;
+    bool drawControl;
+    bool drawHull;
+    QVector<ControlPoint*> controlPoints;
 
-	QPolygonF hull;
-	void updateHull();
-	void removeCurve();
+    QPolygonF hull;
+    void updateHull();
+    void removeCurve();
 
-	void saveCurve();
-	void loadCurve();
+    void saveCurve();
+    void loadCurve();
 
-	void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
 };
 
 #endif // BEZIERCURVE_H
