@@ -35,6 +35,7 @@ void BackgroundScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     {
         QMenu menu;
         QAction *addAction = menu.addAction("Begin curve");
+        QAction *loadAction = menu.addAction("Load curve");
         QAction *selectedAction = menu.exec(event->screenPos());
 
         if(selectedAction == addAction)
@@ -53,6 +54,24 @@ void BackgroundScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 
             secondPoint = cp2;
         }
+        else if(selectedAction == loadAction)
+        {
+            
+            BSplineCurve* bc = new BSplineCurve(this);
+
+            ControlPoint *cp1 = new ControlPoint(bc);
+            bc->addPoint(cp1);
+            cp1->setPos(event->scenePos());
+
+            ControlPoint *cp2 = new ControlPoint(bc);
+            bc->addPoint(cp2);
+            cp2->setPos(event->scenePos());
+
+            addItem(bc);
+
+            bc->loadCurve();
+            bc->updateHull();
+        }   
 
         event->accept();
     }
