@@ -120,8 +120,11 @@ QVector<QPointF> BSplineCurve::pointsOnCurve()
             for(int k = 1; k <= 3; ++k)
                 for(int i = k; i <= 2; ++i)
                 {
-                float tleft = std::max(0.0f, float(j - 3 + i) / float(n));
-                float tright = std::min(1.0f, float(j + i + 1 - k) / float(n));
+                //float tleft = std::max(0.0f, float(j - 3 + i) / float(n));
+                //float tright = std::min(1.0f, float(j + i + 1 - k) / float(n));
+                float tleft = float(j - 3 + i) / float(n);
+                float tright = float(j + i + 1 - k) / float(n);
+
                 c[i][k] = ((eps - tleft) * c[i][k-1] + (tright - eps)*c[i-1][k-1]) / (tright - tleft);
             }
 
@@ -138,8 +141,7 @@ QVector<QPointF> BSplineCurve::pointsOnCurve()
                 }
 
                 pts[it*segments + s] = eval(t);
-                c[3+it][3];
-            }
+                }
         }
 
         pts[intervals * segments] = eval(1);
