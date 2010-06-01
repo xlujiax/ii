@@ -55,10 +55,8 @@ int bezier_above(Bezier* b, Interval*** intervals)
 	  (*intervals)[0] = interval_create(roots[0], roots[1]);
 	  return 1;
 	}
-	else
+	else if(num_roots == 1)
 	{
-	  assert(num_roots == 1);
-	  
 	  float Wx = -B / (2 * A);
 	  if(Wx < roots[0])
 	  {
@@ -72,6 +70,20 @@ int bezier_above(Bezier* b, Interval*** intervals)
 	    (*intervals)[0] = interval_create(roots[0], b->b);
 	    return 1;
 	  }
+	}
+	else
+	{
+	  assert(num_roots == 0);
+
+	  const float half = (b->a + b->b) / 2;
+	  if(bezier_de_casteljau(b, half) < 0)
+	  {
+	    *intervals = malloc(sizeof(Interval*));
+	    (*intervals)[0] = interval_create(b->a, b->b);
+	    return 1;
+	  }
+	  else
+	    return 0;
 	}
       }
       else
@@ -83,10 +95,8 @@ int bezier_above(Bezier* b, Interval*** intervals)
 	  (*intervals)[1] = interval_create(roots[1], b->b);
 	  return 2;
 	}
-	else
+	else if(num_roots == 1)
 	{
-	  assert(num_roots == 1);
-	  
 	  float Wx = -B / (2 * A);
 	  if(Wx < roots[0])
 	  {
@@ -100,6 +110,20 @@ int bezier_above(Bezier* b, Interval*** intervals)
 	    (*intervals)[0] = interval_create(b->a, roots[0]);
 	    return 1;
 	  }
+	}
+	else
+	{
+	  assert(num_roots == 0);
+
+	  const float half = (b->a + b->b) / 2;
+	  if(bezier_de_casteljau(b, half) < 0)
+	  {
+	    *intervals = malloc(sizeof(Interval*));
+	    (*intervals)[0] = interval_create(b->a, b->b);
+	    return 1;
+	  }
+	  else
+	    return 0;
 	}
       }
     }

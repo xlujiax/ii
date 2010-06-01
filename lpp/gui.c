@@ -184,13 +184,61 @@ void demo_reduced_and_raised()
   graphs[1]->color_b = 0.5f;
 }
 
-void demo_intervals()
+void demo_intervals1()
 {
   num_graphs = 1;
   graphs = malloc(sizeof(Graph*) * num_graphs);
   graphs[0] = graph_create(sample_bezier_parabola());
 
   num_intervals = bezier_above(graphs[0]->bezier, &intervals);
+}
+
+void demo_intervals2()
+{
+  Bezier* b = sample_bezier_parabola();
+  bezier_inc_coeffs(b, -0.35f);
+  
+  num_graphs = 1;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(b);
+
+  num_intervals = bezier_above(b, &intervals);
+}
+
+void demo_intervals3()
+{
+  Bezier* b = sample_bezier_parabola();
+  b->c[2] = -0.1f;
+  
+  num_graphs = 1;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(b);
+
+  num_intervals = bezier_above(b, &intervals);
+}
+
+void demo_intervals4()
+{
+  Bezier* b = sample_bezier_parabola();
+  bezier_inc_coeffs(b, 0.4f);
+  
+  num_graphs = 1;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(b);
+
+  num_intervals = bezier_above(b, &intervals);
+}
+
+void demo_intervals5()
+{
+  Bezier* b = sample_bezier_parabola();
+  bezier_inc_coeffs(b, -0.5f);
+  
+  num_graphs = 1;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(b);
+
+  num_intervals = bezier_above(b, &intervals);
 }
 
 void init()
@@ -215,7 +263,11 @@ void init()
   //demo_reduced_and_raised();
   //demo_bounds();
 
-  demo_intervals();
+  //demo_intervals1();
+  //demo_intervals2();
+  //demo_intervals3();
+  demo_intervals4();
+  //demo_intervals5();
 
   //demo_bounds_with_intervals();
 }

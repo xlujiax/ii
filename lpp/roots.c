@@ -12,15 +12,20 @@ int bezier_quad_roots(Bezier* b, float** roots)
 
   if(A == 0)
   {
-    float root = -C / B;
-    if(b->a <= root && root <= b->b)
-    {
-      *roots = malloc(sizeof(float));
-      (*roots)[0] = root;
-      return 1;
-    }
-    else
+    if(B == 0)
       return 0;
+    else
+    {
+      float root = -C / B;
+      if(b->a <= root && root <= b->b)
+      {
+	*roots = malloc(sizeof(float));
+	(*roots)[0] = root;
+	return 1;
+      }
+      else
+	return 0;
+    }
   }
   else
   {
