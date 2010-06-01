@@ -18,7 +18,6 @@ void init()
   num_graphs = 1;
   graphs = malloc(sizeof(Graph*) * num_graphs);
   graphs[0] = graph_create(sample_bezier_parabola());
-  graphs[0]->draw_control_line = 0;
 }
 
 void update()

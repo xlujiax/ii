@@ -8,6 +8,14 @@ Bezier* sample_bezier_sinus(int degree)
   return b;
 }
 
+Bezier* sample_bezier_cosinus(int degree)
+{
+  Bezier* b = bezier_create(degree);
+  for(int i = 0; i <= b->n; ++i)
+    b->c[i] = cosf((float)i / (float)b->n);
+  return b;
+}
+
 Bezier* sample_bezier_parabola()
 {
   Bezier* b = bezier_create(2);

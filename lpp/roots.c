@@ -5,14 +5,30 @@ int bezier_quad_roots(Bezier* b, float** roots)
   assert(b);
   assert(b->n == 2);
 
-  int num_roots = 1;
-  *roots = malloc(num_roots * sizeof(float));
-  (*roots)[0] = 0.5f;
-
   // quadratic polynomial coefficients in power basis
-  //float a = c->;
-  //float b = ;
-  //float c = ;
+  float A = b->c[0] - 2*b->c[1] + b->c[2];
+  float B = -2*b->c[0] + 2*b->c[1];
+  float C = b->c[0];
+
+  float delta = B*B - 4*A*C;
+
   
-  return num_roots;
+  if(delta < 0)
+  {
+    *roots = 0;
+    return 0;
+  }
+  else if(delta == 0)
+  {
+    *roots = malloc(sizeof(float));
+    (*roots)[0] = -B / 2*A;
+    return 1;
+  }
+  else
+  {
+    *roots = malloc(2 * sizeof(float));
+    (*roots)[0] = (-B - sqrtf(delta)) / (2*A);
+    (*roots)[1] = (-B + sqrtf(delta)) / (2*A);
+    return 2;
+  }
 }

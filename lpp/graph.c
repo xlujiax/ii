@@ -5,7 +5,7 @@ Graph* graph_create(Bezier* b)
   Graph* g = malloc(sizeof(Graph));
 
   g->bezier = b;
-  g->draw_control_line = 1;
+  g->draw_control_line = 0;
   g->draw_control_points = 1;
   g->draw_roots = 1;
   g->draw_axis = 1;
@@ -84,12 +84,16 @@ void graph_draw(Graph* g)
     for(int i = 0; i < num_roots; ++i)
     {
       const float t = roots[i];
-      const float ft = bezier_de_casteljau(g->bezier, t);
 
-      glVertex2f(
-	g->offset_x + g->width * t,
-	g->offset_y + g->height * ft
-		 );
+      if(g->bezier->a <= t && t <= g->bezier->b)
+      {
+	const float ft = bezier_de_casteljau(g->bezier, t);
+	
+	glVertex2f(
+	  g->offset_x + g->width * t,
+	  g->offset_y + g->height * ft
+		   );
+      }
     }
     glEnd();
 

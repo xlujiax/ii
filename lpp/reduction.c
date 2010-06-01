@@ -2,6 +2,8 @@
 
 Bezier* bezier_degree_reduction(Bezier* c, int m)
 {
+  printf("bezier_degree_reduction is depracated\n");
+  
   int n = c->n;
 
   Bezier* low = bezier_create(m);
