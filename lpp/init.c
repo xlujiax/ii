@@ -52,7 +52,7 @@ int main(int argc, char** argv)
   glutInit(&argc, argv);
   glutInitWindowSize(width, height);
   glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
-  glutCreateWindow("simple game");
+  glutCreateWindow("Computing roots of Bezier polynomials");
   
   glViewport(0, 0, width, height);
   glMatrixMode(GL_PROJECTION);

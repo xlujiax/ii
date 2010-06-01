@@ -1,97 +1,23 @@
 #include "init.h"
 
-#include "curve.h"
-#include "polygon.h"
-#include "line.h"
-#include "intersection.h"
-#include "hull.h"
-#include "utils.h"
+#include "bezier.h"
+#include "graph.h"
 #include "reduction.h"
 
 const float mouse_size = 20;
 
-float* move_mod_x = NULL;
-float* move_mod_y = NULL;
+float* move_mod_x = 0;
+float* move_mod_y = 0;
 
-Curve** curves;
-int num_curves;
-float (*color_curves)[4];
-
-Line* l;
-
-int n = 6;
+Graph** graphs = 0;
+int num_graphs = 0;
 
 void recalc()
 {
-  curves[1] = curve_degree_reduction_rec(curves[0], 2);
-  curve_degree_raise(curves[1], n);
-
-  curves[2] = curve_degree_reduction_rec(curves[0], 2);
-  const float diff = curve_max_diff(curves[1], curves[0]);
-  
- 
-  curves[3] = curve_create(2);
-  for(int i = 0; i <= 2; ++i)
-  {
-    curves[3]->p[i][0] = curves[2]->p[i][0];
-    curves[3]->p[i][1] = curves[2]->p[i][1] + diff;
-    curves[3]->p[i][2] = curves[2]->p[i][2];
-  }
-
-  curves[4] = curve_create(2);
-  for(int i = 0; i <= 2; ++i)
-  {
-    curves[4]->p[i][0] = curves[2]->p[i][0];
-    curves[4]->p[i][1] = curves[2]->p[i][1] - diff;
-    curves[4]->p[i][2] = curves[2]->p[i][2];
-  }
 }
 
 void init()
 {
-  glEnable(GL_MAP1_VERTEX_3);
-
-  float p1[] = {100, 100, 0};
-  float p2[] = {700, 200, 0};
-  l = line_create(p1, p2);
-  
-  num_curves = 5;
-  curves = malloc(sizeof(Curve*) * num_curves);
-  color_curves = malloc(sizeof(float) * num_curves * 4);
-
-  color_curves[0][0] = 1.0;
-  color_curves[0][1] = 1.0;
-  color_curves[0][2] = 0.0;
-  color_curves[0][3] = 0.5;
-  curves[0] = curve_create(n);
-
-  for(int i = 0; i <= n; ++i)
-  {
-    curves[0]->p[i][0] = i * 30.0f + 300.0f;
-    curves[0]->p[i][1] = cosf(i * 30.0f) * 100.0f + 300;
-    curves[0]->p[i][2] = 0.0f;
-  }
-
-  color_curves[1][0] = 0.0;
-  color_curves[1][1] = 1.0;
-  color_curves[1][2] = 0.0;
-  color_curves[1][3] = 0.5;
-
-  color_curves[2][0] = 0.0;
-  color_curves[2][1] = 0.0;
-  color_curves[2][2] = 1.0;
-  color_curves[2][3] = 0.5;
-
-  color_curves[3][0] = 1.0;
-  color_curves[3][1] = 1.0;
-  color_curves[3][2] = 1.0;
-  color_curves[3][3] = 0.5;
-
-  color_curves[4][0] = 1.0;
-  color_curves[4][1] = 1.0;
-  color_curves[4][2] = 1.0;
-  color_curves[4][3] = 0.5;
-
   recalc();
 }
 
@@ -101,33 +27,12 @@ void update()
 
 void draw()
 {
-  for(int c = 0; c < num_curves; ++c)
-  {
-    glColor3fv(color_curves[c]);
-    curve_draw(curves[c]);
-
-    curve_draw_control_points(curves[c]);
-
-    float* roots;
-    int num_roots = curve_line_intersection(curves[c], l, &roots);
-    
-    glColor3f(1,0,0);
-    glBegin(GL_POINTS);
-    for(int i = 0; i < num_roots; ++i)
-    {
-      float x, y;
-      curve_de_casteljau(curves[c], roots[i], &x, &y);
-      glVertex2f(x,y);
-    }
-    glEnd();
-  }
-
-  glColor3f(0.5,1,0.5);
-  line_draw(l);
-
+  for(int g = 0; g < num_graphs; ++g)
+    graph_draw(graphs[g]);
+  
   // mouse
   glColor3f(1,1,1);
-  glBegin(GL_LINES);
+  glBegin(GL_LINE_STRIP);
   for(float i = 0; i < 2 * 3.1415; i += 0.1)
     glVertex2f(mouse_size * cosf(i) + getMouseX(), mouse_size * sinf(i) + getMouseY());
   glEnd();
@@ -140,16 +45,18 @@ void mouse_move()
   if(move_mod_x != NULL && move_mod_y != NULL)
   {
     //*move_mod_x = getMouseX();
-    *move_mod_y = getMouseY();
+    //*move_mod_y = getMouseY();
 
     recalc();
   }
-  
-  //curves[1] = curve_degree_reduction(curves[0], curves[1]->n);
 }
 
 void mouse_left_click()
 {
+  for(int g = 0; g < num_graphs; ++g)
+  {
+  }
+  /*
   for(int c = 0; c < num_curves; ++c)
   {
     for(int i = 0; i <= curves[c]->n; ++i)
@@ -181,7 +88,7 @@ void mouse_left_click()
 	}
       }
     }
-  }
+    }*/
 }
 
 void mouse_right_click()

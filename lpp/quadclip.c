@@ -1,6 +1,9 @@
 #include "quadclip.h"
 
-int curve_quadclip(Curve* c, float** roots)
+int bezier_quadclip(Bezier* b, float** roots)
 {
-  return 0;
+  if(b->n == 2)
+    return bezier_quad_roots(b, roots);
+  else
+    return 0;
 }

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <assert.h>
-#include "curve.h"
+#include "bezier.h"
 
-int quad_roots(Curve* c, float** roots);
-int cubic_roots(Curve* c, float** roots);
+int bezier_quad_roots(Bezier* b, float** roots);

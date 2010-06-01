@@ -1,38 +1,29 @@
-game:
-	gcc -std=c99 -c game.c
+FLAGS=-Wall -std=c99 -pedantic
+OBJ=bezier.o graph.o quadclip.o reduction.o utils.o roots.o game.o
 
-curve: utils polygon
-	gcc -std=c99 -c curve.c
+bezier:
+	gcc $(FLAGS) -c bezier.c
 
-reduction: curve
-	gcc -std=c99 -c reduction.c
+graph: bezier
+	gcc $(FLAGS) -c graph.c
 
-hull: utils polygon curve
-	gcc -std=c99 -c hull.c
+quadclip: bezier reduction roots
+	gcc $(FLAGS) -c quadclip.c
 
-bezierclip: line curve
-	gcc -std=c99 -c bezierclip.c
-
-roots:
-	gcc -std=c99 -c roots.c
-
-quadclip: line curve roots
-	gcc -std=c99 -c quadclip.c
-
-intersection: bezierclip quadclip
-	gcc -std=c99 -c intersection.c
-
-polygon: utils
-	gcc -std=c99 -c polygon.c
+reduction: bezier utils
+	gcc $(FLAGS) -c reduction.c
 
 utils:
-	gcc -std=c99 -c utils.c
+	gcc $(FLAGS) -c utils.c
 
-line: utils
-	gcc -std=c99 -c line.c
+roots: bezier
+	gcc $(FLAGS) -c roots.c
 
-init: intersection reduction curve polygon line hull game
-	gcc -std=c99 init.c curve.o reduction.o polygon.o quadclip.o bezierclip.o intersection.o utils.o line.o hull.o game.o -lglut -lpng -o game.e
+game: graph reduction quadclip
+	gcc $(FLAGS) -c game.c
+
+init: game
+	gcc $(FLAGS) init.c $(OBJ) -lglut -lpng -o game.e
 
 all: init
 clear:

@@ -1,5 +1,6 @@
 #pragma once
 
-#include "curve.h"
+#include "bezier.h"
+#include "roots.h"
 
-int curve_quadclip(Curve* c, float** roots);
+int bezier_quadclip(Bezier* b, float** roots);

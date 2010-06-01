@@ -1,10 +1,10 @@
 #include "reduction.h"
 
-Curve* curve_degree_reduction(Curve* c, int m)
+Bezier* bezier_degree_reduction(Bezier* c, int m)
 {
   int n = c->n;
 
-  Curve* low = curve_create(m);
+  Bezier* low = bezier_create(m);
 
   float (*coef)[m + 1] = malloc(sizeof(float) * (m + 1) * (m + 1));
   float (*psi)[n + 1] = malloc(sizeof(float) * (m + 1) * (n + 1));
@@ -46,17 +46,12 @@ Curve* curve_degree_reduction(Curve* c, int m)
   {
     e[i] = 0;
     for(int j = 0; j <= n; ++j)
-      e[i] += c->p[j][1]*psi[i][j];
+      e[i] += c->c[j]*psi[i][j];
   }
 
-  float min_x = c->p[0][0];
-  float max_x = c->p[n][0];
-  
   for(int i = 0; i <= m; ++i)
   {
-    low->p[i][0] = min_x + (max_x - min_x)*((float)i) / ((float)m);
-    low->p[i][1] = e[i];
-    low->p[i][2] = 0;
+    low->c[i] = e[i];
   }
 
   printf("def:\n");
@@ -79,11 +74,11 @@ Curve* curve_degree_reduction(Curve* c, int m)
 }
 
 
-Curve* curve_degree_reduction_rec(Curve* c, int m)
+Bezier* bezier_degree_reduction_rec(Bezier* c, int m)
 {
   int n = c->n;
 
-  Curve* low = curve_create(m);
+  Bezier* low = bezier_create(m);
 
   float (*psi)[n+1] = malloc(sizeof(float) * (m + 1) * (n + 1));
   float (*e) = malloc(sizeof(float) * (n + 1));
@@ -150,17 +145,12 @@ Curve* curve_degree_reduction_rec(Curve* c, int m)
   {
     e[i] = 0;
     for(int j = 0; j <= n; ++j)
-      e[i] += c->p[j][1]*psi[i][j];
+      e[i] += c->c[j]*psi[i][j];
   }
 
-  float min_x = c->p[0][0];
-  float max_x = c->p[n][0];
-  
   for(int i = 0; i <= m; ++i)
   {
-    low->p[i][0] = min_x + (max_x - min_x)*((float)i) / ((float)m);
-    low->p[i][1] = e[i];
-    low->p[i][2] = 0;
+    low->c[i] = e[i];
   }
 
   //free(coef);

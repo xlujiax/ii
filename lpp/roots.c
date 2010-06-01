@@ -1,14 +1,14 @@
 #include "roots.h"
 
-int quad_roots(Curve* c, float** roots)
+int bezier_quad_roots(Bezier* b, float** roots)
 {
-  assert(c);
-  assert(c->n == 2);
-  return 0;
-}
+  assert(b);
+  assert(b->n == 2);
 
-int cubic_roots(Curve* c, float** roots)
-{
-  assert(0);
+  // quadratic polynomial coefficients in power basis
+  //float a = c->;
+  //float b = ;
+  //float c = ;
+  
   return 0;
 }
