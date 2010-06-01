@@ -130,15 +130,36 @@ int bezier_above(Bezier* b, Interval*** intervals)
   }
 }
 
-int bezier_intervals(Bezier* up, Bezier* down, Interval*** intervals)
+int bezier_intervals_between(Bezier* up, Bezier* down, Interval*** intervals)
 {
   assert(up->n == 2);
   assert(down->n == 2);
 
-  *intervals = malloc(sizeof(Interval*) * 2);
+  Interval** intervals_up = 0;
+  int num_intervals_up = bezier_above(up, &intervals_up);
 
-  (*intervals)[0] = interval_create(0.0f, 0.1f);
-  (*intervals)[1] = interval_create(0.4f, 0.7f);
+  Interval** intervals_down = 0;
+  int num_intervals_down = bezier_above(down, &intervals_down);
 
-  return 2;
+  // keep intervals above "down" and subtract intervals above "up"
+
+  assert(0); // niepoprawny algorytm
+  
+  int inserter = 0;
+  *intervals = malloc(sizeof(Interval*) * 4);
+  for(int i = 0; i < num_intervals_down; ++i)
+  {
+    for(int j = 0; j < num_intervals_up; ++j)
+    {
+      Interval** diff = 0;
+      int num_diff = interval_difference(intervals_up[i], intervals_down[j], &diff);
+      
+      for(int k = 0; k < num_diff; ++k)
+      {
+	if(!interval_empty(diff[k]))
+	  (*intervals)[inserter++] = interval_copy(diff[k]);
+      }
+    }
+  }
+  return inserter;
 }

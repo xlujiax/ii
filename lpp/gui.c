@@ -132,8 +132,6 @@ void demo_bounds()
 
 void demo_bounds_with_intervals()
 {
-  assert(0); // niedokonczone - brak wypleniania przedzialow
-  
   const int deg = 10;
   Bezier* original = sample_bezier_cosinus(deg, 7.0f);
   Bezier* reduced_and_raised = bezier_degree_reduction_rec(original, 2);
@@ -164,6 +162,9 @@ void demo_bounds_with_intervals()
   graphs[3]->color_r = 0.5f;
   graphs[3]->color_g = 1.0f;
   graphs[3]->color_b = 0.5f;
+
+  /* num_intervals = bezier_intervals_between(reduced_up, reduced_down, &intervals); */
+  num_intervals = bezier_above(reduced_down, &intervals);
 }
 
 void demo_reduced_and_raised()
@@ -241,6 +242,34 @@ void demo_intervals5()
   num_intervals = bezier_above(b, &intervals);
 }
 
+void demo_intervals6()
+{
+  Bezier* b = bezier_create(2);
+  b->c[0] = -0.2;
+  b->c[1] = 0.4;
+  b->c[2] = -0.2;
+  
+  num_graphs = 1;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(b);
+
+  num_intervals = bezier_above(b, &intervals);
+}
+
+void demo_intervals7()
+{
+  Bezier* b = bezier_create(2);
+  b->c[0] = 0.2;
+  b->c[1] = 0.4;
+  b->c[2] = -0.2;
+  
+  num_graphs = 1;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(b);
+
+  num_intervals = bezier_above(b, &intervals);
+}
+
 void init()
 {
   //demo_parabola();
@@ -266,10 +295,12 @@ void init()
   //demo_intervals1();
   //demo_intervals2();
   //demo_intervals3();
-  demo_intervals4();
+  //demo_intervals4();
   //demo_intervals5();
+  //demo_intervals6();
+  //demo_intervals7();
 
-  //demo_bounds_with_intervals();
+  demo_bounds_with_intervals();
 }
 
 void update()
