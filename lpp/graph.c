@@ -57,4 +57,17 @@ void graph_draw(Graph* g)
     glVertex2f(g->offset_x + g->width, g->offset_y);
     glEnd();
   }
+
+  glBegin(GL_LINE_STRIP);
+  for(int i = 0; i < g->segments; ++i)
+  {
+    const float t = (float)i / (float)(g->segments - 1);
+    const float ft = bezier_de_casteljau(g->bezier, t);
+
+    glVertex2f(
+      g->offset_x + g->width * t,
+      g->offset_y + g->height * ft
+	       );
+  }
+  glEnd();
 }

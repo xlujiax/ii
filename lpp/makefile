@@ -1,5 +1,5 @@
 FLAGS=-Wall -std=c99 -pedantic
-OBJ=bezier.o graph.o quadclip.o reduction.o samples.o utils.o roots.o gui.o
+OBJ=bezier.o graph.o quadclip.o casteljau.o reduction.o samples.o utils.o roots.o gui.o
 
 bezier:
 	gcc $(FLAGS) -c bezier.c
@@ -7,8 +7,11 @@ bezier:
 samples:
 	gcc $(FLAGS) -c samples.c
 
-graph: bezier
+graph: bezier casteljau
 	gcc $(FLAGS) -c graph.c
+
+casteljau: bezier
+	gcc $(FLAGS) -c casteljau.c
 
 quadclip: bezier reduction roots
 	gcc $(FLAGS) -c quadclip.c

@@ -2,6 +2,7 @@
 
 #include <malloc.h>
 #include "bezier.h"
+#include "casteljau.h"
 
 typedef struct
 {

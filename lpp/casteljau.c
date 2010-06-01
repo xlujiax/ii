@@ -2,11 +2,11 @@
 
 float bezier_de_casteljau(Bezier* b, float t)
 {
-  float u = (t - a) / (b - a);
+  float u = (t - b->a) / (b->b - b->a);
 
   assert(0.0f <= u && u <= 1.0f);
   // same as:
-  assert(a <= t && t <= b);
+  assert(b->a <= t && t <= b->b);
 
   float (*d)[b->n + 1] = calloc((b->n + 1) * (b->n + 1), sizeof(float));
 
@@ -20,7 +20,7 @@ float bezier_de_casteljau(Bezier* b, float t)
       for(int i = 0; i <= b->n - j; ++i)
 	d[j][i] = (1.0f - u) * d[j-1][i] + u * d[j-1][i+1];
 
-    result = b[c->n][0];
+    result = d[b->n][0];
   }
 
   free(d);
@@ -29,11 +29,11 @@ float bezier_de_casteljau(Bezier* b, float t)
 
 void bezier_split(Bezier* b, float t, Bezier** left, Bezier** right)
 {
-  float u = (t - a) / (b - a);
+  float u = (t - b->a) / (b->b - b->a);
 
   assert(0.0f <= u && u <= 1.0f);
   // same as:
-  assert(a <= t && t <= b);
+  assert(b->a <= t && t <= b->b);
   
   *left = bezier_create(b->n);
   *right = bezier_create(b->n);
