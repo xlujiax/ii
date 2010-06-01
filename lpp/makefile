@@ -25,7 +25,7 @@ roots: bezier
 gui: graph reduction quadclip samples
 	gcc $(FLAGS) -c gui.c
 
-init: game
+init: gui
 	gcc $(FLAGS) init.c $(OBJ) -lglut -lpng -o lpp.e
 
 all: init

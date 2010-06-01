@@ -1,6 +1,6 @@
 #include <GL/glut.h>
 
-#include "game.h"
+#include "gui.h"
 #include "init.h"
 
 const int width = 800;
