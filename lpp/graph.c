@@ -99,7 +99,7 @@ void graph_draw(Graph* g)
       {
 	const float ft = bezier_de_casteljau(g->bezier, t);
 
-	const float eps = 0.0001f;
+	const float eps = 0.01f;
 	assert(fabs(ft) < eps);
 	
 	glVertex2f(

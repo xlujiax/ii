@@ -53,7 +53,7 @@ void demo_sinus()
 {
   num_graphs = 1;
   graphs = malloc(sizeof(Graph*) * num_graphs);
-  graphs[0] = graph_create(sample_bezier_sinus(10));
+  graphs[0] = graph_create(sample_bezier_sinus(10, 3.1415f));
   graphs[0]->draw_roots = 0;
 }
 
@@ -61,26 +61,34 @@ void demo_cosinus()
 {
   num_graphs = 1;
   graphs = malloc(sizeof(Graph*) * num_graphs);
-  graphs[0] = graph_create(sample_bezier_cosinus(10));
+  graphs[0] = graph_create(sample_bezier_cosinus(10, 3.1415f));
   graphs[0]->draw_roots = 0;
 }
 
-void demo_sinus_reduction()
+void demo_sinus_reduction(int n, int freq)
 {
-  num_graphs = 1;
+  num_graphs = 2;
   graphs = malloc(sizeof(Graph*) * num_graphs);
   graphs[0] = graph_create(
-    bezier_degree_reduction_rec(sample_bezier_sinus(10), 2));
-  //graphs[0]->draw_roots = 0;
+    bezier_degree_reduction_rec(sample_bezier_sinus(10, freq), 2));
+  graphs[1] = graph_create(sample_bezier_sinus(n, freq));
+  graphs[1]->color_r = 0.0f;
+  graphs[1]->color_g = 0.0f;
+  graphs[1]->color_b = 1.0f;
+  graphs[1]->draw_roots = 0;
 }
 
-void demo_cosinus_reduction()
+void demo_cosinus_reduction(int n, int freq)
 {
-  num_graphs = 1;
+  num_graphs = 2;
   graphs = malloc(sizeof(Graph*) * num_graphs);
   graphs[0] = graph_create(
-    bezier_degree_reduction_rec(sample_bezier_cosinus(10), 2));
-  //graphs[0]->draw_roots = 0;
+    bezier_degree_reduction_rec(sample_bezier_cosinus(10, freq), 2));
+  graphs[1] = graph_create(sample_bezier_cosinus(n, freq));
+  graphs[1]->color_r = 0.0f;
+  graphs[1]->color_g = 0.0f;
+  graphs[1]->color_b = 1.0f;
+  graphs[1]->draw_roots = 0;
 }
 
 void init()
@@ -91,8 +99,16 @@ void init()
   //demo_parabola_split();
   //demo_sinus();
   //demo_cosinus();
-  //demo_sinus_reduction();
-  demo_cosinus_reduction();
+
+  //demo_sinus_reduction(10, 3.1415f);
+  //demo_cosinus_reduction(10, 3.1415f);
+  //demo_sinus_reduction(30, 3.1415f);
+  //demo_cosinus_reduction(30, 3.1415f);
+  
+  //demo_sinus_reduction(10, 50.0f);
+  //demo_cosinus_reduction(10, 50.0f);
+  //demo_sinus_reduction(30, 50.0f);
+  demo_cosinus_reduction(30, 50.0f);
 }
 
 void update()

@@ -1,18 +1,18 @@
 #include "samples.h"
 
-Bezier* sample_bezier_sinus(int degree)
+Bezier* sample_bezier_sinus(int degree, float freq)
 {
   Bezier* b = bezier_create(degree);
   for(int i = 0; i <= b->n; ++i)
-    b->c[i] = sinf((float)i / (float)b->n * 2.0f);
+    b->c[i] = sinf((float)i / (float)b->n * freq);
   return b;
 }
 
-Bezier* sample_bezier_cosinus(int degree)
+Bezier* sample_bezier_cosinus(int degree, float freq)
 {
   Bezier* b = bezier_create(degree);
   for(int i = 0; i <= b->n; ++i)
-    b->c[i] = cosf((float)i / (float)b->n * 2.0f);
+    b->c[i] = cosf((float)i / (float)b->n * freq);
   return b;
 }
 
