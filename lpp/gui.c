@@ -3,6 +3,7 @@
 #include "bezier.h"
 #include "graph.h"
 #include "reduction.h"
+#include "samples.h"
 
 const float mouse_size = 20;
 
@@ -12,13 +13,12 @@ float* move_mod_y = 0;
 Graph** graphs = 0;
 int num_graphs = 0;
 
-void recalc()
-{
-}
-
 void init()
 {
-  recalc();
+  num_graphs = 1;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(sample_bezier_sinus(10));
+  graphs[0]->draw_control_line = 0;
 }
 
 void update()
@@ -46,8 +46,6 @@ void mouse_move()
   {
     //*move_mod_x = getMouseX();
     //*move_mod_y = getMouseY();
-
-    recalc();
   }
 }
 

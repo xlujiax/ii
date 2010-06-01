@@ -1,11 +1,9 @@
 #include "samples.h"
 
-Bezier* sample_bezier_sinus()
+Bezier* sample_bezier_sinus(int degree)
 {
-  return 0;
-}
-
-Bezier* sample_bezier_cosinus()
-{
-  return 0;
+  Bezier* b = bezier_create(degree);
+  for(int i = 0; i <= b->n; ++i)
+    b->c[i] = sinf((float)i / (float)b->n);
+  return b;
 }
