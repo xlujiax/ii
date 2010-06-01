@@ -22,7 +22,7 @@ int interval_difference(Interval* i, Interval* j, Interval*** intervals)
 {
   if(!interval_overlapps(i, j))
   {
-    **intervals = malloc(sizeof(Interval*));
+    *intervals = malloc(sizeof(Interval*));
     (*intervals)[0] = interval_copy(i);
     return 1;
   }
@@ -30,20 +30,20 @@ int interval_difference(Interval* i, Interval* j, Interval*** intervals)
   {
     if(i->a < j->a)
     {
-      **intervals = malloc(sizeof(Interval*));
+      *intervals = malloc(sizeof(Interval*));
       (*intervals)[0] = interval_create(j->b, i->b);
       return 1;
     }
     else
     {
-      **intervals = malloc(sizeof(Interval*));
+      *intervals = malloc(sizeof(Interval*));
       (*intervals)[0] = interval_create(i->a, j->a);
       return 1;
     }
   }
   else
   {
-    **intervals = malloc(2 * sizeof(Interval*));
+    *intervals = malloc(2 * sizeof(Interval*));
     (*intervals)[0] = interval_create(i->a, j->a);
     (*intervals)[1] = interval_create(j->b, i->b);
     return 2;

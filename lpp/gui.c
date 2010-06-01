@@ -132,8 +132,12 @@ void demo_bounds()
 
 void demo_bounds_with_intervals()
 {
-  const int deg = 10;
-  Bezier* original = sample_bezier_cosinus(deg, 7.0f);
+  const int deg = 3;
+  Bezier* original = bezier_create(deg);
+  original->c[0] = -0.2;
+  original->c[1] = 0.1;
+  original->c[2] = 0.1;
+  original->c[3] = -0.1;
   Bezier* reduced_and_raised = bezier_degree_reduction_rec(original, 2);
   bezier_degree_raise(reduced_and_raised, deg);
 
@@ -163,8 +167,7 @@ void demo_bounds_with_intervals()
   graphs[3]->color_g = 1.0f;
   graphs[3]->color_b = 0.5f;
 
-  /* num_intervals = bezier_intervals_between(reduced_up, reduced_down, &intervals); */
-  num_intervals = bezier_above(reduced_down, &intervals);
+  num_intervals = bezier_intervals_between(reduced_up, reduced_down, &intervals);
 }
 
 void demo_reduced_and_raised()

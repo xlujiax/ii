@@ -143,23 +143,34 @@ int bezier_intervals_between(Bezier* up, Bezier* down, Interval*** intervals)
 
   // keep intervals above "down" and subtract intervals above "up"
 
-  assert(0); // niepoprawny algorytm
-  
   int inserter = 0;
   *intervals = malloc(sizeof(Interval*) * 4);
   for(int i = 0; i < num_intervals_down; ++i)
   {
-    for(int j = 0; j < num_intervals_up; ++j)
+    if(!interval_empty(intervals_down[i]))
     {
-      Interval** diff = 0;
-      int num_diff = interval_difference(intervals_up[i], intervals_down[j], &diff);
-      
-      for(int k = 0; k < num_diff; ++k)
+      Interval* actual = (*intervals)[inserter++] = interval_copy(intervals_down[i]);
+    
+      for(int j = 0; j < num_intervals_up; ++j)
       {
-	if(!interval_empty(diff[k]))
-	  (*intervals)[inserter++] = interval_copy(diff[k]);
+	if(interval_overlapps(actual, intervals_up[j]))
+	{
+	  --inserter;
+	  Interval** diff = 0;
+	  int num_diff = interval_difference(actual, intervals_up[j], &diff);
+	  
+	  for(int k = 0; k < num_diff; ++k)
+	  {
+	    if(!interval_empty(diff[k]))
+	    {
+	      (*intervals)[inserter++] = interval_copy(diff[k]);
+	    }
+	  }
+	}
       }
     }
   }
+  printf("ret %d\n", inserter);
+
   return inserter;
 }
