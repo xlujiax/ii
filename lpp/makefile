@@ -13,7 +13,10 @@ hull: utils polygon curve
 bezierclip: line curve
 	gcc -std=c99 -c bezierclip.c
 
-quadclip: line curve
+roots:
+	gcc -std=c99 -c roots.c
+
+quadclip: line curve roots
 	gcc -std=c99 -c quadclip.c
 
 intersection: bezierclip quadclip
