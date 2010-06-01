@@ -170,7 +170,6 @@ int bezier_intervals_between(Bezier* up, Bezier* down, Interval*** intervals)
       }
     }
   }
-  printf("ret %d\n", inserter);
 
   return inserter;
 }

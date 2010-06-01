@@ -130,7 +130,47 @@ void demo_bounds()
   graphs[3]->color_b = 0.5f;
 }
 
-void demo_bounds_with_intervals()
+void demo_bounds_with_intervals1()
+{
+  const int deg = 3;
+  Bezier* original = bezier_create(deg);
+  original->c[0] = 0.2;
+  original->c[1] = 0.1;
+  original->c[2] = 0.1;
+  original->c[3] = -0.1;
+  Bezier* reduced_and_raised = bezier_degree_reduction_rec(original, 2);
+  bezier_degree_raise(reduced_and_raised, deg);
+
+  float difference = bezier_max_coeff_diff(original, reduced_and_raised);
+  Bezier* reduced_up = bezier_degree_reduction_rec(original, 2);
+  bezier_inc_coeffs(reduced_up, difference);
+  Bezier* reduced_down = bezier_degree_reduction_rec(original, 2);
+  bezier_inc_coeffs(reduced_down, -difference);
+
+  num_graphs = 4;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(original);
+  graphs[0]->draw_roots = 0;
+  graphs[1] = graph_create(reduced_and_raised);
+  graphs[1]->draw_roots = 0;
+  graphs[1]->color_r = 0.5f;
+  graphs[1]->color_g = 0.5f;
+  graphs[1]->color_b = 0.5f;
+
+  graphs[2] = graph_create(reduced_up);
+  graphs[2]->color_r = 0.5f;
+  graphs[2]->color_g = 1.0f;
+  graphs[2]->color_b = 0.5f;
+
+  graphs[3] = graph_create(reduced_down);
+  graphs[3]->color_r = 0.5f;
+  graphs[3]->color_g = 1.0f;
+  graphs[3]->color_b = 0.5f;
+
+  num_intervals = bezier_intervals_between(reduced_up, reduced_down, &intervals);
+}
+
+void demo_bounds_with_intervals2()
 {
   const int deg = 3;
   Bezier* original = bezier_create(deg);
@@ -138,6 +178,88 @@ void demo_bounds_with_intervals()
   original->c[1] = 0.1;
   original->c[2] = 0.1;
   original->c[3] = -0.1;
+  Bezier* reduced_and_raised = bezier_degree_reduction_rec(original, 2);
+  bezier_degree_raise(reduced_and_raised, deg);
+
+  float difference = bezier_max_coeff_diff(original, reduced_and_raised);
+  Bezier* reduced_up = bezier_degree_reduction_rec(original, 2);
+  bezier_inc_coeffs(reduced_up, difference);
+  Bezier* reduced_down = bezier_degree_reduction_rec(original, 2);
+  bezier_inc_coeffs(reduced_down, -difference);
+
+  num_graphs = 4;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(original);
+  graphs[0]->draw_roots = 0;
+  graphs[1] = graph_create(reduced_and_raised);
+  graphs[1]->draw_roots = 0;
+  graphs[1]->color_r = 0.5f;
+  graphs[1]->color_g = 0.5f;
+  graphs[1]->color_b = 0.5f;
+
+  graphs[2] = graph_create(reduced_up);
+  graphs[2]->color_r = 0.5f;
+  graphs[2]->color_g = 1.0f;
+  graphs[2]->color_b = 0.5f;
+
+  graphs[3] = graph_create(reduced_down);
+  graphs[3]->color_r = 0.5f;
+  graphs[3]->color_g = 1.0f;
+  graphs[3]->color_b = 0.5f;
+
+  num_intervals = bezier_intervals_between(reduced_up, reduced_down, &intervals);
+}
+
+
+void demo_bounds_with_intervals3()
+{
+  const int deg = 3;
+  Bezier* original = bezier_create(deg);
+  original->c[0] = 0.2;
+  original->c[1] = -0.1;
+  original->c[2] = -0.1;
+  original->c[3] = 0.1;
+  Bezier* reduced_and_raised = bezier_degree_reduction_rec(original, 2);
+  bezier_degree_raise(reduced_and_raised, deg);
+
+  float difference = bezier_max_coeff_diff(original, reduced_and_raised);
+  Bezier* reduced_up = bezier_degree_reduction_rec(original, 2);
+  bezier_inc_coeffs(reduced_up, difference);
+  Bezier* reduced_down = bezier_degree_reduction_rec(original, 2);
+  bezier_inc_coeffs(reduced_down, -difference);
+
+  num_graphs = 4;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(original);
+  graphs[0]->draw_roots = 0;
+  graphs[1] = graph_create(reduced_and_raised);
+  graphs[1]->draw_roots = 0;
+  graphs[1]->color_r = 0.5f;
+  graphs[1]->color_g = 0.5f;
+  graphs[1]->color_b = 0.5f;
+
+  graphs[2] = graph_create(reduced_up);
+  graphs[2]->color_r = 0.5f;
+  graphs[2]->color_g = 1.0f;
+  graphs[2]->color_b = 0.5f;
+
+  graphs[3] = graph_create(reduced_down);
+  graphs[3]->color_r = 0.5f;
+  graphs[3]->color_g = 1.0f;
+  graphs[3]->color_b = 0.5f;
+
+  num_intervals = bezier_intervals_between(reduced_up, reduced_down, &intervals);
+}
+
+
+void demo_bounds_with_intervals4()
+{
+  const int deg = 3;
+  Bezier* original = bezier_create(deg);
+  original->c[0] = 0.2;
+  original->c[1] = 0.1;
+  original->c[2] = -0.1;
+  original->c[3] = 0.2;
   Bezier* reduced_and_raised = bezier_degree_reduction_rec(original, 2);
   bezier_degree_raise(reduced_and_raised, deg);
 
@@ -303,7 +425,10 @@ void init()
   //demo_intervals6();
   //demo_intervals7();
 
-  demo_bounds_with_intervals();
+  //demo_bounds_with_intervals1();
+  //demo_bounds_with_intervals2();
+  //demo_bounds_with_intervals3();
+  demo_bounds_with_intervals4();
 }
 
 void update()
