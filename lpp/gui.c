@@ -15,9 +15,16 @@ int num_graphs = 0;
 
 void init()
 {
-  num_graphs = 1;
+  Bezier* b = sample_bezier_parabola();
+  Bezier* left = 0;
+  Bezier* right = 0;
+
+  bezier_split(b, 0.5f, &left, &right);
+  
+  num_graphs = 2;
   graphs = malloc(sizeof(Graph*) * num_graphs);
-  graphs[0] = graph_create(sample_bezier_parabola());
+  graphs[0] = graph_create(left);
+  graphs[1] = graph_create(right);
 }
 
 void update()
@@ -38,58 +45,6 @@ void draw()
 }
 
 void key_press(unsigned char key) {}
-
-void mouse_move()
-{
-  if(move_mod_x != NULL && move_mod_y != NULL)
-  {
-    //*move_mod_x = getMouseX();
-    //*move_mod_y = getMouseY();
-  }
-}
-
-void mouse_left_click()
-{
-  for(int g = 0; g < num_graphs; ++g)
-  {
-  }
-  /*
-  for(int c = 0; c < num_curves; ++c)
-  {
-    for(int i = 0; i <= curves[c]->n; ++i)
-    {
-      float dx = getMouseX() - curves[c]->p[i][0];
-      float dy = getMouseY() - curves[c]->p[i][1];
-      
-      float dist = dx*dx + dy*dy;
-      
-      if(dist < mouse_size*mouse_size)
-      {
-	if(move_mod_x == 0 && move_mod_y == 0)
-	{
-	  move_mod_x = &curves[c]->p[i][0];
-	  move_mod_y = &curves[c]->p[i][1];
-	}
-	else
-	{
-	  float dx_old = getMouseX() - *move_mod_x;
-	  float dy_old = getMouseY() - *move_mod_y;
-	  
-	  float dist_old = dx_old*dx_old + dy_old*dy_old;
-	  
-	  if(dist_old > dist * dist)
-	  {
-	    move_mod_x = &curves[c]->p[i][0];
-	    move_mod_y = &curves[c]->p[i][1];
-	  }
-	}
-      }
-    }
-    }*/
-}
-
-void mouse_right_click()
-{
-  move_mod_x = NULL;
-  move_mod_y = NULL;
-}
+void mouse_move() {}
+void mouse_left_click() {}
+void mouse_right_click() {}

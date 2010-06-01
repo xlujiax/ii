@@ -16,7 +16,7 @@ Graph* graph_create(Bezier* b)
   g->height = 400.0f;
   g->offset_x = 100.0f;
   g->offset_y = 200.0f;
-  g->segments = 50;
+  g->precision = 0.001f;
   
   return g;
 }
@@ -29,10 +29,15 @@ void graph_draw(Graph* g)
   {
     glBegin(GL_LINE_STRIP);
     for (int i = 0; i <= g->bezier->n; i++)
+    {
+      const float x_01 = (float)i / (float)g->bezier->n;
+      const float x_ab = x_01 * (g->bezier->b - g->bezier->a) + g->bezier->a;
+      
       glVertex2f(
-	g->offset_x + g->width * (float)i / (float)g->bezier->n,
+	g->offset_x + g->width * x_ab,
 	g->offset_y + g->height * g->bezier->c[i]
 		 );
+    }
     glEnd();
   }
 
@@ -41,10 +46,16 @@ void graph_draw(Graph* g)
     glPointSize(5.0);
     glBegin(GL_POINTS);
     for (int i = 0; i <= g->bezier->n; i++)
+    {
+      const float x_01 = (float)i / (float)g->bezier->n;
+      const float x_ab = x_01 * (g->bezier->b - g->bezier->a) + g->bezier->a;
+      
       glVertex2f(
-	g->offset_x + g->width * (float)i / (float)g->bezier->n,
+	g->offset_x + g->width * x_ab,
 	g->offset_y + g->height * g->bezier->c[i]
 		 );
+
+    }
     glEnd();
   }
 
@@ -60,9 +71,8 @@ void graph_draw(Graph* g)
   }
 
   glBegin(GL_LINE_STRIP);
-  for(int i = 0; i < g->segments; ++i)
+  for(float t = g->bezier->a; t <= g->bezier->b; t += g->precision)
   {
-    const float t = (float)i / (float)(g->segments - 1);
     const float ft = bezier_de_casteljau(g->bezier, t);
 
     glVertex2f(
@@ -88,6 +98,9 @@ void graph_draw(Graph* g)
       if(g->bezier->a <= t && t <= g->bezier->b)
       {
 	const float ft = bezier_de_casteljau(g->bezier, t);
+
+	const float eps = 0.0001f;
+	assert(fabs(ft) < eps);
 	
 	glVertex2f(
 	  g->offset_x + g->width * t,
@@ -96,6 +109,9 @@ void graph_draw(Graph* g)
       }
     }
     glEnd();
+
+    if(roots)
+      free(roots);
 
     glColor3f(g->color_r, g->color_g, g->color_b);
   }

@@ -19,7 +19,7 @@ typedef struct
   float height;
   float offset_x;
   float offset_y;
-  int segments;
+  float precision;
 } Graph;
 
 Graph* graph_create(Bezier* b);

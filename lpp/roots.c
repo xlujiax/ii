@@ -18,17 +18,26 @@ int bezier_quad_roots(Bezier* b, float** roots)
     *roots = 0;
     return 0;
   }
-  else if(delta == 0)
-  {
-    *roots = malloc(sizeof(float));
-    (*roots)[0] = -B / 2*A;
-    return 1;
-  }
   else
   {
-    *roots = malloc(2 * sizeof(float));
-    (*roots)[0] = (-B - sqrtf(delta)) / (2*A);
-    (*roots)[1] = (-B + sqrtf(delta)) / (2*A);
-    return 2;
+    // quadratic formula and scaling from [0,1] to [a,b]
+    float lroot = (-B - sqrtf(delta)) / (2*A) * (b->b - b->a) + b->a;
+    float rroot = (-B + sqrtf(delta)) / (2*A) * (b->b - b->a) + b->a;
+
+    if(lroot == rroot)
+    {
+      *roots = malloc(sizeof(float));
+      (*roots)[0] = lroot;
+      return 1;
+    }
+    else
+    {
+      *roots = malloc(2 * sizeof(float));
+      (*roots)[0] = lroot;
+      (*roots)[1] = rroot;
+      
+      assert(lroot < rroot);
+      return 2;
+    }
   }
 }
