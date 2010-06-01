@@ -1,5 +1,5 @@
 FLAGS=-Wall -std=c99 -pedantic
-OBJ=bezier.o graph.o quadclip.o reduction.o samples.o utils.o roots.o game.o
+OBJ=bezier.o graph.o quadclip.o reduction.o samples.o utils.o roots.o gui.o
 
 bezier:
 	gcc $(FLAGS) -c bezier.c
@@ -22,11 +22,11 @@ utils:
 roots: bezier
 	gcc $(FLAGS) -c roots.c
 
-game: graph reduction quadclip samples
-	gcc $(FLAGS) -c game.c
+gui: graph reduction quadclip samples
+	gcc $(FLAGS) -c gui.c
 
 init: game
-	gcc $(FLAGS) init.c $(OBJ) -lglut -lpng -o game.e
+	gcc $(FLAGS) init.c $(OBJ) -lglut -lpng -o lpp.e
 
 all: init
 clear:
