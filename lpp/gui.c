@@ -13,18 +13,25 @@ float* move_mod_y = 0;
 Graph** graphs = 0;
 int num_graphs = 0;
 
-void init()
+void demo_subrange()
 {
-  Bezier* b = sample_bezier_parabola();
-  Bezier* left = 0;
-  Bezier* right = 0;
+  num_graphs = 1;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(bezier_subrange(sample_bezier_parabola(), 0.3f, 0.7f));
+}
 
-  bezier_split(b, 0.5f, &left, &right);
-  
+void demo_two_subranges()
+{
   num_graphs = 2;
   graphs = malloc(sizeof(Graph*) * num_graphs);
-  graphs[0] = graph_create(left);
-  graphs[1] = graph_create(right);
+  graphs[0] = graph_create(bezier_subrange(sample_bezier_parabola(), 0.3f, 0.4f));
+  graphs[1] = graph_create(bezier_subrange(sample_bezier_parabola(), 0.5f, 0.7f));
+}
+
+void init()
+{
+  //demo_subrange();
+  demo_two_subranges();
 }
 
 void update()

@@ -59,3 +59,20 @@ void bezier_split(Bezier* b, float t, Bezier** left, Bezier** right)
 
   free(d);
 }
+
+Bezier* bezier_subrange(Bezier* b, float t1, float t2)
+{
+  Bezier* left = 0;
+  Bezier* middle_and_right = 0;
+  Bezier* middle = 0;
+  Bezier* right = 0;
+
+  bezier_split(b, t1, &left, &middle_and_right);
+  bezier_split(middle_and_right, t2, &middle, &right);
+
+  bezier_destroy(left);
+  bezier_destroy(middle_and_right);
+  bezier_destroy(right);
+
+  return middle;
+}
