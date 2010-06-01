@@ -35,8 +35,10 @@ int bezier_quad_roots(Bezier* b, float** roots)
       *roots = malloc(2 * sizeof(float));
       (*roots)[0] = lroot;
       (*roots)[1] = rroot;
+
+      printf("l %f r %f\n", lroot, rroot);
       
-      assert(lroot < rroot);
+      //assert(lroot < rroot);
       return 2;
     }
   }

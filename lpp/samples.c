@@ -4,7 +4,7 @@ Bezier* sample_bezier_sinus(int degree)
 {
   Bezier* b = bezier_create(degree);
   for(int i = 0; i <= b->n; ++i)
-    b->c[i] = sinf((float)i / (float)b->n);
+    b->c[i] = sinf((float)i / (float)b->n * 2.0f);
   return b;
 }
 
@@ -12,7 +12,7 @@ Bezier* sample_bezier_cosinus(int degree)
 {
   Bezier* b = bezier_create(degree);
   for(int i = 0; i <= b->n; ++i)
-    b->c[i] = cosf((float)i / (float)b->n);
+    b->c[i] = cosf((float)i / (float)b->n * 2.0f);
   return b;
 }
 

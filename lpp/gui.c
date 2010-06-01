@@ -13,14 +13,35 @@ float* move_mod_y = 0;
 Graph** graphs = 0;
 int num_graphs = 0;
 
-void demo_subrange()
+void demo_parabola()
+{
+  num_graphs = 1;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(sample_bezier_parabola());
+}
+
+void demo_parabola_subrange()
 {
   num_graphs = 1;
   graphs = malloc(sizeof(Graph*) * num_graphs);
   graphs[0] = graph_create(bezier_subrange(sample_bezier_parabola(), 0.3f, 0.7f));
 }
 
-void demo_two_subranges()
+void demo_parabola_split()
+{
+  Bezier* b = sample_bezier_parabola();
+  Bezier* left = 0;
+  Bezier* right = 0;
+
+  bezier_split(b, 0.5f, &left, &right);
+  
+  num_graphs = 2;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(left);
+  graphs[1] = graph_create(right);
+}
+
+void demo_parabola_two_subranges()
 {
   num_graphs = 2;
   graphs = malloc(sizeof(Graph*) * num_graphs);
@@ -28,10 +49,50 @@ void demo_two_subranges()
   graphs[1] = graph_create(bezier_subrange(sample_bezier_parabola(), 0.5f, 0.7f));
 }
 
+void demo_sinus()
+{
+  num_graphs = 1;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(sample_bezier_sinus(10));
+  graphs[0]->draw_roots = 0;
+}
+
+void demo_cosinus()
+{
+  num_graphs = 1;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(sample_bezier_cosinus(10));
+  graphs[0]->draw_roots = 0;
+}
+
+void demo_sinus_reduction()
+{
+  num_graphs = 1;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(
+    bezier_degree_reduction_rec(sample_bezier_sinus(10), 2));
+  //graphs[0]->draw_roots = 0;
+}
+
+void demo_cosinus_reduction()
+{
+  num_graphs = 1;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(
+    bezier_degree_reduction_rec(sample_bezier_cosinus(10), 2));
+  //graphs[0]->draw_roots = 0;
+}
+
 void init()
 {
-  //demo_subrange();
-  demo_two_subranges();
+  //demo_parabola();
+  //demo_parabola_subrange();
+  //demo_parabola_two_subranges();
+  //demo_parabola_split();
+  //demo_sinus();
+  //demo_cosinus();
+  //demo_sinus_reduction();
+  demo_cosinus_reduction();
 }
 
 void update()
