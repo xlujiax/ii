@@ -8,9 +8,102 @@ int bezier_quadclip(Bezier* b, float** roots)
     return 0;
 }
 
-void bezier_ox_above(Bezier* b, float** a1, float** a2, float** a3, float** a4)
+int bezier_above(Bezier* b, Interval*** intervals)
 {
+  assert(b->n == 2);
+
+  float A = b->c[0] - 2*b->c[1] + b->c[2];
+  float B = -2*b->c[0] + 2*b->c[1];
+
+  float* roots = 0;
+  int num_roots = bezier_quad_roots(b, &roots);
   
+  if(A == 0)
+  {
+    if(num_roots == 0)
+      return 0;
+    else
+    {
+      if(B > 0)
+      {
+	*intervals = malloc(sizeof(Interval*));
+	(*intervals)[0] = interval_create(b->a, roots[0]);
+	return 1;
+      }
+      else
+      {
+	*intervals = malloc(sizeof(Interval*));
+	(*intervals)[0] = interval_create(roots[0], b->b);
+	return 1;
+      }
+    }
+  }
+  else
+  {
+    float C = b->c[0];
+    float delta = B*B - 4*A*C;
+
+    if(delta == 0)
+      return 0;
+    else
+    {
+      if(A > 0)
+      {
+	if(num_roots == 2)
+	{
+	  *intervals = malloc(sizeof(Interval*));
+	  (*intervals)[0] = interval_create(roots[0], roots[1]);
+	  return 1;
+	}
+	else
+	{
+	  assert(num_roots == 1);
+	  
+	  float Wx = -B / (2 * A);
+	  if(Wx < roots[0])
+	  {
+	    *intervals = malloc(sizeof(Interval*));
+	    (*intervals)[0] = interval_create(b->a, roots[0]);
+	    return 1;
+	  }
+	  else
+	  {
+	    *intervals = malloc(sizeof(Interval*));
+	    (*intervals)[0] = interval_create(roots[0], b->b);
+	    return 1;
+	  }
+	}
+      }
+      else
+      {
+	if(num_roots == 2)
+	{
+	  *intervals = malloc(sizeof(Interval*) * 2);
+	  (*intervals)[0] = interval_create(b->a, roots[0]);
+	  (*intervals)[1] = interval_create(roots[1], b->b);
+	  return 2;
+	}
+	else
+	{
+	  assert(num_roots == 1);
+	  
+	  float Wx = -B / (2 * A);
+	  if(Wx < roots[0])
+	  {
+	    *intervals = malloc(sizeof(Interval*));
+	    (*intervals)[0] = interval_create(roots[0], b->b);
+	    return 1;
+	  }
+	  else
+	  {
+	    *intervals = malloc(sizeof(Interval*));
+	    (*intervals)[0] = interval_create(b->a, roots[0]);
+	    return 1;
+	  }
+	}
+      }
+    }
+  }
 }
 
 int bezier_intervals(Bezier* up, Bezier* down, Interval*** intervals)

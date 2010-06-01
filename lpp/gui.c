@@ -15,8 +15,8 @@ float* move_mod_y = 0;
 Graph** graphs = 0;
 int num_graphs = 0;
 
-Bezier* up = 0;
-Bezier* down = 0;
+Interval** intervals = 0;
+int num_intervals = 0;
 
 void demo_parabola()
 {
@@ -132,6 +132,8 @@ void demo_bounds()
 
 void demo_bounds_with_intervals()
 {
+  assert(0); // niedokonczone - brak wypleniania przedzialow
+  
   const int deg = 10;
   Bezier* original = sample_bezier_cosinus(deg, 7.0f);
   Bezier* reduced_and_raised = bezier_degree_reduction_rec(original, 2);
@@ -143,9 +145,6 @@ void demo_bounds_with_intervals()
   Bezier* reduced_down = bezier_degree_reduction_rec(original, 2);
   bezier_inc_coeffs(reduced_down, -difference);
 
-  up = reduced_up;
-  down = reduced_up;
-  
   num_graphs = 4;
   graphs = malloc(sizeof(Graph*) * num_graphs);
   graphs[0] = graph_create(original);
@@ -185,6 +184,15 @@ void demo_reduced_and_raised()
   graphs[1]->color_b = 0.5f;
 }
 
+void demo_intervals()
+{
+  num_graphs = 1;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(sample_bezier_parabola());
+
+  num_intervals = bezier_above(graphs[0]->bezier, &intervals);
+}
+
 void init()
 {
   //demo_parabola();
@@ -207,7 +215,9 @@ void init()
   //demo_reduced_and_raised();
   //demo_bounds();
 
-  demo_bounds_with_intervals();
+  demo_intervals();
+
+  //demo_bounds_with_intervals();
 }
 
 void update()
@@ -219,26 +229,21 @@ void draw()
   for(int g = 0; g < num_graphs; ++g)
     graph_draw(graphs[g]);
 
-  if(up && down)
+  glColor3f(1.0f, 0.0f, 0.0f);
+  glLineWidth(3.0f);
+  glBegin(GL_LINES);
+  
+  for(int i = 0; i < num_intervals; ++i)
   {
-    Interval** intervals = 0;
-    int num_intervals = bezier_intervals(up, down, &intervals);
-
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glLineWidth(3.0f);
-    glBegin(GL_LINES);
-
-    for(int i = 0; i < num_intervals; ++i)
-    {
-      assert(intervals);
-      assert(intervals[i]);
-      assert(!interval_empty(intervals[i]));
-      glVertex2f(graphs[0]->offset_x + graphs[0]->width * intervals[i]->a, graphs[0]->offset_y);
-      glVertex2f(graphs[0]->offset_x + graphs[0]->width * intervals[i]->b, graphs[0]->offset_y);
-    }
-    glEnd();
-    glLineWidth(1.0f);
+    assert(intervals);
+    assert(intervals[i]);
+    assert(!interval_empty(intervals[i]));
+    glVertex2f(graphs[0]->offset_x + graphs[0]->width * intervals[i]->a, graphs[0]->offset_y);
+    glVertex2f(graphs[0]->offset_x + graphs[0]->width * intervals[i]->b, graphs[0]->offset_y);
   }
+  glEnd();
+  glLineWidth(1.0f);
+
   
   // mouse
   glColor3f(0.0f, 0.0f, 0.0f);
