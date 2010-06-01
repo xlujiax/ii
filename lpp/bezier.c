@@ -48,4 +48,9 @@ float bezier_max_coeff_diff(Bezier* b1, Bezier* b2)
   return result;
 }
 
+void bezier_inc_coeffs(Bezier* b, float ratio)
+{
+  for(int i = 0; i <= b->n; ++i)
+    b->c[i] += ratio;
+}
 

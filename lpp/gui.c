@@ -91,6 +91,58 @@ void demo_cosinus_reduction(int n, int freq)
   graphs[1]->draw_roots = 0;
 }
 
+void demo_bounds()
+{
+  const int deg = 10;
+  Bezier* original = sample_bezier_cosinus(deg, 7.0f);
+  Bezier* reduced_and_raised = bezier_degree_reduction_rec(original, 2);
+  bezier_degree_raise(reduced_and_raised, deg);
+
+  float difference = bezier_max_coeff_diff(original, reduced_and_raised);
+  Bezier* reduced_up = bezier_degree_reduction_rec(original, 2);
+  bezier_inc_coeffs(reduced_up, difference);
+  Bezier* reduced_down = bezier_degree_reduction_rec(original, 2);
+  bezier_inc_coeffs(reduced_down, -difference);
+
+  num_graphs = 4;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(original);
+  graphs[0]->draw_roots = 0;
+  graphs[1] = graph_create(reduced_and_raised);
+  graphs[1]->draw_roots = 0;
+  graphs[1]->color_r = 0.5f;
+  graphs[1]->color_g = 0.5f;
+  graphs[1]->color_b = 0.5f;
+
+  graphs[2] = graph_create(reduced_up);
+  graphs[2]->color_r = 0.5f;
+  graphs[2]->color_g = 1.0f;
+  graphs[2]->color_b = 0.5f;
+
+  graphs[3] = graph_create(reduced_down);
+  graphs[3]->color_r = 0.5f;
+  graphs[3]->color_g = 1.0f;
+  graphs[3]->color_b = 0.5f;
+}
+
+void demo_reduced_and_raised()
+{
+  const int deg = 10;
+  Bezier* original = sample_bezier_cosinus(deg, 7.0f);
+  Bezier* reduced_and_raised = bezier_degree_reduction_rec(original, 2);
+  bezier_degree_raise(reduced_and_raised, deg);
+
+  num_graphs = 2;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(original);
+  graphs[0]->draw_roots = 0;
+  graphs[1] = graph_create(reduced_and_raised);
+  graphs[1]->draw_roots = 0;
+  graphs[1]->color_r = 0.5f;
+  graphs[1]->color_g = 0.5f;
+  graphs[1]->color_b = 0.5f;
+}
+
 void init()
 {
   //demo_parabola();
@@ -108,7 +160,10 @@ void init()
   //demo_sinus_reduction(10, 50.0f);
   //demo_cosinus_reduction(10, 50.0f);
   //demo_sinus_reduction(30, 50.0f);
-  demo_cosinus_reduction(30, 50.0f);
+  //demo_cosinus_reduction(30, 50.0f);
+
+  //demo_reduced_and_raised();
+  demo_bounds();
 }
 
 void update()
