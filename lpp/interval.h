@@ -1,7 +1,8 @@
 #pragma once
 
-#include "bezier.h"
+#include <malloc.h>
 #include "utils.h"
+#include "interval.h"
 
 typedef struct
 {

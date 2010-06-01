@@ -13,24 +13,15 @@ void bezier_ox_above(Bezier* b, float** a1, float** a2, float** a3, float** a4)
   
 }
 
-void bezier_intervals(Bezier* up, Bezier* down, float** a1, float** a2, float** a3, float** a4)
+int bezier_intervals(Bezier* up, Bezier* down, Interval*** intervals)
 {
   assert(up->n == 2);
   assert(down->n == 2);
 
-  //float* roots1 = 0;
-  //float* roots2 = 0;
-  //int num_roots1 = bezier_quad_roots(up, roots1);
-  //int num_roots2 = bezier_quad_roots(down, roots2);
+  *intervals = malloc(sizeof(Interval*) * 2);
 
-  *a1 = malloc(sizeof(float));
-  *a2 = malloc(sizeof(float));
-  *a3 = malloc(sizeof(float));
-  *a4 = malloc(sizeof(float));
+  (*intervals)[0] = interval_create(0.0f, 0.1f);
+  (*intervals)[1] = interval_create(0.4f, 0.7f);
 
-  **a1 = 0.1f;
-  **a2 = 0.2f;
-  **a3 = 0.4f;
-  **a4 = 0.5f;
-  //assert(0);
+  return 2;
 }

@@ -5,6 +5,7 @@
 #include "reduction.h"
 #include "quadclip.h"
 #include "samples.h"
+#include "interval.h"
 
 const float mouse_size = 20;
 
@@ -220,26 +221,20 @@ void draw()
 
   if(up && down)
   {
-    float* a = 0;
-    float* b = 0;
-    float* c = 0;
-    float* d = 0;
-    bezier_intervals(up, down, &a, &b, &c, &d);
+    Interval** intervals = 0;
+    int num_intervals = bezier_intervals(up, down, &intervals);
 
     glColor3f(1.0f, 0.0f, 0.0f);
     glLineWidth(3.0f);
     glBegin(GL_LINES);
 
-    if(a && b)
+    for(int i = 0; i < num_intervals; ++i)
     {
-      glVertex2f(graphs[0]->offset_x + graphs[0]->width * (*a), graphs[0]->offset_y);
-      glVertex2f(graphs[0]->offset_x + graphs[0]->width * (*b), graphs[0]->offset_y);
-    }
-
-    if(c && d)
-    {
-      glVertex2f(graphs[0]->offset_x + graphs[0]->width * (*c), graphs[0]->offset_y);
-      glVertex2f(graphs[0]->offset_x + graphs[0]->width * (*d), graphs[0]->offset_y);
+      assert(intervals);
+      assert(intervals[i]);
+      assert(!interval_empty(intervals[i]));
+      glVertex2f(graphs[0]->offset_x + graphs[0]->width * intervals[i]->a, graphs[0]->offset_y);
+      glVertex2f(graphs[0]->offset_x + graphs[0]->width * intervals[i]->b, graphs[0]->offset_y);
     }
     glEnd();
     glLineWidth(1.0f);
