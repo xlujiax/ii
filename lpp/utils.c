@@ -2,6 +2,12 @@
 
 float min(float a, float b) { return (a < b) ? a : b; }
 float max(float a, float b) { return (a < b) ? b : a; }
+void swap(float* a, float* b)
+{
+  float tmp = *a;
+  *a = *b;
+  *b = tmp;
+}
 
 float gammln(const float xx)
 {
