@@ -3,6 +3,7 @@
 #include "bezier.h"
 #include "graph.h"
 #include "reduction.h"
+#include "quadclip.h"
 #include "samples.h"
 
 const float mouse_size = 20;
@@ -12,6 +13,9 @@ float* move_mod_y = 0;
 
 Graph** graphs = 0;
 int num_graphs = 0;
+
+Bezier* up = 0;
+Bezier* down = 0;
 
 void demo_parabola()
 {
@@ -125,6 +129,43 @@ void demo_bounds()
   graphs[3]->color_b = 0.5f;
 }
 
+void demo_bounds_with_intervals()
+{
+  const int deg = 10;
+  Bezier* original = sample_bezier_cosinus(deg, 7.0f);
+  Bezier* reduced_and_raised = bezier_degree_reduction_rec(original, 2);
+  bezier_degree_raise(reduced_and_raised, deg);
+
+  float difference = bezier_max_coeff_diff(original, reduced_and_raised);
+  Bezier* reduced_up = bezier_degree_reduction_rec(original, 2);
+  bezier_inc_coeffs(reduced_up, difference);
+  Bezier* reduced_down = bezier_degree_reduction_rec(original, 2);
+  bezier_inc_coeffs(reduced_down, -difference);
+
+  up = reduced_up;
+  down = reduced_up;
+  
+  num_graphs = 4;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(original);
+  graphs[0]->draw_roots = 0;
+  graphs[1] = graph_create(reduced_and_raised);
+  graphs[1]->draw_roots = 0;
+  graphs[1]->color_r = 0.5f;
+  graphs[1]->color_g = 0.5f;
+  graphs[1]->color_b = 0.5f;
+
+  graphs[2] = graph_create(reduced_up);
+  graphs[2]->color_r = 0.5f;
+  graphs[2]->color_g = 1.0f;
+  graphs[2]->color_b = 0.5f;
+
+  graphs[3] = graph_create(reduced_down);
+  graphs[3]->color_r = 0.5f;
+  graphs[3]->color_g = 1.0f;
+  graphs[3]->color_b = 0.5f;
+}
+
 void demo_reduced_and_raised()
 {
   const int deg = 10;
@@ -163,7 +204,9 @@ void init()
   //demo_cosinus_reduction(30, 50.0f);
 
   //demo_reduced_and_raised();
-  demo_bounds();
+  //demo_bounds();
+
+  demo_bounds_with_intervals();
 }
 
 void update()
@@ -175,6 +218,33 @@ void draw()
   for(int g = 0; g < num_graphs; ++g)
     graph_draw(graphs[g]);
 
+  if(up && down)
+  {
+    float* a = 0;
+    float* b = 0;
+    float* c = 0;
+    float* d = 0;
+    bezier_intervals(up, down, &a, &b, &c, &d);
+
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glLineWidth(3.0f);
+    glBegin(GL_LINES);
+
+    if(a && b)
+    {
+      glVertex2f(graphs[0]->offset_x + graphs[0]->width * (*a), graphs[0]->offset_y);
+      glVertex2f(graphs[0]->offset_x + graphs[0]->width * (*b), graphs[0]->offset_y);
+    }
+
+    if(c && d)
+    {
+      glVertex2f(graphs[0]->offset_x + graphs[0]->width * (*c), graphs[0]->offset_y);
+      glVertex2f(graphs[0]->offset_x + graphs[0]->width * (*d), graphs[0]->offset_y);
+    }
+    glEnd();
+    glLineWidth(1.0f);
+  }
+  
   // mouse
   glColor3f(0.0f, 0.0f, 0.0f);
   glBegin(GL_LINE_STRIP);

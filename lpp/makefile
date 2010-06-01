@@ -13,7 +13,7 @@ graph: bezier casteljau
 casteljau: bezier
 	gcc $(FLAGS) -c casteljau.c
 
-quadclip: bezier reduction roots
+quadclip: bezier reduction roots interval
 	gcc $(FLAGS) -c quadclip.c
 
 reduction: bezier utils
@@ -22,10 +22,13 @@ reduction: bezier utils
 utils:
 	gcc $(FLAGS) -c utils.c
 
+interval:
+	gcc $(FLAGS) -c interval.c
+
 roots: bezier
 	gcc $(FLAGS) -c roots.c
 
-gui: graph reduction quadclip samples
+gui: graph reduction quadclip samples interval
 	gcc $(FLAGS) -c gui.c
 
 init: gui
