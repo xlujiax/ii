@@ -3,6 +3,7 @@
 #include <malloc.h>
 #include "bezier.h"
 #include "casteljau.h"
+#include "roots.h"
 
 typedef struct
 {
@@ -10,6 +11,7 @@ typedef struct
   int draw_control_line;
   int draw_control_points;
   int draw_axis;
+  int draw_roots;
   float color_r;
   float color_g;
   float color_b;

@@ -7,14 +7,15 @@ Graph* graph_create(Bezier* b)
   g->bezier = b;
   g->draw_control_line = 1;
   g->draw_control_points = 1;
+  g->draw_roots = 1;
   g->draw_axis = 1;
   g->color_r = 0.0f;
   g->color_g = 0.0f;
   g->color_b = 0.0f;
-  g->width = 100.0f;
-  g->height = 100.0f;
-  g->offset_x = 50.0f;
-  g->offset_y = 50.0f;
+  g->width = 400.0f;
+  g->height = 400.0f;
+  g->offset_x = 100.0f;
+  g->offset_y = 200.0f;
   g->segments = 50;
   
   return g;
@@ -70,4 +71,28 @@ void graph_draw(Graph* g)
 	       );
   }
   glEnd();
+
+  if(g->draw_roots)
+  {
+    glColor3f(1.0f, 0.0f, 0.0f);
+
+    float* roots = 0;
+    int num_roots = bezier_quad_roots(g->bezier, &roots);
+
+    glPointSize(5.0);
+    glBegin(GL_POINTS);
+    for(int i = 0; i < num_roots; ++i)
+    {
+      const float t = roots[i];
+      const float ft = bezier_de_casteljau(g->bezier, t);
+
+      glVertex2f(
+	g->offset_x + g->width * t,
+	g->offset_y + g->height * ft
+		 );
+    }
+    glEnd();
+
+    glColor3f(g->color_r, g->color_g, g->color_b);
+  }
 }
