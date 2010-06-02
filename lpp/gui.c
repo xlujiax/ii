@@ -404,7 +404,13 @@ void demo_quadclip()
   graphs[0] = graph_create(b);
   graphs[0]->draw_roots = 0;
 
-  num_intervals = bezier_quadclip(b, &intervals, 0.05f);
+  num_intervals = bezier_quadclip(b, &intervals, 0.001f);
+
+  printf("Found %d roots\n", num_intervals);
+  for(int i = 0; i < num_intervals; ++i)
+  {
+    printf("[%f %f]\n", intervals[i]->a, intervals[i]->b);
+  }
 }
 
 void init()
@@ -467,7 +473,19 @@ void draw()
     glVertex2f(graphs[0]->offset_x + graphs[0]->width * intervals[i]->b, graphs[0]->offset_y);
   }
   glEnd();
-  glLineWidth(1.0f);
+
+  glBegin(GL_POINTS);
+  
+  for(int i = 0; i < num_intervals; ++i)
+  {
+    assert(intervals);
+    assert(intervals[i]);
+    assert(!interval_empty(intervals[i]));
+    glVertex2f(graphs[0]->offset_x + graphs[0]->width * intervals[i]->a, graphs[0]->offset_y);
+    glVertex2f(graphs[0]->offset_x + graphs[0]->width * intervals[i]->b, graphs[0]->offset_y);
+  }
+  glEnd();
+glLineWidth(1.0f);
 
   
   // mouse
