@@ -404,7 +404,7 @@ void demo_quadclip()
   graphs[0] = graph_create(b);
   graphs[0]->draw_roots = 0;
 
-  num_intervals = bezier_quadclip(b, &intervals);
+  num_intervals = bezier_quadclip(b, &intervals, 0.05f);
 }
 
 void init()

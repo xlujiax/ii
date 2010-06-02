@@ -7,6 +7,8 @@ Bezier* bezier_degree_reduction(Bezier* c, int m)
   int n = c->n;
 
   Bezier* low = bezier_create(m);
+  low->a = c->a;
+  low->b = c->b;
 
   float (*coef)[m + 1] = malloc(sizeof(float) * (m + 1) * (m + 1));
   float (*psi)[n + 1] = malloc(sizeof(float) * (m + 1) * (n + 1));
@@ -81,6 +83,8 @@ Bezier* bezier_degree_reduction_rec(Bezier* c, int m)
   int n = c->n;
 
   Bezier* low = bezier_create(m);
+  low->a = c->a;
+  low->b = c->b;
 
   float (*psi)[n+1] = malloc(sizeof(float) * (m + 1) * (n + 1));
   float (*e) = malloc(sizeof(float) * (n + 1));

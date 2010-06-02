@@ -12,6 +12,15 @@ Bezier* bezier_create(int N)
   return b;
 }
 
+Bezier* bezier_copy(Bezier* b)
+{
+  Bezier* b2 = bezier_create(b->n);
+  memcpy(b2->c, b->c, sizeof(float) * (b->n + 1));
+  b2->a = b->a;
+  b2->b = b->b;
+  return b2;
+}
+
 void bezier_destroy(Bezier* b)
 {
   free(b->c);

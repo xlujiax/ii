@@ -1,9 +1,63 @@
 #include "quadclip.h"
 
-int bezier_quadclip(Bezier* b, Interval*** intervals, float eps)
+void bezier_quadclip_aux(Bezier* original, Interval*** intervals, int* num_intervals, float eps);
+
+
+int bezier_quadclip(Bezier* original, Interval*** intervals, float eps)
 {
-  
-  return 0;
+  int num_intervals = 0;
+
+  *intervals = malloc(sizeof(Interval*) * original->n);
+
+  bezier_quadclip_aux(original, intervals, &num_intervals, eps);
+  return num_intervals;
+}
+
+void bezier_quadclip_aux(Bezier* original, Interval*** intervals, int* num_intervals, float eps)
+{
+  printf("rec\n");
+  if(original->b - original->a <= eps)
+  {
+    (*intervals)[(*num_intervals)++] = interval_create(original->a, original->b);
+  }
+  else
+  {
+    const int deg = original->n;
+    Bezier* reduced = bezier_degree_reduction_rec(original, 2);
+    Bezier* reduced_and_raised = bezier_copy(reduced);
+
+    bezier_degree_raise(reduced_and_raised, deg);
+    
+    float difference = bezier_max_coeff_diff(original, reduced_and_raised);
+    Bezier* reduced_up = bezier_copy(reduced);
+    bezier_inc_coeffs(reduced_up, difference);
+    Bezier* reduced_down = bezier_copy(reduced);
+    bezier_inc_coeffs(reduced_down, -difference);
+    
+    bezier_destroy(reduced);
+    
+    Interval** ox_intervals = 0;
+    int ox_num_intervals = 0;
+    
+    ox_num_intervals = bezier_intervals_between(reduced_up, reduced_down, &ox_intervals);
+    
+    for(int i = 0; i < ox_num_intervals; ++i)
+    {
+      if(ox_intervals[i]->b - ox_intervals[i]->a < (original->b - original->a) / 2.0f)
+      {
+	Bezier* clipped = bezier_subrange(original, ox_intervals[i]->a, ox_intervals[i]->b);
+	bezier_quadclip_aux(clipped, intervals, num_intervals, eps);
+      }
+      else
+      {
+	const float middle = (ox_intervals[i]->a + ox_intervals[i]->b) / 2.0f;
+	Bezier* clipped_left = bezier_subrange(original, ox_intervals[i]->a, middle);
+	Bezier* clipped_right = bezier_subrange(original, middle, ox_intervals[i]->b);
+	bezier_quadclip_aux(clipped_left, intervals, num_intervals, eps);
+	bezier_quadclip_aux(clipped_right, intervals, num_intervals, eps);
+      }
+    }
+  }
 }
 
 int bezier_above(Bezier* b, Interval*** intervals)
