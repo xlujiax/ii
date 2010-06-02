@@ -395,9 +395,28 @@ void demo_intervals7()
   num_intervals = bezier_above(b, &intervals);
 }
 
-void demo_quadclip()
+void demo_quadclip1()
 {
   Bezier* b = sample_bezier_sinus(7, 30);
+  b->c[0] = 0.1;
+  
+  num_graphs = 1;
+  graphs = malloc(sizeof(Graph*) * num_graphs);
+  graphs[0] = graph_create(b);
+  graphs[0]->draw_roots = 0;
+
+  num_intervals = bezier_quadclip(b, &intervals, 0.001f);
+
+  printf("Found %d roots\n", num_intervals);
+  for(int i = 0; i < num_intervals; ++i)
+  {
+    printf("[%f %f]\n", intervals[i]->a, intervals[i]->b);
+  }
+}
+
+void demo_quadclip2()
+{
+  Bezier* b = sample_bezier_cosinus(7, 30);
   
   num_graphs = 1;
   graphs = malloc(sizeof(Graph*) * num_graphs);
@@ -448,7 +467,8 @@ void init()
   //demo_bounds_with_intervals3();
   //demo_bounds_with_intervals4();
 
-  demo_quadclip();
+  demo_quadclip1();
+  //demo_quadclip2();
 }
 
 void update()
