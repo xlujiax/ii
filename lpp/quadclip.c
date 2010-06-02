@@ -15,7 +15,6 @@ int bezier_quadclip(Bezier* original, Interval*** intervals, float eps)
 
 void bezier_quadclip_aux(Bezier* original, Interval*** intervals, int* num_intervals, float eps)
 {
-  printf("rec\n");
   if(original->b - original->a <= eps)
   {
     (*intervals)[(*num_intervals)++] = interval_create(original->a, original->b);

@@ -1,5 +1,7 @@
 #include "roots.h"
 
+// wzory viete'a
+
 int bezier_quad_roots(Bezier* b, float** roots)
 {
   assert(b);
