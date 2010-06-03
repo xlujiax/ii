@@ -137,7 +137,7 @@ QVector<QPointF> BSplineCurve::pointsOnCurve()
                     c[3 + it][k] = ((t - tleft) * c[3 + it][k-1] + (tright - t)*c[3-it-1][k-1]) / (tright - tleft);
                 }
 
-                pts[it*segments + s] = c[3+it][3];
+                pts[it*segments + s] = eval(t);//c[3+it][3];
             }
         }
 
