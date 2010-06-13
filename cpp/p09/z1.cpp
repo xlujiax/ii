@@ -1,5 +1,6 @@
 #include <iostream>
 #include <deque>
+#include <vector>
 #include <algorithm>
 
 template<typename T,
@@ -7,7 +8,7 @@ template<typename T,
 	   typename Element,
 	   typename = std::allocator<Element>
 	   > class Sequence = std::deque,
-	 typename Cmp = std::less<T> >
+	 class Cmp = std::less<T> >
   class priority_queue
 {
 private:
@@ -123,6 +124,24 @@ int main(int, char*[])
   {
     std::cout << "Kolejka obiektow test_t, inny priorytet\n";
     priority_queue<test_t, std::deque, higher_g_cmp> pq;
+    pq.push(test_t(3.14, 7.0));
+    pq.push(test_t(3.14, 7.6));
+    pq.push(test_t(3.14, 7.1));
+    pq.push(test_t(3.5, 7.0));
+    pq.push(test_t(3.5, 2.0));
+    
+    while(!pq.empty())
+    {
+      std::cout << pq.front() << ' ';
+      pq.pop();
+    }
+    std::cout << std::endl;
+  }
+
+
+  {
+    std::cout << "Kolejka obiektow test_t, vector\n";
+    priority_queue<test_t, std::vector> pq;
     pq.push(test_t(3.14, 7.0));
     pq.push(test_t(3.14, 7.6));
     pq.push(test_t(3.14, 7.1));
