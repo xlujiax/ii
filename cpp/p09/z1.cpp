@@ -42,6 +42,30 @@ public:
   }
 };
 
+struct test_t
+{
+  float f;
+  float g;
+  test_t(float F, float G) : f(F), g(G) {}
+  bool operator<(const test_t& t) const
+  {
+    return f < t.f || (f == t.f && g < t.g);
+  }
+  friend std::ostream& operator<<(std::ostream& os, const test_t& t)
+  {
+    os << '(' << t.f << ' ' << t.g << ')';
+    return os;
+  }
+};
+
+struct higher_g_cmp
+{
+  bool operator()(const test_t& t, const test_t& u)
+  {
+    return t.g < u.g || (t.g == u.g && t.f < u.f);
+  }
+};
+
 int main(int, char*[])
 {
   {
@@ -77,6 +101,42 @@ int main(int, char*[])
     }
     std::cout << std::endl;
   }
+
+  {
+    std::cout << "Kolejka obiektow test_t\n";
+    priority_queue<test_t> pq;
+    pq.push(test_t(3.14, 7.0));
+    pq.push(test_t(3.14, 7.6));
+    pq.push(test_t(3.14, 7.1));
+    pq.push(test_t(3.5, 7.0));
+    pq.push(test_t(3.5, 2.0));
+    
+    while(!pq.empty())
+    {
+      std::cout << pq.front() << ' ';
+      pq.pop();
+    }
+    std::cout << std::endl;
+  }
+
+
+  {
+    std::cout << "Kolejka obiektow test_t, inny priorytet\n";
+    priority_queue<test_t, std::deque, higher_g_cmp> pq;
+    pq.push(test_t(3.14, 7.0));
+    pq.push(test_t(3.14, 7.6));
+    pq.push(test_t(3.14, 7.1));
+    pq.push(test_t(3.5, 7.0));
+    pq.push(test_t(3.5, 2.0));
+    
+    while(!pq.empty())
+    {
+      std::cout << pq.front() << ' ';
+      pq.pop();
+    }
+    std::cout << std::endl;
+  }
+
 
   
   return 0;
