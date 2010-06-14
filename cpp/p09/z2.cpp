@@ -80,6 +80,7 @@ int main(int, char*[])
   mm.insert(std::make_pair(1, "uno"));
   mm.insert(std::make_pair(4, "four"));
   mm.insert(std::make_pair(2, "two"));
+  mm.insert(std::make_pair(2, "dwa"));
 
   for(multimap<int, std::string>::iterator i = mm.begin(); i != mm.end(); ++i)
   {
@@ -114,10 +115,18 @@ int main(int, char*[])
   }
   
   {
-    std::cout << "zakres dla 1:\n";
+    std::cout << "zakres dla 1 (upper, lower):\n";
     multimap<int, std::string>::iterator b = mm.lower_bound(1);
     multimap<int, std::string>::iterator e = mm.upper_bound(1);
     for(multimap<int, std::string>::iterator i = b; i != e; ++i)
+      std::cout << (*i).first << ' ' << (*i).second << '\n';
+  }  
+
+  {
+    std::cout << "zakres dla 2 (equal_range):\n";
+    std::pair<multimap<int, std::string>::iterator, multimap<int, std::string>::iterator>
+      range = mm.equal_range(2);
+    for(multimap<int, std::string>::iterator i = range.first; i != range.second; ++i)
       std::cout << (*i).first << ' ' << (*i).second << '\n';
   }  
 
