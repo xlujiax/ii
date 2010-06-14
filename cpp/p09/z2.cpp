@@ -1,3 +1,6 @@
+// todo: upper_bound, lower_bound, equal_range
+// zamiast find_if
+
 #include <iostream>
 #include <deque>
 #include <algorithm>
@@ -17,20 +20,18 @@ template<typename Key,
       return Cmp()(p.first, q.first);
     }
   };
-  class key_with_pair_cmp
+  
+  struct key_with_pair_cmp
   {
-    const Key& k;
-  public:
-    key_with_pair_cmp(const Key& K) : k(K) {}
-    bool operator()(const std::pair<Key, Value>& q)
+    bool operator()(const std::pair<Key, Value>& q, const Key& k)
     {
-      return !Cmp()(k, q.first) && !Cmp()(q.first, k);
+      return Cmp()(q.first, k);
     }
   };
 public:
   void insert(std::pair<Key, Value> p)
   {
-    seq.insert(upper_bound(seq.begin(), seq.end(), p, key_cmp()), p);
+    seq.insert(lower_bound(seq.begin(), seq.end(), p, key_cmp()), p);
   }
   typedef typename std::deque<std::pair<Key, Value> >::iterator iterator;
   iterator begin() { return seq.begin(); }
@@ -40,7 +41,7 @@ public:
 
   iterator find(Key k)
   {
-    return std::find_if(seq.begin(), seq.end(), key_with_pair_cmp(k));
+    return std::lower_bound(seq.begin(), seq.end(), k, key_with_pair_cmp());
   }
 };
 
@@ -50,6 +51,7 @@ int main(int, char*[])
   multimap<int, std::string> mm;
   mm.insert(std::make_pair(3, "three"));
   mm.insert(std::make_pair(1, "one"));
+  mm.insert(std::make_pair(1, "jeden"));
   mm.insert(std::make_pair(4, "four"));
   mm.insert(std::make_pair(2, "two"));
 
