@@ -1,9 +1,3 @@
-// kompatybilnosc z stlem: value_type itp
-// czy dzialaja stlowe algorytmy?
-// comeau
-// tworzenie sekwencji z pary iteratorow
-// sortowanie podczas copy? - przeciązenei inserter, copy itp?
-
 #include <iostream>
 #include <deque>
 #include <algorithm>
@@ -174,6 +168,6 @@ int main(int, char*[])
 
     std::copy(l.begin(), l.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
   }
-
+  
   return 0;
 }
