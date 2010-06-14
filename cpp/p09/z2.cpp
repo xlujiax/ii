@@ -8,6 +8,8 @@
 #include <deque>
 #include <algorithm>
 #include <string>
+#include <list>
+#include <iterator>
 
 template<typename Key,
 	 typename Value,
@@ -89,6 +91,24 @@ public:
   size_type size() const { return seq.size(); }
 };
 
+template<typename T, typename U>
+  struct first_of_pair
+{
+  T operator()(std::pair<T, U> p) const { return p.first; }
+};
+
+template<typename T, typename U>
+  struct second_of_pair
+{
+  U operator()(std::pair<T, U> p) const { return p.second; }
+};
+
+template<typename T, typename U>
+  struct print_pair
+{
+  void operator()(std::pair<T, U> p) const { std::cout << p.first << ' ' << p.second << '\n'; }
+};
+
 int main(int, char*[])
 {
   std::cout << "wstawianie i iteracja po sekwencji\n";
@@ -135,19 +155,25 @@ int main(int, char*[])
   
   {
     std::cout << "zakres dla 1 (upper, lower):\n";
-    multimap<int, std::string>::iterator b = mm.lower_bound(1);
-    multimap<int, std::string>::iterator e = mm.upper_bound(1);
-    for(multimap<int, std::string>::iterator i = b; i != e; ++i)
-      std::cout << (*i).first << ' ' << (*i).second << '\n';
+
+    for_each(mm.lower_bound(1), mm.upper_bound(1), print_pair<int, std::string>());
   }  
 
   {
     std::cout << "zakres dla 2 (equal_range):\n";
     std::pair<multimap<int, std::string>::iterator, multimap<int, std::string>::iterator>
       range = mm.equal_range(2);
-    for(multimap<int, std::string>::iterator i = range.first; i != range.second; ++i)
-      std::cout << (*i).first << ' ' << (*i).second << '\n';
-  }  
+
+    for_each(range.first, range.second, print_pair<int, std::string>());
+  }
+
+  {
+    std::cout << "kopiowanie wartosci do listy:\n";
+    std::list<std::string> l;
+    std::transform(mm.begin(), mm.end(), back_inserter(l), second_of_pair<int, std::string>());
+
+    std::copy(l.begin(), l.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
+  }
 
   return 0;
 }
