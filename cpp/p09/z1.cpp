@@ -36,10 +36,9 @@ public:
   {
     return seq.empty();
   }
-  void pr()
+  int size() const
   {
-    for(typename Sequence<T>::iterator i = seq.begin(); i != seq.end(); ++i)
-      std::cout << *i << '\n';
+    return seq.size();
   }
 };
 
