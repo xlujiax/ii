@@ -39,15 +39,33 @@ template<typename Key,
     }
   };
 public:
+
+  typedef Key key_type;
+  typedef Value mapped_type;
+  typedef std::pair<Key, Value> value_type;
+  typedef Cmp key_compare;
+  typedef typename std::deque<value_type>::allocator_type allocator_type;
+  typedef typename allocator_type::reference reference;
+  typedef typename allocator_type::const_reference const_reference;
+
+  typedef typename std::deque<std::pair<Key, Value> >::iterator iterator;
+  typedef typename std::deque<std::pair<Key, Value> >::const_iterator const_iterator;
+  typedef std::reverse_iterator<iterator> reverse_iterator;
+  typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+
+  typedef size_t size_type;
+  typedef ptrdiff_t difference_type;
+  typedef typename allocator_type::pointer pointer;
+  typedef typename allocator_type::const_pointer const_pointer;
+public:
   void insert(std::pair<Key, Value> p)
   {
     seq.insert(std::lower_bound(seq.begin(), seq.end(), p, key_cmp()), p);
   }
-  typedef typename std::deque<std::pair<Key, Value> >::iterator iterator;
   iterator begin() { return seq.begin(); }
   iterator end() { return seq.end(); }
-  iterator rbegin() { return seq.rbegin(); }
-  iterator rend() { return seq.rend(); }
+  reverse_iterator rbegin() { return seq.rbegin(); }
+  reverse_iterator rend() { return seq.rend(); }
 
   iterator find(const Key& k)
   {
@@ -68,6 +86,7 @@ public:
 
   bool empty() const { return seq.empty(); }
   void clear() const { seq.clear(); }
+  size_type size() const { return seq.size(); }
 };
 
 int main(int, char*[])
