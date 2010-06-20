@@ -85,23 +85,6 @@ Surface* surface_create_uniform(int order, int vertical_controls, int horizontal
 
 void surface_render(Surface* surf)
 {
-  gluBeginSurface(surf->nurb);
-
-  gluNurbsSurface(surf->nurb,
-    surf->sKnotCount, surf->sKnots,
-    surf->tKnotCount, surf->tKnots,
-    surf->sStride,
-    surf->tStride,
-    surf->control,
-    surf->sOrder, surf->tOrder,
-    GL_MAP2_VERTEX_3);
-
-  //gluBeginTrim(s->nurb);
-  //  gluPwlCurve(s->nurb, 8, (GLfloat *)trim, 2, GLU_MAP1_TRIM_2 );
-  //gluEndTrim(s->nurb);
-
-  gluEndSurface(surf->nurb);
-
   if(surf->display_control_points)
   {
     glPointSize(5.0);
@@ -157,6 +140,22 @@ void surface_render(Surface* surf)
     glEnd();
     glEnable(GL_LIGHTING);
   }
+  gluBeginSurface(surf->nurb);
+
+  gluNurbsSurface(surf->nurb,
+    surf->sKnotCount, surf->sKnots,
+    surf->tKnotCount, surf->tKnots,
+    surf->sStride,
+    surf->tStride,
+    surf->control,
+    surf->sOrder, surf->tOrder,
+    GL_MAP2_VERTEX_3);
+
+  //gluBeginTrim(s->nurb);
+  //  gluPwlCurve(s->nurb, 8, (GLfloat *)trim, 2, GLU_MAP1_TRIM_2 );
+  //gluEndTrim(s->nurb);
+
+  gluEndSurface(surf->nurb);
 }
 
 void surface_destroy(Surface* s)

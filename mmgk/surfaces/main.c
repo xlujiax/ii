@@ -29,12 +29,23 @@ void opengl_init(void)
   glEnable(GL_NORMALIZE);
 }
 
+float a = 330;
+float b = 1;
+float c = 0;
+
+void key_press(unsigned char key, int x, int y)
+{
+  if(key == 'a') c += 0.01;
+  if(key == 'd') c -= 0.01;
+  if(key == 'w') a += 0.1;
+  if(key == 's') a -= 0.1;
+}
 void opengl_render(void)
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glPushMatrix();
-  glRotatef(330.0, 1.,0.,0.);
+  glRotatef(a, b, c, 0.0f);
   glScalef (0.5, 0.5, 0.5);
 
   assert(surf);
@@ -70,7 +81,8 @@ int main(int argc, char** argv)
   opengl_reshape(800, 600);
   opengl_init();
   glutIdleFunc(opengl_render);
-
+  glutKeyboardFunc(key_press);
+  
   surf = demo();
   
   glutMainLoop();
