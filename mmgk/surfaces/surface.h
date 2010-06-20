@@ -28,6 +28,7 @@ typedef struct _Surface
   int tControl;
 
   int display_control_mesh;
+  int display_control_points;
   int wireframed;
   
   GLenum type;
