@@ -44,7 +44,7 @@ Surface* surface_create_uniform(int vertical_controls, int horizontal_controls)
   s->sStride = 4 * 3;
   s->tStride = 3;
 
-  s->control = malloc(sizeof(float) * vertical_controls * horizontal_controls);
+  s->control = malloc(sizeof(float) * 3 * vertical_controls * horizontal_controls);
   
   return s;
 }
