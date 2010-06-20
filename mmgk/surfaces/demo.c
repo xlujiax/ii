@@ -9,7 +9,7 @@ Surface* demo1(void)
     {
       surf->control[s*surf->sStride + t*surf->tStride] = 2.0*((GLfloat)s - 1.5);
       surf->control[s*surf->sStride + t*surf->tStride + 1] = 2.0*((GLfloat)t - 1.5);
-      surf->control[s*surf->sStride + t*surf->tStride + 2] = -3.0;
+      surf->control[s*surf->sStride + t*surf->tStride + 2] = ((s == 1 || s == 2) && (t == 1 || t == 2)) ? 3.0 : -3.0;
     }
   return surf;
 }

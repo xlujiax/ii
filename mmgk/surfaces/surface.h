@@ -5,6 +5,7 @@
 #include <GL/glut.h>
 
 #include <malloc.h>
+#include <assert.h>
 
 typedef struct
 {
@@ -22,6 +23,9 @@ typedef struct
   
   int sOrder;
   int tOrder;
+
+  int sControl;
+  int tControl;
   
   GLenum type;
 } Surface;
