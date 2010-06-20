@@ -12,22 +12,31 @@ void nurbsError(GLenum errorCode)
 void surface_init_nurb(Surface* s)
 {
   s->nurb = gluNewNurbsRenderer();
-  gluNurbsProperty(s->nurb, GLU_SAMPLING_TOLERANCE, 25.0);
-  gluNurbsProperty(s->nurb, GLU_DISPLAY_MODE, GLU_FILL);
+  gluNurbsProperty(s->nurb, GLU_SAMPLING_TOLERANCE, 25);
+
+  if(s->wireframed)
+    gluNurbsProperty(s->nurb, GLU_DISPLAY_MODE, GLU_OUTLINE_POLYGON);
+  else
+    gluNurbsProperty(s->nurb, GLU_DISPLAY_MODE, GLU_FILL);
+  
   gluNurbsCallback(s->nurb, GLU_ERROR,
     (GLvoid (*)()) nurbsError);
 }
 
-Surface* surface_create_uniform(int vertical_controls, int horizontal_controls)
+Surface* surface_create_uniform(int order, int vertical_controls, int horizontal_controls)
 {
   Surface* s = malloc(sizeof(Surface));
+
+  s->display_control_mesh = 1;
+  s->wireframed = 0;
+  
   surface_init_nurb(s);
 
   s->sControl = vertical_controls;
   s->tControl = horizontal_controls;
   
-  s->sOrder = 4;
-  s->tOrder = 4;
+  s->sOrder = order;
+  s->tOrder = order;
 
   assert(s->sControl >= s->sOrder);
   assert(s->tControl >= s->tOrder);
@@ -37,7 +46,7 @@ Surface* surface_create_uniform(int vertical_controls, int horizontal_controls)
   s->tKnotCount = s->tControl + s->tOrder;
   
   s->sKnots = malloc(sizeof(float) * s->sKnotCount);
-  s->tKnots = malloc(sizeof(float) * s->sKnotCount);
+  s->tKnots = malloc(sizeof(float) * s->tKnotCount);
 
   for(int i = 0; i < s->sOrder - 1; ++i)
     s->sKnots[i] = 0.0;
@@ -65,12 +74,6 @@ Surface* surface_create_uniform(int vertical_controls, int horizontal_controls)
   for(int i = s->tKnotCount - s->tOrder + 1; i < s->tKnotCount; ++i)
     s->tKnots[i] = 1;
 
-  printf("knotcount %d \n", s->sKnotCount);
-  for(int i = 0; i < s->sKnotCount; ++i)
-  {
-    printf("%f \n", s->sKnots[i]);
-  }
-  
   s->sStride = s->sControl * 3;
   s->tStride = 3;
 
@@ -109,12 +112,16 @@ void surface_render(Surface* surf)
       glVertex3f(
 	surf->control[s*surf->sStride + t*surf->tStride],
 	surf->control[s*surf->sStride + t*surf->tStride + 1],
-	surf->control[s*surf->sStride + t*surf->tStride + 1]
+	surf->control[s*surf->sStride + t*surf->tStride + 2]
 		 );
     }
   }
   glEnd();
   glEnable(GL_LIGHTING);
+
+  if(surf->display_control_mesh)
+  {
+  }
 }
 
 void surface_destroy(Surface* s)

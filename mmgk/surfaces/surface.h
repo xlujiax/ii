@@ -7,7 +7,7 @@
 #include <malloc.h>
 #include <assert.h>
 
-typedef struct
+typedef struct _Surface
 {
   GLUnurbsObj *nurb;
   
@@ -26,10 +26,13 @@ typedef struct
 
   int sControl;
   int tControl;
+
+  int display_control_mesh;
+  int wireframed;
   
   GLenum type;
 } Surface;
 
-Surface* surface_create_uniform(int vertical_controls, int horizontal_controls);
+Surface* surface_create_uniform(int order, int vertical_controls, int horizontal_controls);
 void surface_render(Surface* s);
 void surface_destroy(Surface* s);
