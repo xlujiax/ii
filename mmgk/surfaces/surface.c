@@ -75,8 +75,8 @@ Surface* surface_create_uniform(int order, int vertical_controls, int horizontal
   for(int i = s->tKnotCount - s->tOrder + 1; i < s->tKnotCount; ++i)
     s->tKnots[i] = 1;
 
-  s->sStride = s->sControl * 3;
-  s->tStride = 3;
+  s->sStride = 3;
+  s->tStride = s->tControl * 3;
 
   s->control = malloc(sizeof(float) * 3 * s->sControl * s->tControl);
 

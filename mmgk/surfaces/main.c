@@ -9,6 +9,8 @@
 #include "demo.h"
 
 Surface* surf = 0;
+int cpx = 0;
+int cpy = 0;
 
 void opengl_init(void)
 {
@@ -39,6 +41,19 @@ void key_press(unsigned char key, int x, int y)
   if(key == 'd') c -= 0.01;
   if(key == 'w') a += 0.1;
   if(key == 's') a -= 0.1;
+  
+  if(key == 't') if(cpy < surf->sControl) cpy++;
+  if(key == 'g') if(cpy > 0) cpy--;
+  if(key == 'h') if(cpx < surf->tControl) cpx++;
+  if(key == 'f') if(cpx > 0) cpx--;
+  if(key == 'y')
+  {
+    surf->control[cpx*surf->sStride + cpy*surf->tStride + 2] += 0.1;
+  }
+  if(key == 'r')
+  {
+    surf->control[cpx*surf->sStride + cpy*surf->tStride + 2] -= 0.1;
+  }
 }
 void opengl_render(void)
 {
@@ -50,6 +65,19 @@ void opengl_render(void)
 
   assert(surf);
   surface_render(surf);
+
+  glPointSize(5.0);
+  glDisable(GL_LIGHTING);
+  glColor3f(1.0, 0.0, 0.0);
+  glBegin(GL_POINTS);
+      glVertex3f(
+	surf->control[cpx*surf->sStride + cpy*surf->tStride],
+	surf->control[cpx*surf->sStride + cpy*surf->tStride + 1],
+	surf->control[cpx*surf->sStride + cpy*surf->tStride + 2]
+		 );
+  glEnd();
+  glEnable(GL_LIGHTING);
+
 
   glPopMatrix();
   glFlush();
