@@ -2,7 +2,7 @@
 // modified by Maciej Pacut
 
 #include <iostream>
-
+#include <cstdlib>
 
 struct list
 {
@@ -90,9 +90,44 @@ void print_lst(const list* lst)
   std::cout << '\n';
 }
 
-int main( unsigned int argc, char * args [] )
+void swap_vals(list* const cell1, list* const cell2)
 {
+  unsigned int temp = cell1->val;
+  cell1->val = cell2->val;
+  cell2->val = temp;
+}
 
+// auxilary procedure for bubblesort
+void bubble_one(list* lst)
+{
+  while(lst && lst->next)
+  {
+    if(lst->val > lst->next->val)
+      swap_vals(lst, lst->next);
+    lst = lst->next;
+  }
+}
+
+void bubblesort(list& x)
+{
+  unsigned int len = length(&x);
+  for(unsigned int i = 0; i < len; ++i)
+    bubble_one(&x);
+}
+
+void deletelist( list* lst )
+{
+  while(lst)
+  {
+    list* temp = lst;
+    lst = lst->next;
+    delete temp;
+  }
+}
+
+void manual_test()
+{
+  
   unsigned int n;
   std::cout << "how many numbers do you want to type: ";
   std::cin >> n;
@@ -141,7 +176,41 @@ int main( unsigned int argc, char * args [] )
 
     std::cout << "copied list remains the same as after it's modifiaction\n";
     print_lst(new_lst);
+    deletelist(new_lst);
   }
+
+  std::cout << "(bubble)sorted list:\n";
+  bubblesort(*lst);
+  print_lst(lst);
+
+  deletelist(lst);
+
+  
+}
+
+void top_test(const int iterations)
+{
+  for(int i = 0; i < iterations; ++i)
+  {
+    int len = rand() % 10 + 10;
+    list* lst = 0;
+    for(int j = 0; j < len; ++j)
+      addfront(rand() % 20, lst);
+
+    int copies = rand() % 5 + 5;
+    for(int j = 0; j < copies; ++j)
+    {
+      list* copy = makecopy(lst);
+      deletelist(copy);
+    }
+    deletelist(lst);
+  }
+}
+
+int main( unsigned int argc, char * args [] )
+{
+  //top_test(10000000);
+  manual_test();
 }
 
 
