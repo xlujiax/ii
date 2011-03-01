@@ -1,0 +1,36 @@
+
+# Automatically generated Makefile
+# Makefile-generator programmed by Hans de Nivelle, 2002
+
+
+Flags = -Wreturn-type -pedantic -pedantic-errors -Wundef
+CPP = g++ -O 
+
+
+four : Makefile   four.o state.o shared_state.o ordered_state.o graph.o valuation.o 
+	$(CPP) $(Flags) -o four   four.o state.o shared_state.o ordered_state.o graph.o valuation.o 
+
+four.o : Makefile   four.cpp   graph.h shared_state.h state.h move.h color.h assert.h ordered_state.h valuation.h 
+	$(CPP) -c $(Flags) four.cpp -o  four.o
+
+
+state.o : Makefile   state.cpp   assert.h state.h move.h color.h 
+	$(CPP) -c $(Flags) state.cpp -o  state.o
+
+
+shared_state.o : Makefile   shared_state.cpp   shared_state.h state.h move.h color.h assert.h 
+	$(CPP) -c $(Flags) shared_state.cpp -o  shared_state.o
+
+
+ordered_state.o : Makefile   ordered_state.cpp   ordered_state.h shared_state.h state.h move.h color.h assert.h 
+	$(CPP) -c $(Flags) ordered_state.cpp -o  ordered_state.o
+
+
+graph.o : Makefile   graph.cpp   graph.h shared_state.h state.h move.h color.h assert.h ordered_state.h valuation.h 
+	$(CPP) -c $(Flags) graph.cpp -o  graph.o
+
+
+valuation.o : Makefile   valuation.cpp   assert.h valuation.h state.h move.h color.h 
+	$(CPP) -c $(Flags) valuation.cpp -o  valuation.o
+
+

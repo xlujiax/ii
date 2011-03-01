@@ -1,0 +1,315 @@
+Content-Type: multipart/related; start=<op.mhtml.1298998935335.fdbe697e4e31a965@192.168.1.101>; boundary=----------y1ioG8324LgaJo3LeCu4Zp
+Content-Location: http://www.ii.uni.wroc.pl/~nivelle/teaching/object2011/index.html
+Subject: =?utf-8?Q?Object-Oriented=20Programming.?=
+MIME-Version: 1.0
+
+------------y1ioG8324LgaJo3LeCu4Zp
+Content-Disposition: inline; filename=index.html
+Content-Type: text/html; name=index.html
+Content-ID: <op.mhtml.1298998935335.fdbe697e4e31a965@192.168.1.101>
+Content-Location: http://www.ii.uni.wroc.pl/~nivelle/teaching/object2011/index.html
+Content-Transfer-Encoding: 8bit
+
+
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+
+<head>
+   <title> 
+      Object-Oriented Programming.
+   </title>
+</head>
+
+<body>
+
+
+<h1> Object-Oriented Programming (Programowanie Obiektowe) </h1>
+
+Lecture: Tuesdays, 14-16, room 140.  <br>
+Lab: Tuesdays, 16-18, room 137.      <br>
+
+<h2> Course Description </h2>
+
+The course will be based on Unix and C++. I do not plan to discuss all
+features of all object-oriented programming languages that have existed
+in history. Instead I will base the course on my experience with writing
+theorem provers and a flight simulation program. I will not simply
+list all features of C++, but explain how they must be used. C++ is
+a complicated language with many features which are often used incorrectly.
+
+<h2> Linux </h2>
+
+A professional computer scientist must be familiar
+with Linux. Windows is designed in such a way that the user has
+no control over the computer. Because of this, a Windows user never 
+knows where the files are, which processes are
+running and what they are doing. 
+Windows compilers are usually integrated into development tools
+and usually do not respect the standard. 
+
+<h2> Prerequisites </h2>
+
+You should know C, and have some programming experience.
+
+<h2> Planned Topics </h2>
+
+<ul>
+<li>
+   Basics of linux. Editing. What is inside a file? What is a directory?
+   What is the difference between an executable file and a text file?
+   How to edit and compile a HelloWorld program.
+   What is the role of the file extension? 
+
+<li>
+
+   Usage of STL. The STL is a collection of data structures which are 
+   as good as any high-level language. In particular, one does never have 
+   to worry about memory allocation and freeing if one uses the STL. I 
+   will treat the vectors, lists, maps and their iterators.
+
+<li>
+   Class design. Usage of the .h and the .cpp file.References, Const 
+   references, parameter passing. Constructors,relation between parameter 
+   passing and the copy constructor.Sharing a program between different 
+   files. Usage of Make.
+
+<li>
+   Inheritance. Although often overestimated, inheritance is still 
+   useful, mostly in computer graphics and in designing the input/output 
+   stream hierarchy.
+
+<li>
+   How to design your own containers. (Trees, hashtables, priority queus.)
+   In order to do this, one needs to understand templates.
+
+
+</ul>
+
+
+
+
+
+
+</ol>
+
+
+
+<h2> Slides </h2>
+
+Classes are tuesday, 16.15, room 103. 
+Exercises are tuesday, 18.15, room 137. 
+
+<ul>
+<li>
+   03.03.2009.
+   Why I will insist on use of <a href = "linux.pdf">  linux </a> 
+   in the exercises. 
+
+   A short <a href = "linux_guide.pdf"> guide </a> about
+   how to use Linux. 
+
+   <a href = "intro.pdf"> Introduction </a> to object-oriented programming,
+   and programming in general. 
+ 
+   A <a href = "why_oo_sucks.pdf"> short essay </a> by 
+   somebody who does not like Object-Oriented Programming. 
+
+   Note that there will be no exercise, because it makes no
+   sense to have exercise before the lecture.
+<li>
+   10.03.2009.
+   <a href = "basics.pdf"> Slides </a> about the three types of variables.
+
+<li>
+   23.03.2009.
+   Structure of a C++ program. How to build classes in C++.
+   <a href = "classes.pdf"> slides </a>.
+
+<li>
+   31.03.2009.  
+   <a href = "date.h" > date.h </a>,
+   <a href = "date.cpp"> date.cpp </a>,
+   <a href = "testdate.cpp"> testdate.cpp </a> and the
+   <a href = "Makefile"> Makefile </a>.
+ 
+   It is only a small example, but you should read it very carefully, and
+   make sure that you understand it. It 
+   contains the main constructions of C++ .
+   Store all files in one directory and type make. 
+   Make small changes in the program and see what error messages you get. 
+   The comments dicusss a lot of alternative choices and you should try
+   out some of these alternatives. 
+<li>
+   We will have a long break. Next lecture is on April 21nd, 16.15.
+   <a href = "linkedlist.pdf"> Slides </a> about the doubly linked lists,
+   and the implementation: 
+   <a href = "dllist.h"> dllist.h </a> and 
+   <a href = "dllist.cpp"> dllist.cpp </a>. 
+
+<li>
+   <a href = "stl.pdf"> Slides </a> about containers in the STL.
+   <a href = "map2.cpp"> Example </a> of the use of maps.
+   <a href = "comp_map2"> Script </a> that compiles the example. 
+
+</ul>
+
+<h2> Exercises </h2>
+
+Exercises are on tuesday, 16.15, room 107.
+
+<ul>
+<li>
+   <a href = "nr1.pdf"> This </a> is the first exercise.
+<li>
+   <a href = "nr2.pdf"> This </a> is the second exercise.   
+   <a href = "list.cpp"> This </a> is the program that you need
+   for the exercise.
+<li>
+
+   <a href = "nr3.pdf"> Number 3 </a>.
+   I added some advice, so please download it again. 
+   The final date for these exercises is April 21. 
+   <a href = "bigint.cpp"> This </a> is a partial
+   solution. If you manage to complete it, you will still
+   get some points for this task. If you handed in a solution, you 
+   also have look at it, because all solutions that I saw
+   were too complicated.
+
+<li>
+   <a href = "nr4.pdf"> Number 4 </a> is a continuation of
+   number 3, this time using the class mechanism and information hiding.
+
+<li>
+   <a href = "nr5.pdf"> Number 5 </a> is an easy exercise about STL.
+
+</ul>
+</body>
+</html>
+
+
+<h2> Connect Four Game </h2>
+
+<ul>
+<li>
+   <a href = "connect_four/GNU-PUBLIC-LICENCE"> GNU public licence </a>, 
+<li>
+   <a href = "connect_four/Makefile"> Makefile </a>,
+<li>
+   <a href = "connect_four/assert.h"> assert.h </a>,
+<li>
+   <a href = "connect_four/color.h"> color.h </a>,
+<li>
+   <a href = "connect_four/four.cpp"> four.cpp </a>,
+<li>
+   <a href = "connect_four/graph.h"> graph.h </a>,
+<li>
+   <a href = "connect_four/graph.cpp"> graph.cpp </a>,
+<li> 
+   <a href = "connect_four/move.h"> move.h </a>,
+<li>
+   <a href = "connect_four/ordered_state.h"> ordered_state.h </a>,
+<li>
+   <a href = "connect_four/ordered_state.cpp"> ordered_state.cpp </a>,
+<li>
+   <a href = "connect_four/shared_state.h"> shared_state.h </a>,
+<li>
+   <a href = "connect_four/shared_state.cpp"> shared_state.cpp </a>,
+<li> 
+   <a href = "connect_four/state.h"> state.h </a>,
+<li>
+   <a href = "connect_four/state.cpp"> state.cpp </a>,
+<li>
+   <a href = "connect_four/valuation.h"> valuation.h </a>,
+<li>
+   <a href = "connect_four/valuation.cpp"> valuation.cpp </a>.
+</ul>
+
+You need to understand how this game works! I discussed it in the lectures
+in enough detail. 
+You need to understand the C++ constructions that were used in it.
+I hope that it teaches you how to write good code that has a good class
+design and that makes use of what the STL has to offer.
+
+When you present your final project, we will speak 30 minutes about
+your project, and 30 minutes about this connect four game.
+In your project, I want also to see high-quality, maintainable code
+with a well-chosen class structure. The final project is not a 
+hacking exercise! 
+
+<h2> Final Mark </h2>
+
+Your mark will be based on three things:
+<ul>
+<li>
+   Exercises.
+<li>
+   Understanding of the material that was covered in the lectures.
+<li>
+   Your final project.  
+</ul>
+The marks for points 2 and 3 will be determined when you present your project.
+ 
+<h2> Some Remarks about Programming Style </h2> 
+
+<h3> Programming is Communicating </h3>
+
+Most students seem to think that the main task of the programmer is to
+explain to a computer how to solve a problem. This is wrong. 
+Nearly every program is going to be updated some day. Your task is to make
+the work of the person who comes after you as easy as possible.
+This person is not going to make you compliments for your smart tricks, 
+he does not enjoy figuring out what f1, f2, f3 mean, and he does not 
+like to trace your clever break statements. 
+
+<h3> What should be in a class? </h3>
+
+This is a hard but important question. Finding the right classes requires
+talent and experience.
+There are the following type of classes:
+
+<ul>
+<li>
+   Classes originating from the problem that you are solving. 
+   You have to understand the problem that you solve. Speak 
+   with experts (or become one by yourself) and see which
+   concepts they use. 
+<li>
+   Classes corresponding to mathematical objects, or 
+   objects from computer science. Such objects are numbers, arrays,
+   containers, file readers, graphical objects, etc. 
+</ul>
+
+<h3> What's in a Name? </h3>
+
+As a general rule: Class names must be nouns
+(not: readinput, but inputreader).
+Fields of classes must be nouns.
+
+For a method that returns a boolean, it must be possible
+to read the name as question. (open, isinteger, greater than) 
+Methods that return some other object should be nouns.
+(Not int getrandomint( ), but int random( ).
+ Not double computesine( ), but double sine( ))
+Methods that have side effects must have imperative names. 
+
+<h3> What should be in a comment? </h3>
+
+There is no need to write obvious things in a comment, only
+because your teacher tells you that code has to be commented. 
+In a comment, you write what is important but not obvious. 
+
+For class comments, comments about the external interface
+should be separated from comments about the internal implementation. 
+Class invariants must be listed in comments. (I think most of them
+are internal) Preconditions of methods must be commented. 
+Invariants of loops must be commented, when they are not obvious.
+
+</body>
+</html>
+
+
+
+
+------------y1ioG8324LgaJo3LeCu4Zp--
