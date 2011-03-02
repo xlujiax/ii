@@ -122,24 +122,28 @@ digit* copy(const digit* lst)
   return new_lst;
 }
 
-void append(digit* begin, digit* end)
+void append(digit*& begin, digit* end)
 {
-  assert(begin);
-  
-  while(begin->next)
+  if(!begin)
+    begin = end;
+  else
   {
-    begin = begin->next;
+    digit* begin_iter = begin;
+    while(begin_iter->next)
+    {
+      begin_iter = begin_iter->next;
+    }
+    begin_iter->next = end;
   }
-  begin->next = end;
 }
 
-void addto(const digit* from, digit* to)
+void addto(const digit* from, digit*& to)
 {
-  digit* original_to = to;
-  while(from && to)
+  digit* to_iter = to;
+  while(from && to_iter)
   {
-    to->n = i2d(d2i(to->n) + d2i(from->n));
-    to = to->next;
+    to_iter->n = i2d(d2i(to_iter->n) + d2i(from->n));
+    to_iter = to_iter->next;
     from = from->next;
   }
 
@@ -148,10 +152,10 @@ void addto(const digit* from, digit* to)
   {
     // copy rest of 'from' to 'to'
     digit* rest_of_from = copy(from);
-    append(original_to, rest_of_from);
+    append(to, rest_of_from);
   }
 
-  fix_over_9(original_to);
+  fix_over_9(to);
 }
 
 void fix_under_0(digit* big)
@@ -218,28 +222,53 @@ void subtractfrom(const digit* x, digit*& from)
   }
 }
 
-digit* multiply_by_digit(const digit* a, int x)
+void multiply_by_digit(digit* a, int x)
 {
-  /*while(a)
+  digit* original_a = a;
+  while(a)
   {
-    a->n = 
-    }*/
+    a->n = i2d(d2i(a->n) * x);
+    a = a->next;
+  }
+  fix_over_9(original_a);
 }
 
 digit* multiply(const digit* a, const digit* b)
 {
-  
+  digit* result = 0;
+  int offset = 0;
+  while(a)
+  {
+    if(a->n != i2d(0))
+    {
+      digit* row = copy(b);
+      multiply_by_digit(row, d2i(a->n));
+      for(int i = 0; i < offset; ++i)
+      {
+	digit* new_row = new digit;
+	new_row->next = row;
+	new_row->n = i2d(0);
+	row = new_row;
+      }
+      addto(row, result);
+    }
+    ++offset;
+    a = a->next;
+  }
+  rm_leading_0s(result);
+  return result;
 }
 
 int main(int argc, char* argv[])
 {
   digit* a = buildbigint(111119);
-  digit* b = buildbigint(111119);
+  digit* b = buildbigint(1118);
   printbigint(a);
   printbigint(b);
-  subtractfrom(b, a);
-  printbigint(a);
-  printbigint(b);
-
+  printbigint(multiply(a, b));
+  //addto(a, b);
+  //printbigint(a);
+  //printbigint(b);
+  
   return 0;
 }
