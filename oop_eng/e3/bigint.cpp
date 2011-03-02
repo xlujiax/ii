@@ -12,9 +12,20 @@ struct digit
   digit* next;
 };
 
+char i2d(int i)
+{
+  return i + 10;
+}
+
+int d2i(char d)
+{
+  return d - 10;
+}
+
+
 std::pair<unsigned int, char> deconstruct(const unsigned int x)
 {
-  return std::make_pair(x / 10, (x % 10) + '0');
+  return std::make_pair(x / 10, i2d(x % 10));
 }
 
 digit* buildbigint(unsigned int x)
@@ -41,7 +52,10 @@ void printbigint(const digit* big)
     std::cout << '0' << '\n';
   else
   {
-    std::copy(digits.rbegin(), digits.rend(), std::ostream_iterator<char>(std::cout, ""));
+    for(std::vector<char>::reverse_iterator i = digits.rbegin(); i != digits.rend(); ++i)
+    {
+      std::cout << d2i(*i);
+    }
     std::cout << '\n';
   }
 }
@@ -54,16 +68,6 @@ void deletebigint(digit* big)
     big = big->next;
     delete temp;
   }
-}
-
-char i2d(int i)
-{
-  return i + '0';
-}
-
-int d2i(char d)
-{
-  return d - '0';
 }
 
 // moves foreward carry
@@ -173,7 +177,7 @@ void rm_leading_0s(digit*& big)
   digit* big_iter = big;
   while(big_iter)
   {
-    if(big_iter->n != '0')
+    if(big_iter->n != i2d(0))
       last_non_0 = big_iter;
     big_iter = big_iter->next;
   }
@@ -214,6 +218,18 @@ void subtractfrom(const digit* x, digit*& from)
   }
 }
 
+digit* multiply_by_digit(const digit* a, int x)
+{
+  /*while(a)
+  {
+    a->n = 
+    }*/
+}
+
+digit* multiply(const digit* a, const digit* b)
+{
+  
+}
 
 int main(int argc, char* argv[])
 {
