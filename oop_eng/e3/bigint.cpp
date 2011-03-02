@@ -150,13 +150,78 @@ void addto(const digit* from, digit* to)
   fix_over_9(original_to);
 }
 
+void fix_under_0(digit* big)
+{
+  while(big)
+  {
+    if(d2i(big->n) < 0)
+    {
+      big->n = i2d(10 + d2i(big->n));
+
+      assert(big->next);
+
+      big->next->n--;
+    }
+      
+    big = big->next;
+  }
+}
+
+void rm_leading_0s(digit*& big)
+{
+  digit* last_non_0 = 0;
+  digit* big_iter = big;
+  while(big_iter)
+  {
+    if(big_iter->n != '0')
+      last_non_0 = big_iter;
+    big_iter = big_iter->next;
+  }
+  
+  if(last_non_0 == 0)
+  {
+    // no digits other then 0
+    big = 0;
+  }
+  else
+  {
+    if(last_non_0->next)
+    {
+      deletebigint(last_non_0->next);
+    }
+    last_non_0->next = 0;
+  }
+}
+
+void subtractfrom(const digit* x, digit*& from)
+{
+  digit* from_iter = from;
+  while(x && from_iter)
+  {
+    from_iter->n = i2d(d2i(from_iter->n) - d2i(x->n));
+    x = x->next;
+    from_iter = from_iter->next;
+  }
+
+  if(x)
+  {
+    from = 0;
+  }
+  else
+  {
+    fix_under_0(from);
+    rm_leading_0s(from);
+  }
+}
+
+
 int main(int argc, char* argv[])
 {
-  digit* a = buildbigint(119);
-  digit* b = buildbigint(3333333);
+  digit* a = buildbigint(111119);
+  digit* b = buildbigint(111119);
   printbigint(a);
   printbigint(b);
-  addto(a, b);
+  subtractfrom(b, a);
   printbigint(a);
   printbigint(b);
 
