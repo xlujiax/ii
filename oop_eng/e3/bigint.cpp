@@ -251,6 +251,7 @@ digit* multiply(const digit* a, const digit* b)
 	row = new_row;
       }
       addto(row, result);
+      deletebigint(row);
     }
     ++offset;
     a = a->next;
@@ -259,16 +260,23 @@ digit* multiply(const digit* a, const digit* b)
   return result;
 }
 
+digit* factorial(int n)
+{
+  digit* res = buildbigint(1);
+  for(int i = 2; i <= n; ++i)
+  {
+    digit* big_i = buildbigint(i);
+    digit* original_res = res;
+    res = multiply(res, big_i);
+    deletebigint(original_res);
+    deletebigint(big_i);
+  }
+  return res;
+}
+
 int main(int argc, char* argv[])
 {
-  digit* a = buildbigint(111119);
-  digit* b = buildbigint(1118);
-  printbigint(a);
-  printbigint(b);
-  printbigint(multiply(a, b));
-  //addto(a, b);
-  //printbigint(a);
-  //printbigint(b);
+  printbigint(factorial(690));
   
   return 0;
 }
