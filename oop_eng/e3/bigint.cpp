@@ -6,12 +6,20 @@
 #include <iterator>
 #include <cassert>
 
+// Bignums implemented as single-linked list.
+// Least significant digit is at the front.
 struct digit
 {
   char n;
   digit* next;
 };
 
+// Conversion between integer and char representation of digit.
+// Digits can temporarily be others then 0,1,2,3,4,5,6,7,8,9,
+// because of addition, subtraction and multiplication.
+// Minimal value is -9 as result of 0 - 9.
+// Maximal value is 81 as result of 9 * 9.
+// Therefore, 0 is represented as binary 10 in char.
 char i2d(int i)
 {
   return i + 10;
@@ -40,6 +48,7 @@ digit* buildbigint(unsigned int x)
   return big;
 }
 
+// Printing bignum using additional O(n) memory.
 void printbigint(const digit* big)
 {
   std::vector<char> digits;
@@ -70,7 +79,11 @@ void deletebigint(digit* big)
   }
 }
 
-// moves foreward carry
+// Moves carry foreward.
+// This function is more general then fix_under_0 because
+// fix_over_9 is used in addition as well as in multiplication,
+// where temporarily excessive values can range up to 9*9 = 81
+// with carry = 8
 void fix_over_9(digit* big)
 {
   while(big)
@@ -96,6 +109,8 @@ void fix_over_9(digit* big)
   }
 }
 
+// Creates copy of bignum by adding elements to the end of the new bignum.
+// Complexity O(n) is obtained by keeping pointer to last digit of new bignum.
 digit* copy(const digit* lst)
 {
   if(!lst) return 0;
@@ -122,6 +137,7 @@ digit* copy(const digit* lst)
   return new_lst;
 }
 
+// Append shares 'end' and second part of newly created bignum
 void append(digit*& begin, digit* end)
 {
   if(!begin)
@@ -137,6 +153,10 @@ void append(digit*& begin, digit* end)
   }
 }
 
+// Addition is done in two steps.
+// First one adds corresponding digits, where result of addition
+// can exceed 9. Second step moves carry foreward to obtain
+// digits in 0..9
 void addto(const digit* from, digit*& to)
 {
   digit* to_iter = to;
@@ -158,6 +178,7 @@ void addto(const digit* from, digit*& to)
   fix_over_9(to);
 }
 
+// Moves negative carry foreward
 void fix_under_0(digit* big)
 {
   while(big)
@@ -175,6 +196,7 @@ void fix_under_0(digit* big)
   }
 }
 
+// Auxilary function for subtractfrom
 void rm_leading_0s(digit*& big)
 {
   digit* last_non_0 = 0;
@@ -201,6 +223,8 @@ void rm_leading_0s(digit*& big)
   }
 }
 
+// Subtraction is done in three steps; for first 2 see addto.
+// Third step is removing leading zeros.
 void subtractfrom(const digit* x, digit*& from)
 {
   digit* from_iter = from;
@@ -222,6 +246,8 @@ void subtractfrom(const digit* x, digit*& from)
   }
 }
 
+// Auxilary function for multiply.
+// Performs one step of full multiplication.
 void multiply_by_digit(digit* a, int x)
 {
   digit* original_a = a;
@@ -233,6 +259,9 @@ void multiply_by_digit(digit* a, int x)
   fix_over_9(original_a);
 }
 
+// Full multiplication.
+// For every digit d in 'a' b is multiplied by d.
+// Final result is obtained by addition of all results of multiplications with proper offset.
 digit* multiply(const digit* a, const digit* b)
 {
   digit* result = 0;
@@ -256,6 +285,7 @@ digit* multiply(const digit* a, const digit* b)
     ++offset;
     a = a->next;
   }
+  // needed when a or b is 0
   rm_leading_0s(result);
   return result;
 }
@@ -276,7 +306,7 @@ digit* factorial(int n)
 
 int main(int argc, char* argv[])
 {
-  printbigint(factorial(690));
+  printbigint(factorial(69));
   
   return 0;
 }
