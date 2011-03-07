@@ -21,6 +21,13 @@ class bigunsigned
   bigunsigned operator++(int unused); //postfix
   bigunsigned operator--(int unused); //postfix
 
+  friend bool operator == ( const bigunsigned& d1, const bigunsigned& d2 );
+  friend bool operator != ( const bigunsigned& d1, const bigunsigned& d2 );
+  friend bool operator < ( const bigunsigned& d1, const bigunsigned& d2 );
+  friend bool operator > ( const bigunsigned& d1, const bigunsigned& d2 );
+  friend bool operator <= ( const bigunsigned& d1, const bigunsigned& d2 );
+  friend bool operator >= ( const bigunsigned& d1, const bigunsigned& d2 );
+ 
   friend std::ostream& operator << ( std::ostream& , const bigunsigned & );
 };
 

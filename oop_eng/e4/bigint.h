@@ -17,3 +17,4 @@ digit* copy(const digit* lst);
 void addto(const digit* from, digit*& to);
 void subtractfrom(const digit* x, digit*& from);
 digit* multiply(const digit* a, const digit* b);
+int compare(const digit* a, const digit* b);

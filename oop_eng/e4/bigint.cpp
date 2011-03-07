@@ -283,3 +283,17 @@ digit* multiply(const digit* a, const digit* b)
   return result;
 }
 
+int compare(const digit* a, const digit* b)
+{
+  if(!a && !b)
+    return 0;
+  if(!a)
+    return -1;
+  if(!b)
+    return 1;
+  if(a->n == b->n)
+    return compare(a->next, b->next);
+  if(d2i(a->n) < d2i(b->n))
+    return -1;
+  return 1;
+}

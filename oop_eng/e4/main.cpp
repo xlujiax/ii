@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include <cassert>
 #include "bignum.h"
 
 void memory_leak_test()
@@ -52,11 +53,26 @@ void operators_test()
   std::cout << c << '\n';
 }
 
+void comparison_test()
+{
+  assert(bigunsigned(3) < bigunsigned(7));
+  assert(bigunsigned(30) < bigunsigned(70));
+  assert(bigunsigned(30) <= bigunsigned(70));
+  assert(bigunsigned(30) <= bigunsigned(30));
+  assert(bigunsigned(70) > bigunsigned(30));
+  assert(bigunsigned(70) >= bigunsigned(30));
+  assert(bigunsigned(70) >= bigunsigned(70));
+  assert(bigunsigned(70) == bigunsigned(70));
+  assert(!(bigunsigned(70) != bigunsigned(70)));
+  std::cout << "all assertions succedeed\n";
+}
+
 int main(int argc, char* argv[])
 {
   //memory_leak_test();
-  computation_test();
+  //computation_test();
   //operators_test();
+  comparison_test();
   
   return 0;
 }

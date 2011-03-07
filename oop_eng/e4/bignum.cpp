@@ -86,3 +86,28 @@ std::ostream& operator << ( std::ostream& os, const bigunsigned &x)
   printbigint(os, x.d);
   return os;
 }
+
+bool operator == ( const bigunsigned& d1, const bigunsigned& d2 )
+{
+  return compare(d1.d,d2.d) == 0;
+}
+bool operator != ( const bigunsigned& d1, const bigunsigned& d2 )
+{
+  return compare(d1.d,d2.d) != 0;
+}
+bool operator < ( const bigunsigned& d1, const bigunsigned& d2 )
+{
+  return compare(d1.d,d2.d) == -1;
+}
+bool operator > ( const bigunsigned& d1, const bigunsigned& d2 )
+{
+  return compare(d1.d,d2.d) == 1;
+}
+bool operator <= ( const bigunsigned& d1, const bigunsigned& d2 )
+{
+  return compare(d1.d,d2.d) != 1;
+}
+bool operator >= ( const bigunsigned& d1, const bigunsigned& d2 )
+{
+  return compare(d1.d,d2.d) != -1;
+}
