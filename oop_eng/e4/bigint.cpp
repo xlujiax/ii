@@ -43,7 +43,7 @@ digit* buildbigint(unsigned int x)
 }
 
 // Printing bignum using additional O(n) memory.
-void printbigint(const digit* big)
+void printbigint(std::ostream& os, const digit* big)
 {
   std::vector<char> digits;
   while(big)
@@ -52,14 +52,13 @@ void printbigint(const digit* big)
     big = big->next;
   }
   if(digits.empty())
-    std::cout << '0' << '\n';
+    os << '0';
   else
   {
     for(std::vector<char>::reverse_iterator i = digits.rbegin(); i != digits.rend(); ++i)
     {
-      std::cout << d2i(*i);
+      os << d2i(*i);
     }
-    std::cout << '\n';
   }
 }
 

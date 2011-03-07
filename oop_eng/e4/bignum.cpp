@@ -29,3 +29,28 @@ bigunsigned& bigunsigned::operator = (const bigunsigned& b)
   }
   return *this;
 }
+
+bigunsigned bigunsigned::operator+(const bigunsigned& x) const
+{
+  bigunsigned b(0);
+  addto(x.d, b.d);
+  return b;
+}
+bigunsigned bigunsigned::operator-(const bigunsigned& x) const
+{
+  bigunsigned b(0);
+  subtractfrom(x.d, b.d);
+  return b;
+}
+bigunsigned bigunsigned::operator*(const bigunsigned& x) const
+{
+  bigunsigned b;
+  b.d = multiply(d, x.d);
+  return b;
+}
+
+std::ostream& operator << ( std::ostream& os, const bigunsigned &x)
+{
+  printbigint(os, x.d);
+  return os;
+}

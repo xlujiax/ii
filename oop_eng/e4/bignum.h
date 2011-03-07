@@ -12,5 +12,10 @@ class bigunsigned
   ~bigunsigned( );
   bigunsigned& operator = ( const bigunsigned& x );
 
+  bigunsigned operator+(const bigunsigned& x) const;
+  bigunsigned operator-(const bigunsigned& x) const;
+  bigunsigned operator*(const bigunsigned& x) const;
+
+  friend std::ostream& operator << ( std::ostream& , const bigunsigned & );
 };
 
