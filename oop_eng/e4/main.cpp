@@ -3,6 +3,6 @@
 
 int main(int argc, char* argv[])
 {
-  bigunsigned b;
+  bigunsigned b(312);
   return 0;
 }
