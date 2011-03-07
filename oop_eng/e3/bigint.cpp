@@ -6,13 +6,7 @@
 #include <iterator>
 #include <cassert>
 
-// Bignums implemented as single-linked list.
-// Least significant digit is at the front.
-struct digit
-{
-  char n;
-  digit* next;
-};
+#include "bigint.h"
 
 // Conversion between integer and char representation of digit.
 // Digits can temporarily be others then 0,1,2,3,4,5,6,7,8,9,
@@ -290,23 +284,3 @@ digit* multiply(const digit* a, const digit* b)
   return result;
 }
 
-digit* factorial(int n)
-{
-  digit* res = buildbigint(1);
-  for(int i = 2; i <= n; ++i)
-  {
-    digit* big_i = buildbigint(i);
-    digit* original_res = res;
-    res = multiply(res, big_i);
-    deletebigint(original_res);
-    deletebigint(big_i);
-  }
-  return res;
-}
-
-int main(int argc, char* argv[])
-{
-  printbigint(factorial(69));
-  
-  return 0;
-}
