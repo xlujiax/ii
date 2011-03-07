@@ -49,6 +49,38 @@ bigunsigned bigunsigned::operator*(const bigunsigned& x) const
   return b;
 }
 
+bigunsigned& bigunsigned::operator++() //prefix
+{
+  digit* one = buildbigint(1);
+  addto(one, d);
+  deletebigint(one);
+  return *this;
+}
+bigunsigned& bigunsigned::operator--() //prefix
+{
+  digit* one = buildbigint(1);
+  subtractfrom(one, d);
+  deletebigint(one);
+  return *this;
+}
+bigunsigned bigunsigned::operator++(int unused) //postfix
+{
+  bigunsigned temp = *this;
+  digit* one = buildbigint(1);
+  addto(one, d);
+  deletebigint(one);
+  return temp;
+}
+bigunsigned bigunsigned::operator--(int unused) //postfix
+{
+  bigunsigned temp = *this;
+  digit* one = buildbigint(1);
+  subtractfrom(one, d);
+  deletebigint(one);
+  return temp;
+}
+
+
 std::ostream& operator << ( std::ostream& os, const bigunsigned &x)
 {
   printbigint(os, x.d);

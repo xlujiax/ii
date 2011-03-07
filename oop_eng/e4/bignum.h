@@ -16,6 +16,11 @@ class bigunsigned
   bigunsigned operator-(const bigunsigned& x) const;
   bigunsigned operator*(const bigunsigned& x) const;
 
+  bigunsigned& operator++(); //prefix
+  bigunsigned& operator--(); //prefix
+  bigunsigned operator++(int unused); //postfix
+  bigunsigned operator--(int unused); //postfix
+
   friend std::ostream& operator << ( std::ostream& , const bigunsigned & );
 };
 
