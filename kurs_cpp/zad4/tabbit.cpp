@@ -140,18 +140,18 @@ TabBit operator^(const TabBit& a, const TabBit& b)
 TabBit& operator&=(TabBit& a, const TabBit& b)
 {
   assert(a.rozmiar() == b.rozmiar());
-  std::transform(b.cbegin(), b.cend(), a.begin(), and_f);
+  std::transform(b.cbegin(), b.cend(), a.cbegin(), a.begin(), and_f);
   return a;
 }
 TabBit& operator|=(TabBit& a, const TabBit& b)
 {
   assert(a.rozmiar() == b.rozmiar());
-  std::transform(b.cbegin(), b.cend(), a.begin(), or_f);
+  std::transform(b.cbegin(), b.cend(), a.cbegin(), a.begin(), or_f);
   return a;
 }
 TabBit& operator^=(TabBit& a, const TabBit& b)
 {
   assert(a.rozmiar() == b.rozmiar());
-  std::transform(b.cbegin(), b.cend(), a.begin(), xor_f);
+  std::transform(b.cbegin(), b.cend(), a.cbegin(), a.begin(), xor_f);
   return a;
 }

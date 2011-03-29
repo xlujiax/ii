@@ -63,12 +63,92 @@ void testPodwojnejNegacji()
   assert(equal(t.begin(), t.end(), negated.begin()));
 }
 
+void testOr()
+{
+  TabBit t1(3);
+  TabBit t2(3);
+
+  t1[1] = true;
+  t2[1] = true;
+  t1[0] = true;
+  t2[2] = true;
+
+  TabBit trues(3);
+  fill_n(trues.begin(), 3, true);
+
+  assert(equal(trues.begin(), trues.end(),
+      (t1 | t2).begin()));
+}
+
+void testAnd()
+{
+  TabBit t1(3);
+  TabBit t2(3);
+
+  t1[1] = true;
+  t2[1] = true;
+  t1[0] = true;
+  t2[2] = true;
+
+  TabBit result(3);
+  result[0] = false;
+  result[1] = true;
+  result[2] = false;
+  
+  assert(equal(result.begin(), result.end(),
+      (t1 & t2).begin()));
+}
+
+void testXor()
+{
+  TabBit t1(3);
+  TabBit t2(3);
+
+  t1[1] = true;
+  t2[1] = true;
+  t1[0] = true;
+  t2[2] = true;
+
+  TabBit result(3);
+  result[0] = true;
+  result[1] = false;
+  result[2] = true;
+  
+  assert(equal(result.begin(), result.end(),
+      (t1 ^ t2).begin()));
+}
+
+void testOperatoryModyfikujace()
+{
+  TabBit t1(3);
+  TabBit t2(3);
+  
+  t1[1] = true;
+  t2[1] = true;
+  t1[0] = true;
+  t2[2] = true;
+
+  t1 &= t2;
+  
+  TabBit result(3);
+  result[0] = false;
+  result[1] = true;
+  result[2] = false;
+  
+  assert(equal(result.begin(), result.end(),
+      t1.begin()));
+}
+
 void test()
 {
   testRownosci();
   testKopiowania();
   testNegacji();
   testPodwojnejNegacji();
+  testOr();
+  testAnd();
+  testXor();
+  testOperatoryModyfikujace();
 
   cout << "Wszystkie testy zakonczone powodzeniem." << endl;
 }
