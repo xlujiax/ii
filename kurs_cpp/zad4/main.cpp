@@ -18,13 +18,6 @@ void testZTresci()
   cout<<t<<endl;
 }
 
-void testWypisania()
-{
-  TabBit t(10);
-  t[3] = true;
-  cout << t << endl;
-}
-
 void testKopiowania()
 {
   TabBit t1(10);
@@ -33,8 +26,7 @@ void testKopiowania()
   t1[3] = t1[4] = t1[7] = true;
   copy(t1.begin(), t1.end(), t2.begin());
 
-  cout << t1 << endl;
-  cout << t2 << endl;
+  assert(equal(t1.begin(), t1.end(), t2.begin()));
 }
 
 void testRownosci()
@@ -50,19 +42,35 @@ void testRownosci()
 
 void testNegacji()
 {
+  TabBit falses(10);
+  fill_n(falses.begin(), 10, false);
+
+  TabBit trues(10);
+  fill_n(trues.begin(), 10, true);
+
+  assert(equal(
+      falses.begin(), falses.end(), (~trues).begin()
+));
+}
+
+void testPodwojnejNegacji()
+{
   TabBit t(10);
   fill_n(t.begin(), 10, false);
   t[3] = t[4] = t[7] = true;
-  cout << t << endl;
-  cout << ~t << endl;
+
+  TabBit negated = ~(~t);
+  assert(equal(t.begin(), t.end(), negated.begin()));
 }
 
 void test()
 {
-  //testWypisania();
   testRownosci();
-  //testKopiowania();
+  testKopiowania();
   testNegacji();
+  testPodwojnejNegacji();
+
+  cout << "Wszystkie testy zakonczone powodzeniem." << endl;
 }
 
 int main(int argc, char* argv[])
