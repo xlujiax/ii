@@ -1,4 +1,6 @@
 #include <iostream>
+#include <algorithm>
+#include <iterator>
 using namespace std;
 
 #include "tabbit.h"
@@ -16,18 +18,16 @@ void testZTresci()
 
 void test()
 {
-  TabBit t(72);
-  t.pisz(3, true);
-  t.pisz(4, true);
-  t.pisz(4, false);
-  t.pisz(1, false);
-  t.pisz(1, true);
-  cout << t << endl;
+  TabBit t(10);
+  t[3] = true;
+  std::copy(t.begin(), t.end(), std::ostream_iterator<bool>(std::cout, ""));
+  std::cout << std::endl;
+  std::cout << t << std::endl;
 }
 
 int main(int argc, char* argv[])
 {
-  testZTresci();
+  test();
   
   return 0;
 }

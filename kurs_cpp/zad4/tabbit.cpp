@@ -79,14 +79,14 @@ bool TabBit::pisz (int i, bool b)
 bool TabBit::operator[] (int i) const
 {
   if(i < 0 || i > dl)
-    throw Zakres();
+    throw std::out_of_range("Out of range of tabbit.");
   return czytaj(i);
 }
  
 TabBit::Ref TabBit::operator[] (int i)
 {
   if(i < 0 || i > dl)
-    throw Zakres();
+    throw std::out_of_range("Out of range of tabbit.");
   return Ref(this, i);
 }
 
@@ -99,9 +99,8 @@ std::istream & operator >> (std::istream &we, TabBit &tb)
   return we;
 }
 */
-std::ostream & operator << (std::ostream &wy, const TabBit &tb)
+std::ostream & operator << (std::ostream &wy, const TabBit &t)
 {
-  for(int i = 0; i < tb.dl; ++i)
-    wy << tb[i];
+  std::copy(t.cbegin(), t.cend(), std::ostream_iterator<bool>(wy, ""));
   return wy;
 }
