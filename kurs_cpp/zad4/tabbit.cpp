@@ -104,3 +104,18 @@ std::ostream & operator << (std::ostream &wy, const TabBit &t)
   std::copy(t.cbegin(), t.cend(), std::ostream_iterator<bool>(wy, ""));
   return wy;
 }
+
+bool negate(bool b) { return !b; }
+
+TabBit operator~(const TabBit& src)
+{
+  TabBit t(src.rozmiar());
+  std::transform(src.cbegin(), src.cend(), t.begin(), negate);
+  return t;
+}
+TabBit operator&(const TabBit&, const TabBit&) { return TabBit(1); }
+TabBit operator|(const TabBit&, const TabBit&) { return TabBit(1); }
+TabBit operator^(const TabBit&, const TabBit&) { return TabBit(1); }
+TabBit operator&=(TabBit&, const TabBit&) { return TabBit(1); }
+TabBit operator|=(TabBit&, const TabBit&) { return TabBit(1); }
+TabBit operator^=(TabBit&, const TabBit&) { return TabBit(1); }

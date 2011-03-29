@@ -10,8 +10,17 @@ class TabBit
 {
   typedef unsigned long long slowo; // komorka w tablicy
   static const int rozmiarSlowa; // rozmiar slowa w bitach
+public:
   friend std::istream & operator >> (std::istream &we, TabBit &tb);
   friend std::ostream & operator << (std::ostream &wy, const TabBit &tb);
+public:
+  friend TabBit operator~(const TabBit&);
+  friend TabBit operator&(const TabBit&, const TabBit&);
+  friend TabBit operator|(const TabBit&, const TabBit&);
+  friend TabBit operator^(const TabBit&, const TabBit&);
+  friend TabBit operator&=(TabBit&, const TabBit&);
+  friend TabBit operator|=(TabBit&, const TabBit&);
+  friend TabBit operator^=(TabBit&, const TabBit&);
 public:
   class Ref
   {

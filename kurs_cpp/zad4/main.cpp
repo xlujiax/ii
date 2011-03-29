@@ -3,6 +3,8 @@
 #include <iterator>
 using namespace std;
 
+#include <cassert>
+
 #include "tabbit.h"
 
 void testZTresci()
@@ -16,13 +18,51 @@ void testZTresci()
   cout<<t<<endl;
 }
 
-void test()
+void testWypisania()
 {
   TabBit t(10);
   t[3] = true;
-  std::copy(t.begin(), t.end(), std::ostream_iterator<bool>(std::cout, ""));
-  std::cout << std::endl;
-  std::cout << t << std::endl;
+  cout << t << endl;
+}
+
+void testKopiowania()
+{
+  TabBit t1(10);
+  TabBit t2(10);
+
+  t1[3] = t1[4] = t1[7] = true;
+  copy(t1.begin(), t1.end(), t2.begin());
+
+  cout << t1 << endl;
+  cout << t2 << endl;
+}
+
+void testRownosci()
+{
+  TabBit t1(10);
+  TabBit t2(10);
+
+  t1[3] = t1[4] = t1[7] = true;
+  t2[7] = t2[3] = t2[4] = true;
+  
+  assert(equal(t1.begin(), t1.end(), t2.begin()));
+}
+
+void testNegacji()
+{
+  TabBit t(10);
+  fill_n(t.begin(), 10, false);
+  t[3] = t[4] = t[7] = true;
+  cout << t << endl;
+  cout << ~t << endl;
+}
+
+void test()
+{
+  //testWypisania();
+  testRownosci();
+  //testKopiowania();
+  testNegacji();
 }
 
 int main(int argc, char* argv[])
