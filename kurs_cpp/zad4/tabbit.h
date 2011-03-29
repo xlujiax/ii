@@ -18,6 +18,7 @@ class TabBit
   public:
   Ref(TabBit* const tbp, const int ip) : tb(tbp), i(ip) {}
     bool operator = (bool bit) { tb->pisz(i, bit); return bit; }
+    bool operator = (const Ref& r) { tb->pisz(i, r.tb->czytaj(r.i)); return r.tb->czytaj(r.i); }
     operator bool() const { return tb->czytaj(i); }
   };
   class Zakres {}; // klasa wyjatku
