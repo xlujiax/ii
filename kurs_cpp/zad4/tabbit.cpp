@@ -106,6 +106,9 @@ std::ostream & operator << (std::ostream &wy, const TabBit &t)
 }
 
 bool negate(bool b) { return !b; }
+bool and_f(bool a, bool b) { return a && b; }
+bool or_f(bool a, bool b) { return a || b; }
+bool xor_f(bool a, bool b) { return a ^ b; }
 
 TabBit operator~(const TabBit& src)
 {
@@ -113,9 +116,42 @@ TabBit operator~(const TabBit& src)
   std::transform(src.cbegin(), src.cend(), t.begin(), negate);
   return t;
 }
-TabBit operator&(const TabBit&, const TabBit&) { return TabBit(1); }
-TabBit operator|(const TabBit&, const TabBit&) { return TabBit(1); }
-TabBit operator^(const TabBit&, const TabBit&) { return TabBit(1); }
-TabBit operator&=(TabBit&, const TabBit&) { return TabBit(1); }
-TabBit operator|=(TabBit&, const TabBit&) { return TabBit(1); }
-TabBit operator^=(TabBit&, const TabBit&) { return TabBit(1); }
+TabBit operator&(const TabBit& a, const TabBit& b)
+{
+  assert(a.rozmiar() == b.rozmiar());
+  TabBit t(a.rozmiar());
+  std::transform(a.cbegin(), a.cend(), b.cbegin(), t.begin(), and_f);
+  return t;
+}
+TabBit operator|(const TabBit& a, const TabBit& b)
+{
+  assert(a.rozmiar() == b.rozmiar());
+  TabBit t(a.rozmiar());
+  std::transform(a.cbegin(), a.cend(), b.cbegin(), t.begin(), or_f);
+  return t;
+}
+TabBit operator^(const TabBit& a, const TabBit& b)
+{
+  assert(a.rozmiar() == b.rozmiar());
+  TabBit t(a.rozmiar());
+  std::transform(a.cbegin(), a.cend(), b.cbegin(), t.begin(), xor_f);
+  return t;
+}
+TabBit& operator&=(TabBit& a, const TabBit& b)
+{
+  assert(a.rozmiar() == b.rozmiar());
+  std::transform(b.cbegin(), b.cend(), a.begin(), and_f);
+  return a;
+}
+TabBit& operator|=(TabBit& a, const TabBit& b)
+{
+  assert(a.rozmiar() == b.rozmiar());
+  std::transform(b.cbegin(), b.cend(), a.begin(), or_f);
+  return a;
+}
+TabBit& operator^=(TabBit& a, const TabBit& b)
+{
+  assert(a.rozmiar() == b.rozmiar());
+  std::transform(b.cbegin(), b.cend(), a.begin(), xor_f);
+  return a;
+}

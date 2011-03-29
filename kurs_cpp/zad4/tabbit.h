@@ -18,9 +18,9 @@ public:
   friend TabBit operator&(const TabBit&, const TabBit&);
   friend TabBit operator|(const TabBit&, const TabBit&);
   friend TabBit operator^(const TabBit&, const TabBit&);
-  friend TabBit operator&=(TabBit&, const TabBit&);
-  friend TabBit operator|=(TabBit&, const TabBit&);
-  friend TabBit operator^=(TabBit&, const TabBit&);
+  friend TabBit& operator&=(TabBit&, const TabBit&);
+  friend TabBit& operator|=(TabBit&, const TabBit&);
+  friend TabBit& operator^=(TabBit&, const TabBit&);
 public:
   class Ref
   {
