@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "sockwrap.h"
 #include "send_echo_request.h"
+#include "icmp_recieve.h"
 
 int main(int argc, char* argv[])
 {
@@ -16,6 +17,8 @@ int main(int argc, char* argv[])
 
   send_echo_request(sockfd, 10, ip);
   sleep(1);
+
+  icmp_recieve();
 
   return 0;
 }
