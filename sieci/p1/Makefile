@@ -1,17 +1,17 @@
 CC = gcc 
 CFLAGS = -Wall -W -Wshadow -std=gnu99
-TARGETS = sockwrap imcp traceroute
+TARGETS = sockwrap icmp traceroute
  
 all: traceroute
 
-traceroute: sockwrap imcp traceroute.c
+traceroute: sockwrap icmp traceroute.c
 	$(CC) -o $@ $(CFLAGS) traceroute.c
 
-imcp: imcp.h imcp.c
-	$(CC) -o $@ $(CFLAGS) $^
+icmp: icmp.h icmp.c
+	$(CC) -c icmp.c $(CFLAGS) -o $@
 
 sockwrap: sockwrap.h sockwrap.c
-	$(CC) -o $@ $(CFLAGS) $^
+	$(CC) -c sockwrap.c $(CFLAGS) -o $@
 
 distclean:
 	rm -f traceroute
