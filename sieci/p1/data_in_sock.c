@@ -1,6 +1,6 @@
 #include "data_in_sock.h"
 
-int data_in_socket(int sockfd)
+int data_in_socket(unsigned int sockfd)
 {
   fd_set fds;
   struct timeval timeout;
@@ -11,7 +11,7 @@ int data_in_socket(int sockfd)
 
   FD_ZERO(&fds);
   FD_SET(sockfd, &fds);
-  rc = select(sizeof(fds)*8, &fds, NULL, NULL, &timeout);
+  rc = select(sockfd+1, &fds, NULL, NULL, &timeout);
 
   if(rc == -1)
   {

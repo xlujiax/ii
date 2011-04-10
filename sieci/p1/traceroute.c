@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <arpa/inet.h>
+#include <fcntl.h>
 #include "sockwrap.h"
 #include "send_echo_request.h"
 #include "icmp_recieve.h"
@@ -20,15 +21,13 @@ int main(int argc, char* argv[])
 
   for(int i = 1; i <= 30; ++i)
   {
-    int id1 = send_echo_request(sockfd, i, ip);
-    int id2 = send_echo_request(sockfd, i, ip);
-    int id3 = send_echo_request(sockfd, i, ip);
-
-    printf("Sending packages with ids: %d %d %d\n", id1, id2, id3);
+    printf("%d. \n", i);
+    send_echo_request(sockfd, i, ip);
+    send_echo_request(sockfd, i, ip);
+    send_echo_request(sockfd, i, ip);
 
     while(data_in_socket(sockfd))
     {
-      printf("Processing packet\n");
       struct ip* packet;
       struct icmp* icmp_packet;
       struct ip* original_packet;

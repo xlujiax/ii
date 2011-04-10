@@ -4,6 +4,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int data_in_socket(int sockfd);
+int data_in_socket(unsigned int sockfd);
 
 #endif
