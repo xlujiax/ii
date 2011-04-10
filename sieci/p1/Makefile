@@ -5,7 +5,7 @@ TARGETS = sockwrap icmp traceroute
 all: traceroute
 
 traceroute: sockwrap icmp traceroute.c
-	$(CC) -o $@ $(CFLAGS) traceroute.c
+	$(CC) -o $@ $(CFLAGS) $^
 
 icmp: icmp.h icmp.c
 	$(CC) -c icmp.c $(CFLAGS) -o $@
