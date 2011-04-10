@@ -12,6 +12,7 @@
 #include <string.h>
 #include <errno.h>
 #include <assert.h>
+#include <unistd.h>
 #include "sockwrap.h"
 #include "icmp.h"
 

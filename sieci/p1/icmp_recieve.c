@@ -43,6 +43,11 @@ int icmp_recieve(int sockfd)
       // ICMP packet
       skip_bytes (ICMP_HEADER_LEN);
       assert(remaining_packet_data == 0);
+
+      if(icmp_packet->icmp_id == getpid())
+	return icmp_packet->icmp_seq;
+      else
+	return 0;
     } else {
       // Original IP payload
       skip_bytes (remaining_packet_data);
@@ -52,6 +57,11 @@ int icmp_recieve(int sockfd)
   if (icmp_packet->icmp_type == ICMP_ECHOREPLY) {
     // ICMP payload
     skip_bytes (remaining_packet_data);
+    
+    if(icmp_packet->icmp_id == getpid())
+      return icmp_packet->icmp_seq;
+    else
+      return 0;
   }
   return 0;
 }

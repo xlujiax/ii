@@ -15,10 +15,13 @@ int main(int argc, char* argv[])
 
   int sockfd = Socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 
-  send_echo_request(sockfd, 10, ip);
+  int id = send_echo_request(sockfd, 10, ip);
   sleep(1);
 
   icmp_recieve(sockfd);
+
+  if(id)
+  {}
 
   return 0;
 }

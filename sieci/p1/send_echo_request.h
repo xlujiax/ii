@@ -9,6 +9,6 @@
 #include "sockwrap.h"
 #include "icmp.h"
 
-void send_echo_request(int sockfd, int ttl, const char* ip);
+int send_echo_request(int sockfd, int ttl, const char* ip);
 
 #endif

@@ -6,8 +6,9 @@ int get_icmp_seq()
   return gen++;
 }
 
-void send_echo_request(int sockfd, int ttl, const char* ip)
+int send_echo_request(int sockfd, int ttl, const char* ip)
 {
+  const int gen_icmp_seq = get_icmp_seq();
   struct sockaddr_in remote_address;
   bzero (&remote_address, sizeof(remote_address));
   remote_address.sin_family = AF_INET;
@@ -20,11 +21,13 @@ void send_echo_request(int sockfd, int ttl, const char* ip)
   icmp_packet.icmp_type = ICMP_ECHO;
   icmp_packet.icmp_code = 0;
   icmp_packet.icmp_id = getpid();
-  icmp_packet.icmp_seq = get_icmp_seq();
+  icmp_packet.icmp_seq = gen_icmp_seq;
   icmp_packet.icmp_cksum = 0;
   icmp_packet.icmp_cksum = in_cksum((u_short*)&icmp_packet, 8, 0);
 
   Setsockopt(sockfd, IPPROTO_IP, IP_TTL, &ttl, sizeof(int));
 
   Sendto(sockfd, &icmp_packet, ICMP_HEADER_LEN, 0, &remote_address, sizeof(remote_address));
+
+  return gen_icmp_seq;
 }
