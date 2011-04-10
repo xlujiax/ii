@@ -13,7 +13,13 @@ int data_in_socket(int sockfd)
   FD_SET(sockfd, &fds);
   rc = select(sizeof(fds)*8, &fds, NULL, NULL, &timeout);
 
-  if (rc > 0 && FD_ISSET(sockfd, &fds))
+  if(rc == -1)
+  {
+    printf("select error\n");
+    exit(1);
+  }
+
+  if (FD_ISSET(sockfd, &fds))
     return 1;
 
   return 0;

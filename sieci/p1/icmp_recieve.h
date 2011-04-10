@@ -22,6 +22,7 @@
 
 int icmp_recieve(
   int sockfd,
+  char* readable_ip,
   struct ip** packet, struct icmp** icmp_packet,
   struct ip** original_packet, struct icmp** original_icmp_package);
   

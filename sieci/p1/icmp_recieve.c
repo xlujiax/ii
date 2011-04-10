@@ -14,6 +14,7 @@ void skip_bytes (int count)
 
 int icmp_recieve(
   int sockfd,
+  char* readable_ip,
   struct ip** packet, struct icmp** icmp_packet,
   struct ip** original_packet, struct icmp** original_icmp_packet)
 {
@@ -23,8 +24,7 @@ int icmp_recieve(
   remaining_packet_data = Recvfrom(sockfd, buffer_ptr, IP_MAXPACKET,
     0, &sender, &sender_len);
 
-  char str[20];
-  inet_ntop(AF_INET, &(sender.sin_addr), str, sizeof(str));
+  inet_ntop(AF_INET, &(sender.sin_addr), readable_ip, INET_ADDRSTRLEN);
 
   // Received IP packet with ICMP content
   packet = (struct ip**)&buffer_ptr;
