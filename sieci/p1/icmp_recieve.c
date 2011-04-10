@@ -12,7 +12,10 @@ void skip_bytes (int count)
   }
 }
 
-int icmp_recieve(int sockfd)
+int icmp_recieve(
+  int sockfd,
+  struct ip** packet, struct icmp** icmp_packet,
+  struct ip** original_packet, struct icmp** original_icmp_packet)
 {
   struct sockaddr_in sender;
   socklen_t sender_len = sizeof(sender);
@@ -24,44 +27,28 @@ int icmp_recieve(int sockfd)
   inet_ntop(AF_INET, &(sender.sin_addr), str, sizeof(str));
 
   // Received IP packet with ICMP content
-  struct ip* packet = (struct ip*) buffer_ptr;
-  skip_bytes (packet->ip_hl * 4);
+  packet = (struct ip**)&buffer_ptr;
+  skip_bytes ((*packet)->ip_hl * 4);
 
   // IP header
-  struct icmp* icmp_packet = (struct icmp*) buffer_ptr;
-  skip_bytes (ICMP_HEADER_LEN);
+  icmp_packet = (struct icmp**)&buffer_ptr;
 
-  // ICMP type and code
-  if (icmp_packet->icmp_type == ICMP_TIME_EXCEEDED &&
-    icmp_packet->icmp_code == ICMP_EXC_TTL) {
+  if ((*icmp_packet)->icmp_type == ICMP_TIME_EXCEEDED &&
+    (*icmp_packet)->icmp_code == ICMP_EXC_TTL) {
+    original_packet = (struct ip**)&buffer_ptr;
+    skip_bytes((*original_packet)->ip_hl * 4);
 
-    // Original IP header
-    struct ip* packet_orig = (struct ip*) buffer_ptr;
-    skip_bytes (packet_orig->ip_hl * 4);
-
-    if (packet_orig->ip_p == IPPROTO_ICMP) {
-      // ICMP packet
-      skip_bytes (ICMP_HEADER_LEN);
-      assert(remaining_packet_data == 0);
-
-      if(icmp_packet->icmp_id == getpid())
-	return icmp_packet->icmp_seq;
-      else
-	return 0;
+    if ((*original_packet)->ip_p == IPPROTO_ICMP) {
+      original_icmp_packet = (struct icmp**)&buffer_ptr;
+      return REC_PACKET_AND_ORIGINAL_PACKET;
     } else {
-      // Original IP payload
-      skip_bytes (remaining_packet_data);
+      return REC_NONE;
     }
   }
 
-  if (icmp_packet->icmp_type == ICMP_ECHOREPLY) {
-    // ICMP payload
-    skip_bytes (remaining_packet_data);
-    
-    if(icmp_packet->icmp_id == getpid())
-      return icmp_packet->icmp_seq;
-    else
-      return 0;
+  if ((*icmp_packet)->icmp_type == ICMP_ECHOREPLY) {
+    return REC_PACKET;
   }
-  return 0;
+
+  return REC_NONE;
 }

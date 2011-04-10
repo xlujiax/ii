@@ -12,16 +12,31 @@ int main(int argc, char* argv[])
   }
 
   const char* ip = argv[1];
-
   int sockfd = Socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 
-  int id = send_echo_request(sockfd, 10, ip);
-  sleep(1);
+  for(int i = 1; i <= 30; ++i)
+  {
+    send_echo_request(sockfd, i, ip);
+    
+    sleep(1);
 
-  icmp_recieve(sockfd);
+    struct ip* packet;
+    struct icmp* icmp_packet;
+    struct ip* original_packet;
+    struct icmp* original_icmp_packet;
+    int rec = icmp_recieve(sockfd, &packet, &icmp_packet, &original_packet, &original_icmp_packet);
 
-  if(id)
-  {}
+    switch(rec)
+    {
+      case REC_PACKET:
+	break;
+      case REC_PACKET_AND_ORIGINAL_PACKET:
+	break;
+      default:
+	// REC_NONE, ignore
+	break;
+    }
+  }
 
   return 0;
 }

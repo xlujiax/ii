@@ -16,6 +16,13 @@
 #include "sockwrap.h"
 #include "icmp.h"
 
-int icmp_recieve(int sockfd);
+#define REC_NONE 0
+#define REC_PACKET 1
+#define REC_PACKET_AND_ORIGINAL_PACKET 2
+
+int icmp_recieve(
+  int sockfd,
+  struct ip** packet, struct icmp** icmp_packet,
+  struct ip** original_packet, struct icmp** original_icmp_package);
   
 #endif
