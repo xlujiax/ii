@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
   send_echo_request(sockfd, 10, ip);
   sleep(1);
 
-  icmp_recieve();
+  icmp_recieve(sockfd);
 
   return 0;
 }
