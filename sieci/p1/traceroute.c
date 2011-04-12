@@ -20,6 +20,9 @@ int main(int argc, char* argv[])
   for(int i = 1; i <= 30; ++i)
   {
     printf("%d. ", i);
+
+    struct timeval send_time;
+    gettimeofday(&send_time, NULL);
     
     int id1 = send_echo_request(sockfd, i, ip);
     int id2 = send_echo_request(sockfd, i, ip);
@@ -41,9 +44,16 @@ int main(int argc, char* argv[])
 
       if(rec == REC_PACKET)
       {
+	struct timeval rec_time;
+	gettimeofday(&rec_time, NULL);
+
+	int seconds  = rec_time.tv_sec  - send_time.tv_sec;
+	int useconds = rec_time.tv_usec - send_time.tv_usec;
+	int mtime = ((seconds) * 1000 + useconds/1000.0) + 0.5;
+
 	printf("%s ", readable_ip);
 	rec_packets++;
-	sum_miliseconds += 0;
+	sum_miliseconds += mtime;
 
 	// wyjście z zewnętrznej pętli
 	i = 30;
@@ -57,10 +67,17 @@ int main(int argc, char* argv[])
 	     original_icmp_packet->icmp_seq == id2 ||
 	     original_icmp_packet->icmp_seq == id3)
 	  {
+	    struct timeval rec_time;
+	    gettimeofday(&rec_time, NULL);
+	    
+	    int seconds  = rec_time.tv_sec  - send_time.tv_sec;
+	    int useconds = rec_time.tv_usec - send_time.tv_usec;
+	    int mtime = ((seconds) * 1000 + useconds/1000.0) + 0.5;
+
 	    // spełnienie tego warunku implikuje, że pakiet ma ttl == i
 	    printf("%s ", readable_ip);
 	    rec_packets++;
-	    sum_miliseconds += 0;
+	    sum_miliseconds += mtime;
 	  }
 	}
       }
