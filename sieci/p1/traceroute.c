@@ -67,6 +67,8 @@ int main(int argc, char* argv[])
 	     original_icmp_packet->icmp_seq == id2 ||
 	     original_icmp_packet->icmp_seq == id3)
 	  {
+	    // spełnienie tego warunku implikuje, że pakiet ma ttl == i
+
 	    struct timeval rec_time;
 	    gettimeofday(&rec_time, NULL);
 	    
@@ -74,7 +76,6 @@ int main(int argc, char* argv[])
 	    int useconds = rec_time.tv_usec - send_time.tv_usec;
 	    int mtime = ((seconds) * 1000 + useconds/1000.0) + 0.5;
 
-	    // spełnienie tego warunku implikuje, że pakiet ma ttl == i
 	    printf("%s ", readable_ip);
 	    rec_packets++;
 	    sum_miliseconds += mtime;
