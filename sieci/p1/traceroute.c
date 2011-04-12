@@ -63,12 +63,6 @@ int main(int argc, char* argv[])
 	    sum_miliseconds += 0;
 	  }
 	}
-	printf("b: (%d %d) (%d %d) from %s\n",
-	    icmp_packet->icmp_id,
-	    icmp_packet->icmp_seq,
-	    original_icmp_packet->icmp_id,
-	    original_icmp_packet->icmp_seq,
-	    readable_ip);
       }
     }
 
