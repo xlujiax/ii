@@ -14,17 +14,19 @@ int main(int argc, char* argv[])
     exit(1);
   }
 
-  printf("My pid is %d\n", getpid());
-
   const char* ip = argv[1];
   int sockfd = Socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 
   for(int i = 1; i <= 30; ++i)
   {
-    printf("%d. \n", i);
-    send_echo_request(sockfd, i, ip);
-    send_echo_request(sockfd, i, ip);
-    send_echo_request(sockfd, i, ip);
+    printf("%d. ", i);
+    
+    int id1 = send_echo_request(sockfd, i, ip);
+    int id2 = send_echo_request(sockfd, i, ip);
+    int id3 = send_echo_request(sockfd, i, ip);
+
+    int sum_miliseconds = 0;
+    int rec_packets = 0;
 
     while(data_in_socket(sockfd))
     {
@@ -37,24 +39,43 @@ int main(int argc, char* argv[])
 	&packet, &icmp_packet,
         &original_packet, &original_icmp_packet);
 
-      switch(rec)
+      if(rec == REC_PACKET)
       {
-        case REC_PACKET:
+	printf("%s ", readable_ip);
+	rec_packets++;
+	sum_miliseconds += 0;
+
+	// wyjście z zewnętrznej pętli
+	i = 30;
+	break;
+      }
+      else if(rec == REC_PACKET_AND_ORIGINAL_PACKET)
+      {
+	if(original_icmp_packet->icmp_id == getpid())
+	{
+	  if(original_icmp_packet->icmp_seq == id1 ||
+	     original_icmp_packet->icmp_seq == id2 ||
+	     original_icmp_packet->icmp_seq == id3)
 	  {
-	    printf("a: (%d %d) from %s\n",
-	      icmp_packet->icmp_id,
-	      icmp_packet->icmp_seq, readable_ip);
+	    // spełnienie tego warunku implikuje, że pakiet ma ttl == i
+	    printf("%s ", readable_ip);
+	    rec_packets++;
+	    sum_miliseconds += 0;
 	  }
-          break;
-        case REC_PACKET_AND_ORIGINAL_PACKET:
-          printf("b\n");
-          break;
-        default:
-          printf("c\n");
-          // REC_NONE, ignore
-          break;
+	}
+	printf("b: (%d %d) (%d %d) from %s\n",
+	    icmp_packet->icmp_id,
+	    icmp_packet->icmp_seq,
+	    original_icmp_packet->icmp_id,
+	    original_icmp_packet->icmp_seq,
+	    readable_ip);
       }
     }
+
+    if(rec_packets == 0)
+      printf("*\n");
+    else
+      printf("%dms\n", sum_miliseconds / rec_packets);
   }
 
   return 0;
