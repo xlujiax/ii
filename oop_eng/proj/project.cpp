@@ -85,26 +85,6 @@ int main(int, char*[])
   }
   
   numeric<int>::usage_report();
-  numeric<int>::reset_report();
-
-  {
-    vector<numeric<int>, 3> v;
-    v[0] = 1;
-    v[1] = 10;
-    v[2] = 100;
-    
-    vector<numeric<int>, 3> w;
-    w[0] = 2;
-    w[1] = 20;
-    w[2] = 200;
-
-    std::cout << "creating array of size " << dot_product(v, w) << std::endl;
-
-    // below without ugly implicit cast
-    int arr[dot_product(v, w).implicit_value()];
-  }
-  
-  numeric<int>::usage_report();
 
   {
     vector<int, 3> v;
