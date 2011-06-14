@@ -3,6 +3,7 @@
 #include "numeric.hpp"
 #include "dotproduct.hpp"
 #include "vector.hpp"
+#include "expression_operators.hpp"
 
 int main(int, char*[])
 {
