@@ -8,7 +8,68 @@
 int main(int, char*[])
 {
   numeric<int>::reset_report();
+
   {
+    std::cout << "large computation doesn't peek because of lazy temporary value"<< std::endl;
+    vector<numeric<int>, 100> v;
+    for(int i = 0; i < 100; ++i)
+      v[i] = i * 100 + 9;
+
+    vector<numeric<int>, 100> w;
+    for(int i = 0; i < 100; ++i)
+      w[i] = i * 10 + 9;
+    
+    vector<numeric<int>, 100> u;
+    for(int i = 0; i < 100; ++i)
+      u[i] = i + 9;
+
+    vector<numeric<int>, 100> r;
+    r = u - v / w + u * v;
+  }
+  
+  numeric<int>::usage_report();
+
+  numeric<int>::reset_report();
+
+  {
+    std::cout << "accessing only one cell of vector doesn't create rest of its cells"<< std::endl;
+    vector<numeric<int>, 100> v;
+    for(int i = 0; i < 100; ++i)
+      v[i] = i * 100 + 9;
+
+    vector<numeric<int>, 100> w;
+    for(int i = 0; i < 100; ++i)
+      w[i] = i * 10 + 9;
+    
+    vector<numeric<int>, 100> u;
+    for(int i = 0; i < 100; ++i)
+      u[i] = i + 9;
+
+    std::cout << (u - v / w + u * v)[3] << std::endl;
+  }
+  
+  numeric<int>::usage_report();
+  
+  numeric<int>::reset_report();
+  
+  {
+    std::cout << "getting names of vector representation"<< std::endl;
+    vector<numeric<int>, 100> v;
+    for(int i = 0; i < 100; ++i)
+      v[i] = i * 100 + 9;
+
+    vector<numeric<int>, 100> w;
+    for(int i = 0; i < 100; ++i)
+      w[i] = i * 10 + 9;
+    
+    std::cout << v.get_rep().name() << std::endl;
+    std::cout << (v+w).get_rep().name() << std::endl;
+    std::cout << (v*(w/v)).get_rep().name() << std::endl;
+  }
+
+  numeric<int>::reset_report();
+  {
+    std::cout << "scalar are ugly" << std::endl;
     vector<numeric<int>, 1> v;
     v[0] = 5;
     
@@ -37,7 +98,7 @@ int main(int, char*[])
     w[1] = 20;
     w[2] = 200;
 
-    std::cout << dot_product(v, w) << std::endl;
+    std::cout << "creating array of size " << dot_product(v, w) << std::endl;
 
     // below without ugly implicit cast
     int arr[dot_product(v, w).implicit_value()];
@@ -56,50 +117,10 @@ int main(int, char*[])
     w[1] = 20;
     w[2] = 200;
 
-    std::cout << dot_product(v, w) << std::endl;
+    std::cout << "creating array of size " << dot_product(v, w) << std::endl;
 
     int arr[dot_product(v, w)];
   }
   
-  numeric<int>::reset_report();
-
-  {
-    vector<numeric<int>, 100> v;
-    for(int i = 0; i < 100; ++i)
-      v[i] = i * 100 + 9;
-
-    vector<numeric<int>, 100> w;
-    for(int i = 0; i < 100; ++i)
-      w[i] = i * 10 + 9;
-    
-    vector<numeric<int>, 100> u;
-    for(int i = 0; i < 100; ++i)
-      u[i] = i + 9;
-
-    vector<numeric<int>, 100> r;
-    r = u - v / w + u * v;
-    std::cout << (u - v / w + u * v)[3] << std::endl;
-    std::cout << (u - v / w + u * v)[4] << std::endl;
-  }
-  
-  numeric<int>::usage_report();
-  numeric<int>::reset_report();
-  
-  {
-    vector<numeric<int>, 100> v;
-    for(int i = 0; i < 100; ++i)
-      v[i] = i * 100 + 9;
-
-    vector<numeric<int>, 100> w;
-    for(int i = 0; i < 100; ++i)
-      w[i] = i * 10 + 9;
-    
-    std::cout << (v+w)[3] << std::endl;
-
-    std::cout << v.get_rep().name() << std::endl;
-    std::cout << (v+w).get_rep().name() << std::endl;
-    std::cout << (v*(w/v)).get_rep().name() << std::endl;
-  }
-
   return 0;
 }
