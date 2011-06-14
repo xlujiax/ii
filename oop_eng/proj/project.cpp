@@ -69,7 +69,7 @@ int main(int, char*[])
 
   numeric<int>::reset_report();
   {
-    std::cout << "scalar are ugly" << std::endl;
+    std::cout << "scalars are ugly" << std::endl;
     vector<numeric<int>, 1> v;
     v[0] = 5;
     
