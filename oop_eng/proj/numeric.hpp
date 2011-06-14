@@ -54,10 +54,8 @@ template<typename T>
     n.v = a.v - b.v;
     return n;
   }
-  operator T()
-  {
-    return v;
-  }
+  operator T() { return v; }
+  T implicit_value() const { return v; }
 
   static void reset_report()
   {
