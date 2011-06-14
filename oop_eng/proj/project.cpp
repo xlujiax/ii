@@ -81,10 +81,28 @@ int main(int, char*[])
     
     vector<numeric<int>, 1> r;
     r = v + u * w + (v*vector<numeric<int>, 1, scalar<numeric<int> > >(2));
+    //r = v + u * w + (v*2);
     std::cout << r[0] << std::endl;
   }
   
   numeric<int>::usage_report();
+
+  {
+    std::cout << "scalars are ugly" << std::endl;
+    vector<int, 1> v;
+    v[0] = 5;
+    
+    vector<int, 1> u;
+    u[0] = 1;
+    
+    vector<int, 1> w;
+    w[0] = 7;
+    
+    vector<int, 1> r;
+    r = v + u * w + (v*vector<int, 1, scalar<int > >(2));
+    //r = v + u * w + (v*2);
+    std::cout << r[0] << std::endl;
+  }
 
   {
     vector<int, 3> v;
