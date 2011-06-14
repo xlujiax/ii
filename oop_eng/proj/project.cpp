@@ -49,9 +49,7 @@ int main(int, char*[])
   }
   
   numeric<int>::usage_report();
-  
-  numeric<int>::reset_report();
-  
+
   {
     std::cout << "getting names of vector representation"<< std::endl;
     vector<numeric<int>, 100> v;
@@ -66,26 +64,6 @@ int main(int, char*[])
     std::cout << (v+w).get_rep().name() << std::endl;
     std::cout << (v*(w/v)).get_rep().name() << std::endl;
   }
-
-  numeric<int>::reset_report();
-  {
-    std::cout << "scalars are ugly" << std::endl;
-    vector<numeric<int>, 1> v;
-    v[0] = 5;
-    
-    vector<numeric<int>, 1> u;
-    u[0] = 1;
-    
-    vector<numeric<int>, 1> w;
-    w[0] = 7;
-    
-    vector<numeric<int>, 1> r;
-    r = v + u * w + (v*vector<numeric<int>, 1, scalar<numeric<int> > >(2));
-    //r = v + u * w + (v*2);
-    std::cout << r[0] << std::endl;
-  }
-  
-  numeric<int>::usage_report();
 
   {
     std::cout << "scalars are ugly" << std::endl;
