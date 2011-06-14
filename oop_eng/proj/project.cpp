@@ -7,6 +7,7 @@
 
 int main(int, char*[])
 {
+  numeric<int>::reset_report();
   {
     vector<numeric<int>, 1> v;
     v[0] = 5;
@@ -18,8 +19,7 @@ int main(int, char*[])
     w[0] = 7;
     
     vector<numeric<int>, 1> r;
-    r = v + u * w + v;
-    
+    r = v + u * w + (v*vector<numeric<int>, 1, scalar<numeric<int> > >(2));
     std::cout << r[0] << std::endl;
   }
   

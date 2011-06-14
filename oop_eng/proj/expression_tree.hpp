@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "vector.hpp"
 
 template<typename T>
@@ -63,5 +65,6 @@ template<typename T>
 public:
   scalar(T const& s) : rep(s) {}
   T operator[] (int) const { return rep; }
+  int size() const { return 0; }
   std::string name() const { return "scalar"; }
 };

@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "expression_tree.hpp"
+
 template<typename T, int Size>
   class vector_data
 {
@@ -47,5 +49,16 @@ public:
   T operator[](int i) const { return rep[i]; }
   T& operator[](int i) { return rep[i]; }
   const Rep& get_rep() const { return rep; }
+};
+
+template<typename T, int Size>
+  class vector<T, Size, scalar<T> >
+{
+  scalar<T> rep;
+public:
+  vector(T t) : rep(t) {}
+  int size() const { return rep.size(); }
+  T operator[](int i) const { return rep[i]; }
+  const scalar<T>& get_rep() const { return rep; }
 };
 

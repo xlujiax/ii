@@ -15,7 +15,7 @@ template<typename T>
   static int instances_peak;
  public:
   numeric() { ++instances_created; ++instances_current; instances_peak = std::max(instances_current, instances_peak); }
- numeric(const T& t) : v(t) { ++instances_created; ++instances_current; instances_peak = std::max(instances_current, instances_peak); }
+ numeric(T t) : v(t) { ++instances_created; ++instances_current; instances_peak = std::max(instances_current, instances_peak); }
   ~numeric() { --instances_current; }
   numeric& operator=(const numeric<T>& n)
     {
