@@ -1,9 +1,11 @@
-#include "sdl_window.h"
+#include "sdl_window.hpp"
+
+const SDL_VideoInfo* video;
+
+static int get_bits_per_pixel() { return video->vfmt->BitsPerPixel; }
 
 bool setup_sdl_window(const int width, const int height)
 {
-  const SDL_VideoInfo* video;
-
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cout << "Couldn't initialize SDL: "
 	      << SDL_GetError() << std::endl;
@@ -33,11 +35,25 @@ bool setup_sdl_window(const int width, const int height)
    * Double buffering is enabled or disabled using the
    * SDL_GL_DOUBLEBUFFER attribute.
    */
-  if(SDL_SetVideoMode(width, height, video->vfmt->BitsPerPixel, SDL_OPENGL) == 0) {
+  if(SDL_SetVideoMode(width, height, get_bits_per_pixel(), SDL_OPENGL | SDL_RESIZABLE) == 0) {
     std::cout << "Couldn't set video mode: "
 	 << SDL_GetError() << std::endl;
     return false;
   }
 
   return true;
+}
+
+void setup_opengl(const int width, const int height)
+{
+  glViewport(0, 0, width, height);
+  gluOrtho2D(0, width, height, 0);
+  glClearColor(0.0, 0.0, 0.0, 0.0);
+}
+
+void handle_resize(const int width, const int height)
+{
+  SDL_SetVideoMode(width, height, get_bits_per_pixel(), SDL_OPENGL | SDL_RESIZABLE);
+
+  glViewport(0, 0, width, height);
 }

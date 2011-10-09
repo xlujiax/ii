@@ -11,6 +11,29 @@ using namespace std;
 timer frame_timer;
 player p1, p2;
 
+struct board
+{
+  int x, y, sizex, sizey;
+  void draw() const
+  {
+    glBegin(GL_LINES);
+    glVertex2f(x, y);
+    glVertex2f(x + sizex, y);
+    
+    glVertex2f(x + sizex, y);
+    glVertex2f(x + sizex, y + sizey);
+    
+    glVertex2f(x + sizex, y + sizey);
+    glVertex2f(x, y + sizey);
+
+    glVertex2f(x, y + sizey);
+    glVertex2f(x, y);
+    glEnd();
+  }
+};
+
+board b;
+
 static void init()
 {
   p1.x = 100;
@@ -18,6 +41,11 @@ static void init()
 
   p2.x = 300;
   p2.y = 300;
+
+  b.x = 10;
+  b.y = 10;
+  b.sizex = 620;
+  b.sizey = 460;
 
   frame_timer.init();
 }
@@ -32,6 +60,9 @@ static void draw()
   glColor3f(1.0,0.0,1.0);
   p2.draw();
 
+  glColor3f(1.0,1.0,1.0);
+  b.draw();
+
   SDL_GL_SwapBuffers();
 }
 
@@ -41,13 +72,6 @@ static void animate()
   
   p1.animate(dtime);
   p2.animate(dtime);
-}
-
-static void setup_opengl(const int width, const int height)
-{
-  glViewport(0, 0, width, height);
-  gluOrtho2D(0, width, height, 0);
-  glClearColor(0.0, 0.0, 0.0, 0.0);
 }
 
 
@@ -106,8 +130,11 @@ static void main_loop()
               break;
           }
           break;
+	case SDL_VIDEORESIZE:
+	  handle_resize(event.resize.w, event.resize.h);
+	  break;
         case SDL_QUIT:
-          exit (0);
+          exit(0);
           break;
       }
     }
