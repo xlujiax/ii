@@ -8,45 +8,76 @@ using namespace std;
 
 #include <math.h>
 
-static void repaint()
+struct player
+{
+  float x, y;
+  float vx, vy;
+  float speed;
+
+  float sizex, sizey;
+
+  player()
+    : vx(0), vy(0),
+      speed(10),
+      sizex(20), sizey(100) {}
+  
+  void draw() const
+  {
+     glBegin(GL_POLYGON);
+     glVertex2f(x, y);
+     glVertex2f(x + sizex, y);
+     glVertex2f(x + sizex, y + sizey);
+     glVertex2f(x, y + sizey);
+     glEnd();
+  }
+
+  void animate(const float dtime)
+  {
+    x += dtime * vx;
+    y += dtime * vy;
+  }
+
+  void move_up() { vy = -speed; }
+  void move_down() { vy = speed; }
+  void move_up_end() { if(vy < 0) vy = 0; }
+  void move_down_end() { if(vy > 0) vy = 0; }
+};
+
+player p1, p2;
+
+static void init()
+{
+  p1.x = 100;
+  p1.y = 100;
+
+  p2.x = 300;
+  p2.y = 300;
+}
+
+static void draw()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glLoadIdentity();
-  glBegin(GL_POLYGON);
-  
-  glEnd();
+
+  glColor3f(1.0,1.0,1.0);
+  p1.draw();
+
+  glColor3f(1.0,0.0,1.0);
+  p2.draw();
+
   SDL_GL_SwapBuffers();
+}
+
+static void animate()
+{
+  p1.animate(1);
+  p2.animate(1);
 }
 
 static void setup_opengl(const int width, const int height)
 {
-  float aspect = (float)width / (float)height;
-
-  /* Make the viewport cover the whole window */
   glViewport(0, 0, width, height);
-
-  /* Set the camera projection matrix:
-   * field of view: 90 degrees
-   * near clipping plane at 0.1
-   * far clipping plane at 100.0
-   */
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-
-  gluPerspective(60.0, aspect, 0.1, 100.0);
-  /* We're done with the camera, now matrix operations
-   * will affect the modelview matrix
-   * */
-  glMatrixMode(GL_MODELVIEW);
-
-  /* set the clear color to gray */
-  glClearColor(0.5, 0.5 ,0.5, 0);
-
-  /* We want z-buffer tests enabled*/
-  glEnable(GL_DEPTH_TEST);
-
-  /* Do draw back-facing polygons*/
-  glDisable(GL_CULL_FACE);
+  gluOrtho2D(0, width, height, 0);
+  glClearColor(0.0, 0.0, 0.0, 0.0);
 }
 
 
@@ -54,43 +85,65 @@ static void main_loop()
 {
   SDL_Event event;
 
-  while (1) {
-    /* process pending events */
-    while( SDL_PollEvent( &event ) ) {
-      switch( event.type ) {
+  while(true)
+  {
+    while(SDL_PollEvent(&event))
+    {
+      switch(event.type) {
         case SDL_KEYDOWN:
-          switch ( event.key.keysym.sym ) {
+          switch(event.key.keysym.sym)
+	  {
             case SDLK_ESCAPE:
               exit(0);
               break;
 
-            case SDLK_KP_PLUS:
-              break;
+	    case 'a':
+	      p1.move_up();
+	      break;
 
-            case SDLK_KP_MINUS:
-              break;
+	    case 'z':
+	      p1.move_down();
+	      break;
+	      
+	    case 'k':
+	      p2.move_up();
+	      break;
+
+	    case 'm':
+	      p2.move_down();
+	      break;
 
             default:
-              //no default key processing
-              //(stops compiler warnings for unhandled SDL keydefs
               break;
           }
           break;
-
-        case SDL_MOUSEMOTION:
+	case SDL_KEYUP:
+          switch(event.key.keysym.sym)
+	  {
+	    case 'a':
+	      p1.move_up_end();
+	      break;
+	    case 'z':
+	      p1.move_down_end();
+	      break;
+	    case 'k':
+	      p2.move_up_end();
+	      break;
+	    case 'm':
+	      p2.move_down_end();
+	      break;
+	    default:
+              break;
+          }
           break;
-
         case SDL_QUIT:
           exit (0);
           break;
       }
     }
-
-    /* update the screen */
-    repaint();
-
-    /* Wait 50ms to avoid using up all the CPU time */
-    SDL_Delay( 50 );
+    animate();
+    draw();
+    SDL_Delay(50);
   }
 }
 
@@ -101,6 +154,8 @@ int main(int argc, char* argv[])
     return 1;
 
   setup_opengl(640, 480);
+
+  init();
 
   main_loop();
 
