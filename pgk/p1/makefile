@@ -30,3 +30,6 @@ game.o: game.cpp game.hpp
 
 pong.e: main.cpp $(modules)
 	g++ $(error_flags) $(std_flag) main.cpp $(modules) $(libs) -o $(output)
+
+clear:
+	rm $(modules)
