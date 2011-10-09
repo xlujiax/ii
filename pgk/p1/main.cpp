@@ -5,30 +5,28 @@
 #include "timer.hpp"
 #include "game.hpp"
 
-int main(int argc, char* argv[])
+game pong;
+timer frame_timer;
+
+void setup_opengl(const int width, const int height)
 {
-  window wnd;
+   glViewport(0, 0, width, height);
+   gluOrtho2D(0, width, height, 0);
+   glClearColor(0.0, 0.0, 0.0, 0.0);
+}
 
-  if(!wnd.setup(640, 480))
-    return 1;
+void keyup(const char k)
+{
+  pong.keyup(k);
+}
 
-  game pong;
-  pong.init();
-  
-  timer frame_timer;
-  frame_timer.init();
+void keydown(const char k)
+{
+  pong.keydown(k);
+}
 
-  wnd.setup_opengl = [](const int width, const int height)
-    {
-       glViewport(0, 0, width, height);
-       gluOrtho2D(0, width, height, 0);
-       glClearColor(0.0, 0.0, 0.0, 0.0);
-    };
-
-  wnd.keydown = [&](const char k) { pong.keydown(k); };
-  wnd.keyup = [&](const char k) { pong.keyup(k); };
-
-  wnd.frame = [&]() {
+void frame()
+{
     const float delta_time = frame_timer.delta_time();
     pong.animate(delta_time);
 
@@ -37,7 +35,25 @@ int main(int argc, char* argv[])
     pong.draw();
 
     SDL_GL_SwapBuffers();
-  };
+}
+
+int main(int argc, char* argv[])
+{
+  window wnd;
+
+  if(!wnd.setup(640, 480))
+    return 1;
+
+  pong.init();
+  frame_timer.init();
+
+  wnd.setup_opengl = setup_opengl;
+
+  // why not: wnd.keydown = [&](const key k) { pong.keydown(k); } ?
+  wnd.keydown = keydown;
+  wnd.keyup = keyup;
+  
+  wnd.frame = frame;
 
   wnd.main_loop();
 
