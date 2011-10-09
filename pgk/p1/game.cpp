@@ -12,6 +12,10 @@ void game::init()
   board1.y = 10;
   board1.sizex = 620;
   board1.sizey = 460;
+
+  ball1.x = 200;
+  ball1.y = 200;
+  ball1.radius = 10;
 }
 
 void game::animate(const float delta_time)
@@ -22,14 +26,17 @@ void game::animate(const float delta_time)
 
 void game::draw() const
 {
-  glColor3f(1.0,1.0,1.0);
+  glColor3f(0.8,0.8,0.2);
   p1.draw();
 
-  glColor3f(1.0,0.0,1.0);
+  glColor3f(0.5,0.5,0.8);
   p2.draw();
 
   glColor3f(1.0,1.0,1.0);
   board1.draw();
+  
+  glColor3f(1.0,1.0,1.0);
+  ball1.draw();
 }
 
 void game::keyup(char k)

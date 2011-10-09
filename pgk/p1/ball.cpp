@@ -2,12 +2,17 @@
 
 void ball::draw() const
 {
-  glBegin(GL_LINE_STRIP);
+  GLfloat vertices[] = {
+    x + radius, y - radius,
+    x + radius, y + radius,
+    x - radius, y + radius,
+    x - radius, y - radius
+  };
 
-  glVertex2f(x - radius, y - radius);
-  glVertex2f(x + radius, y - radius);
-  glVertex2f(x + radius, y + radius);
-  glVertex2f(x - radius, y + radius);
-  glVertex2f(x - radius, y - radius);
-  glEnd();
+  glEnableClientState(GL_VERTEX_ARRAY);
+  glVertexPointer(2, GL_FLOAT, 0, vertices);
+
+  glDrawArrays(GL_QUADS, 0, 8);
+
+  glDisableClientState(GL_VERTEX_ARRAY);
 }
