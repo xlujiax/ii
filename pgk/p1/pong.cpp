@@ -8,6 +8,25 @@ using namespace std;
 
 #include <math.h>
 
+struct timer
+{
+  int old_time;
+  void init()
+  {
+    old_time = SDL_GetTicks();
+  }
+  
+  float delta_time() // in miliseconds
+  {
+    int new_time = SDL_GetTicks();
+    int dtime = new_time - old_time;
+    old_time = new_time;
+    return static_cast<float>(dtime);
+  }
+};
+
+timer frame_timer;
+
 struct player
 {
   float x, y;
@@ -18,7 +37,7 @@ struct player
 
   player()
     : vx(0), vy(0),
-      speed(10),
+      speed(0.10),
       sizex(20), sizey(100) {}
   
   void draw() const
@@ -52,6 +71,8 @@ static void init()
 
   p2.x = 300;
   p2.y = 300;
+
+  frame_timer.init();
 }
 
 static void draw()
@@ -69,8 +90,10 @@ static void draw()
 
 static void animate()
 {
-  p1.animate(1);
-  p2.animate(1);
+  const float dtime = frame_timer.delta_time();
+  
+  p1.animate(dtime);
+  p2.animate(dtime);
 }
 
 static void setup_opengl(const int width, const int height)
@@ -143,7 +166,6 @@ static void main_loop()
     }
     animate();
     draw();
-    SDL_Delay(50);
   }
 }
 
