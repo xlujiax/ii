@@ -3,6 +3,8 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 
+#include "board.hpp"
+
 struct player
 {
   float x, y;
@@ -10,6 +12,8 @@ struct player
   float speed;
 
   float sizex, sizey;
+
+  
 
   player();
   

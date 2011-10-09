@@ -5,9 +5,6 @@
 #include "timer.hpp"
 #include "game.hpp"
 
-#include <iostream>
-using namespace std;
-
 // poznizsze obiekty musza byc globalne; jesli sa w funkcji main to wystepuje blad:
 // error: cannot convert ‘main(int, char**)::<lambda(char)>’ to ‘void (*)(char)’ in assignment
 game pong;

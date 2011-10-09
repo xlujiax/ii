@@ -2,10 +2,11 @@
 
 void game::init()
 {
-  p1.x = 100;
+  const int paddle_to_border_dist = 20;
+  p1.x = 10 + paddle_to_border_dist;
   p1.y = 100;
 
-  p2.x = 300;
+  p2.x = 630 - paddle_to_border_dist - p2.sizex;
   p2.y = 300;
 
   board1.x = 10;
