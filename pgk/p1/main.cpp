@@ -1,61 +1,30 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 
-#include <iostream>
-using namespace std;
-
 #include "sdl_window.hpp"
 #include "timer.hpp"
-#include "player.hpp"
-#include "ball.hpp"
-#include "board.hpp"
+#include "game.hpp"
 
+game pong;
 timer frame_timer;
-player p1, p2;
-
-board board1;
-ball ball1;
 
 static void init()
 {
-  p1.x = 100;
-  p1.y = 100;
-
-  p2.x = 300;
-  p2.y = 300;
-
-  board1.x = 10;
-  board1.y = 10;
-  board1.sizex = 620;
-  board1.sizey = 460;
-
   frame_timer.init();
+  pong.init();
 }
 
-static void draw()
+static void frame()
 {
+  const float delta_time = frame_timer.delta_time();
+  pong.animate(delta_time);
+  
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  glColor3f(1.0,1.0,1.0);
-  p1.draw();
-
-  glColor3f(1.0,0.0,1.0);
-  p2.draw();
-
-  glColor3f(1.0,1.0,1.0);
-  board1.draw();
+  pong.draw();
 
   SDL_GL_SwapBuffers();
 }
-
-static void animate()
-{
-  const float dtime = frame_timer.delta_time();
-  
-  p1.animate(dtime);
-  p2.animate(dtime);
-}
-
 
 static void main_loop()
 {
@@ -73,44 +42,13 @@ static void main_loop()
               exit(0);
               break;
 
-	    case 'a':
-	      p1.move_up();
-	      break;
-
-	    case 'z':
-	      p1.move_down();
-	      break;
-	      
-	    case 'k':
-	      p2.move_up();
-	      break;
-
-	    case 'm':
-	      p2.move_down();
-	      break;
-
             default:
+	      pong.keydown(event.key.keysym.sym);
               break;
           }
           break;
 	case SDL_KEYUP:
-          switch(event.key.keysym.sym)
-	  {
-	    case 'a':
-	      p1.move_up_end();
-	      break;
-	    case 'z':
-	      p1.move_down_end();
-	      break;
-	    case 'k':
-	      p2.move_up_end();
-	      break;
-	    case 'm':
-	      p2.move_down_end();
-	      break;
-	    default:
-              break;
-          }
+	  pong.keyup(event.key.keysym.sym);
           break;
 	case SDL_VIDEORESIZE:
 	  handle_resize(event.resize.w, event.resize.h);
@@ -120,8 +58,8 @@ static void main_loop()
           break;
       }
     }
-    animate();
-    draw();
+
+    frame();
   }
 }
 
