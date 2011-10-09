@@ -7,32 +7,14 @@ using namespace std;
 #include "sdl_window.hpp"
 #include "timer.hpp"
 #include "player.hpp"
+#include "ball.hpp"
+#include "board.hpp"
 
 timer frame_timer;
 player p1, p2;
 
-struct board
-{
-  int x, y, sizex, sizey;
-  void draw() const
-  {
-    glBegin(GL_LINES);
-    glVertex2f(x, y);
-    glVertex2f(x + sizex, y);
-    
-    glVertex2f(x + sizex, y);
-    glVertex2f(x + sizex, y + sizey);
-    
-    glVertex2f(x + sizex, y + sizey);
-    glVertex2f(x, y + sizey);
-
-    glVertex2f(x, y + sizey);
-    glVertex2f(x, y);
-    glEnd();
-  }
-};
-
-board b;
+board board1;
+ball ball1;
 
 static void init()
 {
@@ -42,10 +24,10 @@ static void init()
   p2.x = 300;
   p2.y = 300;
 
-  b.x = 10;
-  b.y = 10;
-  b.sizex = 620;
-  b.sizey = 460;
+  board1.x = 10;
+  board1.y = 10;
+  board1.sizex = 620;
+  board1.sizey = 460;
 
   frame_timer.init();
 }
@@ -61,7 +43,7 @@ static void draw()
   p2.draw();
 
   glColor3f(1.0,1.0,1.0);
-  b.draw();
+  board1.draw();
 
   SDL_GL_SwapBuffers();
 }
