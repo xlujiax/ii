@@ -7,12 +7,19 @@ player::player()
 
 void player::draw() const
 {
-  glBegin(GL_POLYGON);
-  glVertex2f(x, y);
-  glVertex2f(x + sizex, y);
-  glVertex2f(x + sizex, y + sizey);
-  glVertex2f(x, y + sizey);
-  glEnd();
+  GLfloat vertices[] = {
+    x, y,
+    x + sizex, y,
+    x + sizex, y + sizey,
+    x, y + sizey
+  };
+
+  glEnableClientState(GL_VERTEX_ARRAY);
+  glVertexPointer(2, GL_FLOAT, 0, vertices);
+
+  glDrawArrays(GL_QUADS, 0, 8);
+
+  glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 void player::animate(const float dtime)

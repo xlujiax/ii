@@ -2,12 +2,19 @@
 
 void board::draw() const
 {
-  glBegin(GL_LINE_STRIP);
-  glVertex2f(x, y);
-  glVertex2f(x + sizex, y);
+  GLint vertices[] = {
+    x, y,
+    x + sizex, y,
+    x + sizex, y + sizey,
+    x, y + sizey,
 
-  glVertex2f(x + sizex, y + sizey);
-  glVertex2f(x, y + sizey);
-  glVertex2f(x, y);
-  glEnd();
+    x, y
+  };
+
+  glEnableClientState(GL_VERTEX_ARRAY);
+  glVertexPointer(2, GL_INT, 0, vertices);
+
+  glDrawArrays(GL_LINE_STRIP, 0, 10);
+
+  glDisableClientState(GL_VERTEX_ARRAY);
 }
