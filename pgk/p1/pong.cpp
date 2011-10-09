@@ -6,44 +6,9 @@ using namespace std;
 
 #include "sdl_window.hpp"
 #include "timer.hpp"
+#include "player.hpp"
 
 timer frame_timer;
-
-struct player
-{
-  float x, y;
-  float vx, vy;
-  float speed;
-
-  float sizex, sizey;
-
-  player()
-    : vx(0), vy(0),
-      speed(0.10),
-      sizex(20), sizey(100) {}
-  
-  void draw() const
-  {
-     glBegin(GL_POLYGON);
-     glVertex2f(x, y);
-     glVertex2f(x + sizex, y);
-     glVertex2f(x + sizex, y + sizey);
-     glVertex2f(x, y + sizey);
-     glEnd();
-  }
-
-  void animate(const float dtime)
-  {
-    x += dtime * vx;
-    y += dtime * vy;
-  }
-
-  void move_up() { vy = -speed; }
-  void move_down() { vy = speed; }
-  void move_up_end() { if(vy < 0) vy = 0; }
-  void move_down_end() { if(vy > 0) vy = 0; }
-};
-
 player p1, p2;
 
 static void init()
