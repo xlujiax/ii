@@ -5,75 +5,41 @@
 #include "timer.hpp"
 #include "game.hpp"
 
-game pong;
-timer frame_timer;
-
-static void init()
-{
-  frame_timer.init();
-  pong.init();
-}
-
-static void frame()
-{
-  const float delta_time = frame_timer.delta_time();
-  pong.animate(delta_time);
-  
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  pong.draw();
-
-  SDL_GL_SwapBuffers();
-}
-
-static void main_loop()
-{
-  SDL_Event event;
-
-  while(true)
-  {
-    while(SDL_PollEvent(&event))
-    {
-      switch(event.type) {
-        case SDL_KEYDOWN:
-          switch(event.key.keysym.sym)
-	  {
-            case SDLK_ESCAPE:
-              exit(0);
-              break;
-
-            default:
-	      pong.keydown(event.key.keysym.sym);
-              break;
-          }
-          break;
-	case SDL_KEYUP:
-	  pong.keyup(event.key.keysym.sym);
-          break;
-	case SDL_VIDEORESIZE:
-	  handle_resize(event.resize.w, event.resize.h);
-	  break;
-        case SDL_QUIT:
-          exit(0);
-          break;
-      }
-    }
-
-    frame();
-  }
-}
-
-
 int main(int argc, char* argv[])
 {
-  if(!setup_sdl_window(640, 480))
+  window wnd;
+
+  if(!wnd.setup(640, 480))
     return 1;
 
-  setup_opengl(640, 480);
+  game pong;
+  pong.init();
+  
+  timer frame_timer;
+  frame_timer.init();
 
-  init();
+  wnd.setup_opengl = [](const int width, const int height)
+    {
+       glViewport(0, 0, width, height);
+       gluOrtho2D(0, width, height, 0);
+       glClearColor(0.0, 0.0, 0.0, 0.0);
+    };
 
-  main_loop();
+  wnd.keydown = [&](const char k) { pong.keydown(k); };
+  wnd.keyup = [&](const char k) { pong.keyup(k); };
+
+  wnd.frame = [&]() {
+    const float delta_time = frame_timer.delta_time();
+    pong.animate(delta_time);
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    pong.draw();
+
+    SDL_GL_SwapBuffers();
+  };
+
+  wnd.main_loop();
 
   return 0;
 }
