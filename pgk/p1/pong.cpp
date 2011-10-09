@@ -4,26 +4,8 @@
 #include <iostream>
 using namespace std;
 
-#include "sdl_window.h"
-
-#include <math.h>
-
-struct timer
-{
-  int old_time;
-  void init()
-  {
-    old_time = SDL_GetTicks();
-  }
-  
-  float delta_time() // in miliseconds
-  {
-    int new_time = SDL_GetTicks();
-    int dtime = new_time - old_time;
-    old_time = new_time;
-    return static_cast<float>(dtime);
-  }
-};
+#include "sdl_window.hpp"
+#include "timer.hpp"
 
 timer frame_timer;
 
