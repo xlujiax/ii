@@ -13,10 +13,10 @@ struct ball : public rect
   
   vec vel;
   
-  std::shared_ptr<rect> top_boundary;
-  std::shared_ptr<rect> bottom_boundary;
-  std::shared_ptr<rect> right_player;
-  std::shared_ptr<rect> left_player;
+  rect* top_boundary;
+  rect* bottom_boundary;
+  rect* right_paddle;
+  rect* left_paddle;
 
   void animate(const float dtime);
 };

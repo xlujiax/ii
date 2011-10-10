@@ -23,4 +23,16 @@ void ball::animate(const float dtime)
     stick_to_top(*bottom_boundary);
     vel.y *= -1;
   }
+
+  if(rect::collide(*this, *left_paddle))
+  {
+    stick_to_right(*left_paddle);
+    vel.x *= -1;
+  }
+
+  if(rect::collide(*this, *right_paddle))
+  {
+    stick_to_left(*right_paddle);
+    vel.x *= -1;
+  }
 }

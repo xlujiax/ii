@@ -4,12 +4,19 @@ void game::place_ball_on_the_left()
 {
   ball1.pos.x = board1.pos.x + player_left.size.x;
   ball1.pos.y = board1.pos.y + board1.size.y / 2 - ball1.size.y / 2;
+
+  ball1.vel.x = 0.16;
+  ball1.vel.y = 0.08;
 }
 
 void game::place_ball_on_the_right()
 {
   ball1.pos.x = board1.pos.x + board1.size.x - player_left.size.x - ball1.size.x;
   ball1.pos.y = board1.pos.y + board1.size.y / 2 - ball1.size.y / 2;
+
+  
+  ball1.vel.x = -0.16;
+  ball1.vel.y = 0.08;
 }
 
 void game::reset_paddles()
@@ -46,7 +53,7 @@ void game::init()
 
     {
       bottom_boundary.pos.x = board1.pos.x;
-      bottom_boundary.pos.y = board1.pos.y;
+      bottom_boundary.pos.y = board1.pos.y + board1.size.y;
       bottom_boundary.size.x = board1.size.x;
       bottom_boundary.size.y = boundary_size;
     }
@@ -66,24 +73,33 @@ void game::init()
     }
   }
 
-  player_left.size = vec(20, 160);
-  player_left.top_boundary = &top_boundary;
-  player_left.bottom_boundary = &bottom_boundary;
-  
-  player_right.size = vec(20, 160);
-  player_right.top_boundary = &top_boundary;
-  player_right.bottom_boundary = &bottom_boundary;
-  reset_paddles();
+  {
+    player_left.size = vec(20, 160);
+    player_left.top_boundary = &top_boundary;
+    player_left.bottom_boundary = &bottom_boundary;
+    
+    player_right.size = vec(20, 160);
+    player_right.top_boundary = &top_boundary;
+    player_right.bottom_boundary = &bottom_boundary;
+    
+    reset_paddles();
+  }
 
-  ball1.size = vec(20, 20);
-  place_ball_on_the_right();
+  {
+    ball1.size = vec(20, 20);
+    ball1.top_boundary = &top_boundary;
+    ball1.bottom_boundary = &bottom_boundary;
+    ball1.left_paddle = &player_left;
+    ball1.right_paddle = &player_right;
+    place_ball_on_the_right();
+  }
 }
 
 void game::animate(const float delta_time)
 {
   player_left.animate(delta_time);
   player_right.animate(delta_time);
-  //ball1.animate(delta_time);
+  ball1.animate(delta_time);
 }
 
 void game::draw() const
