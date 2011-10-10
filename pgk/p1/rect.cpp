@@ -19,13 +19,23 @@ void rect::draw() const
 
 bool rect::collide(const rect& a, const rect& b)
 {
-  std::array<vec, 4> a_corners = a.corners();
-  std::array<vec, 4> b_corners = b.corners();
-  return std::all_of(b_corners.begin(), b_corners.end(), [&](const vec& v) {
+  // uproszczony model kolizji nie biorący pod uwagę sytuacji,
+  // w której prostokąty kolidują środkami
+  //          +-+
+  //          | |
+  //        +-+-+-+
+  //        | | | |
+  //        +-+-+-+
+  //          | | 
+  //          +-+
+  
+  auto a_corners = a.corners();
+  auto b_corners = b.corners();
+  return std::any_of(b_corners.begin(), b_corners.end(), [&](const vec& v) {
       return a.point_inside(v);
     })
-    &&
-    std::all_of(a_corners.begin(), a_corners.end(), [&](const vec& v) {
+    ||
+    std::any_of(a_corners.begin(), a_corners.end(), [&](const vec& v) {
       return b.point_inside(v);
     });
 }
