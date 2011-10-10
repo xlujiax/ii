@@ -8,18 +8,33 @@ void game::place_ball_on_the_left()
   ball1.vy = 0.08;
 }
 
-void game::init()
+void game::place_ball_on_the_right()
+{
+  ball1.x = 610;
+  ball1.y = 240;
+  ball1.vx = -0.16;
+  ball1.vy = -0.08;
+}
+
+void game::reset_paddles()
 {
   const int paddle_to_border_dist = 20;
   p1.x = 10 + paddle_to_border_dist;
   p1.y = 100;
-  p1.top_boundary = 10;
-  p1.bottom_boundary = 470;
 
   p2.x = 630 - paddle_to_border_dist - p2.sizex;
   p2.y = 300;
+}
+
+void game::init()
+{
+  p1.top_boundary = 10;
+  p1.bottom_boundary = 470;
+
   p2.top_boundary = 10;
   p2.bottom_boundary = 470;
+
+  reset_paddles();
 
   board1.x = 10;
   board1.y = 10;
@@ -37,6 +52,8 @@ void game::animate(const float delta_time)
   p1.animate(delta_time);
   p2.animate(delta_time);
   ball1.animate(delta_time);
+
+  
 }
 
 void game::draw() const

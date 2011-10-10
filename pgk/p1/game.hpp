@@ -21,4 +21,5 @@ struct game
 private:
   void place_ball_on_the_left();
   void place_ball_on_the_right();
+  void reset_paddles();
 };
