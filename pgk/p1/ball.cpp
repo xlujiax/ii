@@ -2,9 +2,10 @@
 
 ball::ball()
 {
-  color_r = 1.0;
-  color_g = 1.0;
+  color_r = 0.5;
+  color_g = 0.5;
   color_b = 1.0;
+  filled = true;
 }
 
 void ball::animate(const float dtime)

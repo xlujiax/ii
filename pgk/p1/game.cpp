@@ -2,11 +2,14 @@
 
 void game::place_ball_on_the_left()
 {
-  
+  ball1.pos.x = board1.pos.x + player_left.size.x;
+  ball1.pos.y = board1.pos.y + board1.size.y / 2 - ball1.size.y / 2;
 }
 
 void game::place_ball_on_the_right()
 {
+  ball1.pos.x = board1.pos.x + board1.size.x - player_left.size.x - ball1.size.x;
+  ball1.pos.y = board1.pos.y + board1.size.y / 2 - ball1.size.y / 2;
 }
 
 void game::reset_paddles()
@@ -68,7 +71,7 @@ void game::init()
   reset_paddles();
 
   ball1.size = vec(20, 20);
-  place_ball_on_the_left();
+  place_ball_on_the_right();
 }
 
 void game::animate(const float delta_time)
