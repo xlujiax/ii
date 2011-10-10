@@ -1,8 +1,8 @@
 #include "player.hpp"
 
 player::player()
-  : vx(0), vy(0),
-    speed(0.10),
+  : vy(0),
+    speed(0.16),
     sizex(20), sizey(100) {}
 
 void player::draw() const
@@ -24,6 +24,10 @@ void player::draw() const
 
 void player::animate(const float dtime)
 {
-  x += dtime * vx;
   y += dtime * vy;
+
+  if(y > bottom_boundary - sizey)
+    y = bottom_boundary - sizey;
+  if(y < top_boundary)
+    y = top_boundary;
 }

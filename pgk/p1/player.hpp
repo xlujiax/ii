@@ -8,12 +8,12 @@
 struct player
 {
   float x, y;
-  float vx, vy;
+  float vy;
   float speed;
 
   float sizex, sizey;
 
-  
+  float top_boundary, bottom_boundary;
 
   player();
   

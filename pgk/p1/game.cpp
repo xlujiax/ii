@@ -5,9 +5,13 @@ void game::init()
   const int paddle_to_border_dist = 20;
   p1.x = 10 + paddle_to_border_dist;
   p1.y = 100;
+  p1.top_boundary = 10;
+  p1.bottom_boundary = 470;
 
   p2.x = 630 - paddle_to_border_dist - p2.sizex;
   p2.y = 300;
+  p2.top_boundary = 10;
+  p2.bottom_boundary = 470;
 
   board1.x = 10;
   board1.y = 10;
