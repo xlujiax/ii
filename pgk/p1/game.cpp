@@ -67,22 +67,22 @@ void game::init()
 
 void game::animate(const float delta_time)
 {
-  player_left->animate(delta_time);
-  player_right->animate(delta_time);
-  ball1->animate(delta_time);
+  //player_left.animate(delta_time);
+  //player_right.animate(delta_time);
+  //ball1.animate(delta_time);
 }
 
 void game::draw() const
 {
-  std::array<std::shared_ptr<rect>, 4> obj_to_draw = {
-    { board1,
-      player_left,
-      player_right,
-      ball1 }
+  std::array<rect*, 4> obj_to_draw = {
+    { (rect*)&board1,
+      (rect*)&player_left,
+      (rect*)&player_right,
+      (rect*)&ball1 }
   };
-  std::for_each(obj_to_draw.begin(), obj_to_draw(), [](const shared_ptr<rect>& r) {
+  std::for_each(obj_to_draw.begin(), obj_to_draw.end(), [](rect* r) {
       r->draw();
-    })
+    });
 }
 
 void game::keyup(char k)
@@ -90,16 +90,16 @@ void game::keyup(char k)
   switch(k)
   {
     case 'a':
-      p1.move_up_end();
+      player_left.move_up_end();
       break;
     case 'z':
-      p1.move_down_end();
+      player_left.move_down_end();
       break;
     case 'k':
-      p2.move_up_end();
+      player_right.move_up_end();
       break;
     case 'm':
-      p2.move_down_end();
+      player_right.move_down_end();
       break;
     default:
       break;
@@ -111,19 +111,19 @@ void game::keydown(char k)
   switch(k)
   {
     case 'a':
-      p1.move_up();
+      player_left.move_up();
       break;
 
     case 'z':
-      p1.move_down();
+      player_left.move_down();
       break;
 
     case 'k':
-      p2.move_up();
+      player_right.move_up();
       break;
 
     case 'm':
-      p2.move_down();
+      player_right.move_down();
       break;
 
     default:
