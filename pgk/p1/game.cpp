@@ -100,6 +100,18 @@ void game::animate(const float delta_time)
   player_left.animate(delta_time);
   player_right.animate(delta_time);
   ball1.animate(delta_time);
+
+  if(rect::collide(ball1, left_score))
+  {
+    reset_paddles();
+    place_ball_on_the_left();
+  }
+  
+  if(rect::collide(ball1, right_score))
+  {
+    reset_paddles();
+    place_ball_on_the_right();
+  }
 }
 
 void game::draw() const
