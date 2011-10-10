@@ -17,4 +17,8 @@ struct game
   void draw() const;
   void keyup(char);
   void keydown(char);
+
+private:
+  void place_ball_on_the_left();
+  void place_ball_on_the_right();
 };

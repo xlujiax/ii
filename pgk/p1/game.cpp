@@ -1,5 +1,13 @@
 #include "game.hpp"
 
+void game::place_ball_on_the_left()
+{
+  ball1.x = 30;
+  ball1.y = 240;
+  ball1.vx = 0.16;
+  ball1.vy = 0.08;
+}
+
 void game::init()
 {
   const int paddle_to_border_dist = 20;
@@ -18,15 +26,17 @@ void game::init()
   board1.sizex = 620;
   board1.sizey = 460;
 
-  ball1.x = 200;
-  ball1.y = 200;
   ball1.radius = 10;
+  ball1.top_boundary = 10;
+  ball1.bottom_boundary = 470;
+  place_ball_on_the_left();
 }
 
 void game::animate(const float delta_time)
 {
   p1.animate(delta_time);
   p2.animate(delta_time);
+  ball1.animate(delta_time);
 }
 
 void game::draw() const
