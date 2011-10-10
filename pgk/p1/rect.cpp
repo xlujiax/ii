@@ -95,7 +95,7 @@ void rect::stick_to_bottom(const rect& r)
 
 void rect::stick_to_top(const rect& r)
 {
-  pos.y = r.pos.y - size.y
+  pos.y = r.pos.y - size.y;
 }
 
 void rect::stick_to_left(const rect& r)

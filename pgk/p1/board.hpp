@@ -7,4 +7,5 @@
 
 struct board : public rect
 {
+  board();
 };

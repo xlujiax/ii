@@ -5,13 +5,13 @@
 
 #include <memory>
 #include "rect.hpp"
-#include "vel.hpp"
+#include "vec.hpp"
 
-struct ball
+struct ball : public rect
 {
   ball();
   
-  float vel;
+  vec vel;
   
   std::shared_ptr<rect> top_boundary;
   std::shared_ptr<rect> bottom_boundary;

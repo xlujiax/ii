@@ -10,17 +10,17 @@
 
 struct game
 {
-  std::shared_ptr<player> player_left;
-  std::shared_ptr<player> player_right;
+  player player_left;
+  player player_right;
 
-  std::shared_ptr<board> board1;
+  board board1;
   
-  std::shared_ptr<rect> top_boundary;
-  std::shared_ptr<rect> bottom_boundary;
-  std::shared_ptr<rect> left_score;
-  std::shared_ptr<rect> right_score;
+  rect top_boundary;
+  rect bottom_boundary;
+  rect left_score;
+  rect right_score;
   
-  std::shared_ptr<ball> ball1;
+  ball ball1;
 
   void init();
   void animate(const float);

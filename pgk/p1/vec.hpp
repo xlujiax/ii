@@ -11,4 +11,6 @@ struct vec
   { return vec(x - c.x, y - c.y); }
   vec operator *(const float f) const
   { return vec(x * f, y * f); }
+  void operator +=(const vec& c)
+  { x += c.x; y += c.y; }
 };
