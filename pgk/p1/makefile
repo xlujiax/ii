@@ -4,11 +4,17 @@ error_flags = -Wall -Werror
 std_flag = -std=c++0x
 
 libs = $(opengl_libs) $(sdl_libs)
-modules = player.o timer.o sdl_window.o board.o ball.o game.o
+modules = player.o timer.o sdl_window.o rect.o board.o ball.o game.o vec.o
 
 output = pong.e
 
 all: pong.e
+
+rect.o: rect.cpp rect.hpp
+	g++ $(error_flags) $(std_flag) -c rect.cpp $(libs)
+
+vec.o: vec.cpp vec.hpp
+	g++ $(error_flags) $(std_flag) -c vec.cpp $(libs)
 
 player.o: player.cpp player.hpp
 	g++ $(error_flags) $(std_flag) -c player.cpp $(libs)
