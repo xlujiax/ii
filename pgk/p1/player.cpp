@@ -3,7 +3,7 @@
 player::player()
 {
   vel.y = 0.0;
-  move_speed = 0.0;
+  move_speed = 0.16;
 }
 
 void player::animate(const float dtime)

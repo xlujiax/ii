@@ -67,7 +67,12 @@ void game::init()
   }
 
   player_left.size = vec(20, 160);
+  player_left.top_boundary = &top_boundary;
+  player_left.bottom_boundary = &bottom_boundary;
+  
   player_right.size = vec(20, 160);
+  player_right.top_boundary = &top_boundary;
+  player_right.bottom_boundary = &bottom_boundary;
   reset_paddles();
 
   ball1.size = vec(20, 20);
@@ -76,8 +81,8 @@ void game::init()
 
 void game::animate(const float delta_time)
 {
-  //player_left.animate(delta_time);
-  //player_right.animate(delta_time);
+  player_left.animate(delta_time);
+  player_right.animate(delta_time);
   //ball1.animate(delta_time);
 }
 

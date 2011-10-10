@@ -13,8 +13,8 @@ struct player : public rect
   vec vel;
   float move_speed;
 
-  std::shared_ptr<rect> top_boundary;
-  std::shared_ptr<rect> bottom_boundary;
+  rect* top_boundary;
+  rect* bottom_boundary;
 
   player();
   
