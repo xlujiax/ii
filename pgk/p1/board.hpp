@@ -3,8 +3,8 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 
-struct board
+#include "rect.hpp"
+
+struct board : public rect
 {
-  int x, y, sizex, sizey;
-  void draw() const;
 };

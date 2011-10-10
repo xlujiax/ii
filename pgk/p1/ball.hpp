@@ -3,13 +3,20 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 
+#include <memory>
+#include "rect.hpp"
+#include "vel.hpp"
+
 struct ball
 {
-  float x, y, radius;
-  float vx, vy;
+  ball();
+  
+  float vel;
+  
+  std::shared_ptr<rect> top_boundary;
+  std::shared_ptr<rect> bottom_boundary;
+  std::shared_ptr<rect> right_player;
+  std::shared_ptr<rect> left_player;
 
-  float top_boundary, bottom_boundary;
-
-  void draw() const;
   void animate(const float dtime);
 };

@@ -1,20 +1,54 @@
 #include "rect.hpp"
 
+rect::rect()
+{
+  color_r = 1.0;
+  color_g = 1.0;
+  color_b = 1.0;
+  filled = true;
+  visible = true;
+}
+
 void rect::draw() const
 {
-  GLfloat vertices[] = {
-    pos.x, pos.y,
-    pos.x + size.x, pos.y,
-    pos.x + size.x, pos.y + size.y,
-    pos.x, pos.y + size.y
-  };
+  if(visible)
+  {
+    glColor3f(color_r, color_g, color_b);
+    
+    if(filled)
+    {
+      GLfloat vertices[] = {
+	pos.x, pos.y,
+	pos.x + size.x, pos.y,
+	pos.x + size.x, pos.y + size.y,
+	pos.x, pos.y + size.y
+      };
 
-  glEnableClientState(GL_VERTEX_ARRAY);
-  glVertexPointer(2, GL_FLOAT, 0, vertices);
+      glEnableClientState(GL_VERTEX_ARRAY);
+      glVertexPointer(2, GL_FLOAT, 0, vertices);
 
-  glDrawArrays(GL_QUADS, 0, 8);
+      glDrawArrays(GL_QUADS, 0, 8);
 
-  glDisableClientState(GL_VERTEX_ARRAY);
+      glDisableClientState(GL_VERTEX_ARRAY);
+    }
+    else
+    {
+      GLfloat vertices[] = {
+	pos.x, pos.y,
+	pos.x + size.x, pos.y,
+	pos.x + size.x, pos.y + size.y,
+	pos.x, pos.y + size.y,
+	pos.x, pos.y
+      };
+
+      glEnableClientState(GL_VERTEX_ARRAY);
+      glVertexPointer(2, GL_FLOAT, 0, vertices);
+
+      glDrawArrays(GL_LINE_STRIP, 0, 10);
+
+      glDisableClientState(GL_VERTEX_ARRAY);
+    }
+  }
 }
 
 bool rect::collide(const rect& a, const rect& b)
@@ -52,4 +86,24 @@ std::array<vec, 4> rect::corners() const
 	pos + vec(0, size.y),
 	pos + vec(size.x, 0),
 	pos + size }};
+}
+
+void rect::stick_to_bottom(const rect& r)
+{
+  pos.y = r.pos.y + r.size.y;
+}
+
+void rect::stick_to_top(const rect& r)
+{
+  pos.y = r.pos.y - size.y
+}
+
+void rect::stick_to_left(const rect& r)
+{
+  pos.x = r.pos.x - size.x;
+}
+
+void rect::stick_to_right(const rect& r)
+{
+  pos.x = r.pos.x + r.size.x;
 }

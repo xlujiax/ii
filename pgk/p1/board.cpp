@@ -1,20 +1,9 @@
 #include "board.hpp"
 
-void board::draw() const
+board::board()
 {
-  GLint vertices[] = {
-    x, y,
-    x + sizex, y,
-    x + sizex, y + sizey,
-    x, y + sizey,
-
-    x, y
-  };
-
-  glEnableClientState(GL_VERTEX_ARRAY);
-  glVertexPointer(2, GL_INT, 0, vertices);
-
-  glDrawArrays(GL_LINE_STRIP, 0, 10);
-
-  glDisableClientState(GL_VERTEX_ARRAY);
+  color_r = 0.5;
+  color_g = 0.5;
+  color_b = 0.5;
+  filled = false;
 }

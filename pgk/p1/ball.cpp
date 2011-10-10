@@ -1,35 +1,25 @@
 #include "ball.hpp"
 
-void ball::draw() const
+ball::ball()
 {
-  GLfloat vertices[] = {
-    x + radius, y - radius,
-    x + radius, y + radius,
-    x - radius, y + radius,
-    x - radius, y - radius
-  };
-
-  glEnableClientState(GL_VERTEX_ARRAY);
-  glVertexPointer(2, GL_FLOAT, 0, vertices);
-
-  glDrawArrays(GL_QUADS, 0, 8);
-
-  glDisableClientState(GL_VERTEX_ARRAY);
+  color_r = 1.0;
+  color_g = 1.0;
+  color_b = 1.0;
 }
 
 void ball::animate(const float dtime)
 {
-  y += dtime * vy;
-  x += dtime * vx;
+  pos += dtime * vel;
 
-  if(y > bottom_boundary - radius)
+  if(rect::collide(*this, top_boundary))
   {
-    y = bottom_boundary - radius;
+    stick_to_bottom(top_boundary);
     vy *= -1;
   }
-  if(y < top_boundary + radius)
+
+  if(rect::collide(*this, bottom_boundary))
   {
-    y = top_boundary + radius;
+    stick_to_top(bottom_boundary);
     vy *= -1;
   }
 }
