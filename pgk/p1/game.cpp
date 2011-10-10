@@ -11,6 +11,11 @@ void game::place_ball_on_the_right()
 
 void game::reset_paddles()
 {
+  player_left.pos.x = board1.pos.x;
+  player_left.pos.y = board1.pos.y + board1.size.y / 2 - player_left.size.y / 2;
+  
+  player_right.pos.x = board1.pos.x + board1.size.x - player_right.size.x;
+  player_right.pos.y = board1.pos.y + board1.size.y / 2 - player_right.size.y / 2;
 }
 
 void game::init()
@@ -58,10 +63,11 @@ void game::init()
     }
   }
 
+  player_left.size = vec(20, 160);
+  player_right.size = vec(20, 160);
   reset_paddles();
 
-  ball1.size.x = ball1.size.y = 20;
-  
+  ball1.size = vec(20, 20);
   place_ball_on_the_left();
 }
 
@@ -74,15 +80,10 @@ void game::animate(const float delta_time)
 
 void game::draw() const
 {
-  std::array<rect*, 4> obj_to_draw = {
-    { (rect*)&board1,
-      (rect*)&player_left,
-      (rect*)&player_right,
-      (rect*)&ball1 }
-  };
-  std::for_each(obj_to_draw.begin(), obj_to_draw.end(), [](rect* r) {
-      r->draw();
-    });
+  board1.draw();
+  player_left.draw();
+  player_right.draw();
+  ball1.draw();
 }
 
 void game::keyup(char k)
