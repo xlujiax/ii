@@ -110,5 +110,15 @@ void rect::stick_to_right(const rect& r)
 
 vec rect::center() const
 {
-  return pos - vec(size.x / 2.0, size.x / 2.0);
+  return pos + vec(size.x / 2.0, size.y / 2.0);
+}
+
+vec rect::lower_center() const
+{
+  return pos + vec(size.x / 2.0, size.y);
+}
+
+vec rect::upper_center() const
+{
+  return pos + vec(size.x / 2.0, 0.0);
 }

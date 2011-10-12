@@ -17,6 +17,10 @@ struct rect
   bool point_inside(const vec& v) const;
 
   vec center() const;
+  vec lower_center() const;
+  vec upper_center() const;
+  vec left_center() const;
+  vec right_center() const;
 
   void stick_to_bottom(const rect&);
   void stick_to_top(const rect&);
