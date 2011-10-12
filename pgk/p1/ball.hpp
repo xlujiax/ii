@@ -25,4 +25,6 @@ struct ball : public drawable_rect
   player* left_paddle;
 
   void animate(const float dtime);
+
+  void handle_collision_with_player(const player& paddle);
 };

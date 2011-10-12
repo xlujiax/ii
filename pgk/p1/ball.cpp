@@ -15,6 +15,24 @@ void ball::normalize_speed()
   vel = vel * speed;
 }
 
+void ball::handle_collision_with_player(const player& paddle)
+{
+  if(rect::collide(*this, paddle.middle()))
+  {
+    vel.x *= -1;
+  }
+  else if(rect::collide(*this, paddle.upper_corner()))
+  {
+    vel = center() - paddle.upper_corner().lower_center();
+    normalize_speed();
+  }
+  else if(rect::collide(*this, paddle.lower_corner()))
+  {
+    vel = center() - paddle.lower_corner().upper_center();
+    normalize_speed();
+  }
+}
+
 void ball::animate(const float dtime)
 {
   pos += vel * dtime;
@@ -34,40 +52,12 @@ void ball::animate(const float dtime)
   if(rect::collide(*this, *left_paddle))
   {
     stick_to_right(*left_paddle);
-    
-    if(rect::collide(*this, left_paddle->middle()))
-    {
-      vel.x *= -1;
-    }
-    else if(rect::collide(*this, left_paddle->upper_corner()))
-    {
-      vel = center() - left_paddle->upper_corner().lower_center();
-      normalize_speed();
-    }
-    else if(rect::collide(*this, left_paddle->lower_corner()))
-    {
-      vel = center() - left_paddle->lower_corner().upper_center();
-      normalize_speed();
-    }
+    handle_collision_with_player(*left_paddle);
   }
 
   if(rect::collide(*this, *right_paddle))
   {
     stick_to_left(*right_paddle);
-    
-    if(rect::collide(*this, right_paddle->middle()))
-    {
-      vel.x *= -1;
-    }
-    else if(rect::collide(*this, right_paddle->upper_corner()))
-    {
-      vel = center() - right_paddle->upper_corner().lower_center();
-      normalize_speed();
-    }
-    else if(rect::collide(*this, right_paddle->lower_corner()))
-    {
-      vel = center() - right_paddle->lower_corner().upper_center();
-      normalize_speed();
-    }
+    handle_collision_with_player(*right_paddle);
   }
 }
