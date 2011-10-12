@@ -11,6 +11,7 @@
 
 struct game
 {
+private:
   player player_left;
   player player_right;
 
@@ -22,7 +23,7 @@ struct game
   rect right_score;
   
   ball ball1;
-
+public:
   void init();
   void animate(const float);
   void draw() const;

@@ -13,9 +13,6 @@ struct rect
 
   std::array<vec, 4> corners() const;
   
-  static bool collide(const rect& a, const rect& b);
-  bool point_inside(const vec& v) const;
-
   vec center() const;
   vec lower_center() const;
   vec upper_center() const;
@@ -26,6 +23,10 @@ struct rect
   void stick_to_top(const rect&);
   void stick_to_left(const rect&);
   void stick_to_right(const rect&);
+
+  static bool collide(const rect& a, const rect& b);
+private:
+  bool point_inside(const vec& v) const;
 };
 
 struct drawable_rect : public rect

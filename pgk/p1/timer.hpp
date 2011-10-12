@@ -4,7 +4,8 @@
 
 struct timer
 {
-  int old_time;
   void init();
   float delta_time(); // in miliseconds
+private:
+  int old_time;
 };
