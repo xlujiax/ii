@@ -8,11 +8,16 @@
 #include "player.hpp"
 #include "vec.hpp"
 
+#include <iostream>
+
 struct ball : public drawable_rect
 {
   ball();
   
   vec vel;
+  float speed;
+
+  void normalize_speed();
   
   rect* top_boundary;
   rect* bottom_boundary;

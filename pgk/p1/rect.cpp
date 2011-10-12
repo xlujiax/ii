@@ -107,3 +107,8 @@ void rect::stick_to_right(const rect& r)
 {
   pos.x = r.pos.x + r.size.x;
 }
+
+vec rect::center() const
+{
+  return pos - vec(size.x / 2.0, size.x / 2.0);
+}

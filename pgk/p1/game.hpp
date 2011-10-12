@@ -7,6 +7,7 @@
 #include <memory>
 #include <array>
 #include <algorithm>
+#include <iostream>
 
 struct game
 {

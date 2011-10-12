@@ -5,8 +5,9 @@ void game::place_ball_on_the_left()
   ball1.pos.x = board1.pos.x + player_left.size.x;
   ball1.pos.y = board1.pos.y + board1.size.y / 2 - ball1.size.y / 2;
 
-  ball1.vel.x = 0.16;
-  ball1.vel.y = 0.08;
+  ball1.vel.x = 2;
+  ball1.vel.y = 1;
+  ball1.normalize_speed();
 }
 
 void game::place_ball_on_the_right()
@@ -14,9 +15,9 @@ void game::place_ball_on_the_right()
   ball1.pos.x = board1.pos.x + board1.size.x - player_left.size.x - ball1.size.x;
   ball1.pos.y = board1.pos.y + board1.size.y / 2 - ball1.size.y / 2;
 
-  
-  ball1.vel.x = -0.16;
-  ball1.vel.y = 0.08;
+  ball1.vel.x = -2;
+  ball1.vel.y = 1;
+  ball1.normalize_speed();
 }
 
 void game::reset_paddles()

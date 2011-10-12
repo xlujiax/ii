@@ -6,6 +6,13 @@ ball::ball()
   color_g = 0.5;
   color_b = 1.0;
   filled = true;
+  speed = 0.24;
+}
+
+void ball::normalize_speed()
+{
+  vel = vel.normal();
+  vel = vel * speed;
 }
 
 void ball::animate(const float dtime)
@@ -30,7 +37,8 @@ void ball::animate(const float dtime)
 
     if(rect::collide(*this, left_paddle->upper_corner()))
     {
-      
+      vel = left_paddle->upper_corner().center() - center();
+      normalize_speed();
     }
     else if(rect::collide(*this, left_paddle->lower_corner()))
     {

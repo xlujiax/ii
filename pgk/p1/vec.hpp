@@ -15,6 +15,8 @@ struct vec
   { return vec(x * f, y * f); }
   void operator +=(const vec& c)
   { x += c.x; y += c.y; }
+  void operator *=(float f)
+  { x *= f; y *= f; }
   float length() const
   { return sqrt(x*x + y*y); }
   vec normal() const
