@@ -9,17 +9,10 @@
 
 struct rect
 {
-  rect();
-  
   vec pos, size;
-
-  float color_r, color_g, color_b;
-  bool filled;
-  bool visible;
 
   std::array<vec, 4> corners() const;
   
-  void draw() const;
   static bool collide(const rect& a, const rect& b);
   bool point_inside(const vec& v) const;
 
@@ -29,3 +22,13 @@ struct rect
   void stick_to_right(const rect&);
 };
 
+struct drawable_rect : public rect
+{
+  drawable_rect();
+
+  float color_r, color_g, color_b;
+  bool filled;
+  bool visible;
+
+  void draw() const;
+};

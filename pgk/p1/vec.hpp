@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 struct vec
 {
   float x, y;
@@ -13,4 +15,11 @@ struct vec
   { return vec(x * f, y * f); }
   void operator +=(const vec& c)
   { x += c.x; y += c.y; }
+  float length() const
+  { return sqrt(x*x + y*y); }
+  vec normal() const
+  {
+    const float inv = 1.0 / length();
+    return vec(x * inv, y * inv);
+  }
 };

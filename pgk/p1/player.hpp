@@ -8,7 +8,7 @@
 #include "rect.hpp"
 #include "vec.hpp"
 
-struct player : public rect
+struct player : public drawable_rect
 {
   vec vel;
   float move_speed;
@@ -24,4 +24,7 @@ struct player : public rect
   void move_down() { vel.y = move_speed; }
   void move_up_end() { if(vel.y < 0) vel.y = 0; }
   void move_down_end() { if(vel.y > 0) vel.y = 0; }
+
+  rect lower_corner() const;
+  rect upper_corner() const;
 };

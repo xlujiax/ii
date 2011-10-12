@@ -27,12 +27,32 @@ void ball::animate(const float dtime)
   if(rect::collide(*this, *left_paddle))
   {
     stick_to_right(*left_paddle);
-    vel.x *= -1;
+
+    if(rect::collide(*this, left_paddle->upper_corner()))
+    {
+      
+    }
+    else if(rect::collide(*this, left_paddle->lower_corner()))
+    {
+      
+    }
+    else // srodek paletki
+      vel.x *= -1;
   }
 
   if(rect::collide(*this, *right_paddle))
   {
     stick_to_left(*right_paddle);
-    vel.x *= -1;
+    
+    if(rect::collide(*this, right_paddle->upper_corner()))
+    {
+      
+    }
+    else if(rect::collide(*this, right_paddle->lower_corner()))
+    {
+      
+    }
+    else // srodek paletki
+      vel.x *= -1;
   }
 }

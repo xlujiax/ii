@@ -1,6 +1,6 @@
 #include "rect.hpp"
 
-rect::rect()
+drawable_rect::drawable_rect()
 {
   color_r = 1.0;
   color_g = 1.0;
@@ -9,7 +9,7 @@ rect::rect()
   visible = true;
 }
 
-void rect::draw() const
+void drawable_rect::draw() const
 {
   if(visible)
   {

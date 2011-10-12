@@ -5,9 +5,10 @@
 
 #include <memory>
 #include "rect.hpp"
+#include "player.hpp"
 #include "vec.hpp"
 
-struct ball : public rect
+struct ball : public drawable_rect
 {
   ball();
   
@@ -15,8 +16,8 @@ struct ball : public rect
   
   rect* top_boundary;
   rect* bottom_boundary;
-  rect* right_paddle;
-  rect* left_paddle;
+  player* right_paddle;
+  player* left_paddle;
 
   void animate(const float dtime);
 };

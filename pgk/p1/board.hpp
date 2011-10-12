@@ -5,7 +5,7 @@
 
 #include "rect.hpp"
 
-struct board : public rect
+struct board : public drawable_rect
 {
   board();
 };

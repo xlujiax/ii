@@ -22,3 +22,19 @@ void player::animate(const float dtime)
     vel.y = 0;
   }
 }
+
+rect player::lower_corner() const
+{
+  rect lower_corner;
+  lower_corner.size = vec(size.x, size.x);
+  lower_corner.pos = pos + vec(0, size.y - lower_corner.size.y);
+  return lower_corner;
+}
+
+rect player::upper_corner() const
+{
+  rect upper_corner;
+  upper_corner.size = vec(size.x, size.x);
+  upper_corner.pos = pos;
+  return upper_corner;
+}
