@@ -34,8 +34,12 @@ void ball::animate(const float dtime)
   if(rect::collide(*this, *left_paddle))
   {
     stick_to_right(*left_paddle);
-
-    if(rect::collide(*this, left_paddle->upper_corner()))
+    
+    if(rect::collide(*this, left_paddle->middle()))
+    {
+      vel.x *= -1;
+    }
+    else if(rect::collide(*this, left_paddle->upper_corner()))
     {
       vel = center() - left_paddle->upper_corner().lower_center();
       normalize_speed();
@@ -45,15 +49,17 @@ void ball::animate(const float dtime)
       vel = center() - left_paddle->lower_corner().upper_center();
       normalize_speed();
     }
-    else // srodek paletki
-      vel.x *= -1;
   }
 
   if(rect::collide(*this, *right_paddle))
   {
     stick_to_left(*right_paddle);
     
-    if(rect::collide(*this, right_paddle->upper_corner()))
+    if(rect::collide(*this, right_paddle->middle()))
+    {
+      vel.x *= -1;
+    }
+    else if(rect::collide(*this, right_paddle->upper_corner()))
     {
       vel = center() - right_paddle->upper_corner().lower_center();
       normalize_speed();
@@ -63,7 +69,5 @@ void ball::animate(const float dtime)
       vel = center() - right_paddle->lower_corner().upper_center();
       normalize_speed();
     }
-    else // srodek paletki
-      vel.x *= -1;
   }
 }

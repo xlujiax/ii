@@ -27,4 +27,7 @@ struct player : public drawable_rect
 
   rect lower_corner() const;
   rect upper_corner() const;
+  rect middle() const;
+
+  float corner_size;
 };

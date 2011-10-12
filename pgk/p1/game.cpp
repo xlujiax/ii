@@ -76,10 +76,12 @@ void game::init()
 
   {
     player_left.size = vec(20, 160);
+    player_left.corner_size = 20;
     player_left.top_boundary = &top_boundary;
     player_left.bottom_boundary = &bottom_boundary;
     
     player_right.size = vec(20, 160);
+    player_right.corner_size = 20;
     player_right.top_boundary = &top_boundary;
     player_right.bottom_boundary = &bottom_boundary;
     
