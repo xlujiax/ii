@@ -12,17 +12,16 @@ struct rect
   vec pos, size;
 
   std::array<vec, 4> corners() const;
-  
-  vec center() const;
-  vec lower_center() const;
-  vec upper_center() const;
-  vec left_center() const;
-  vec right_center() const;
 
-  void stick_to_bottom(const rect&);
-  void stick_to_top(const rect&);
-  void stick_to_left(const rect&);
-  void stick_to_right(const rect&);
+  enum class edge
+  {
+    bottom, top, left, right
+  };
+
+  vec center() const;
+  vec middle_of(edge e) const;
+
+  void stick_to(edge e, const rect&);
 
   static bool collide(const rect& a, const rect& b);
 private:

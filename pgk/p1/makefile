@@ -22,7 +22,7 @@ player.o: player.cpp player.hpp
 board.o: board.cpp board.hpp
 	g++ $(error_flags) $(std_flag) -c board.cpp $(libs)
 
-ball.o: ball.cpp ball.hpp
+ball.o: ball.cpp ball.hpp rect.o
 	g++ $(error_flags) $(std_flag) -c ball.cpp $(libs)
 
 timer.o: timer.cpp timer.hpp

@@ -88,24 +88,23 @@ std::array<vec, 4> rect::corners() const
 	pos + size }};
 }
 
-void rect::stick_to_bottom(const rect& r)
+void rect::stick_to(edge e, const rect& r)
 {
-  pos.y = r.pos.y + r.size.y;
-}
-
-void rect::stick_to_top(const rect& r)
-{
-  pos.y = r.pos.y - size.y;
-}
-
-void rect::stick_to_left(const rect& r)
-{
-  pos.x = r.pos.x - size.x;
-}
-
-void rect::stick_to_right(const rect& r)
-{
-  pos.x = r.pos.x + r.size.x;
+  switch(e)
+  {
+    case edge::bottom:
+      pos.y = r.pos.y + r.size.y;
+      break;
+    case edge::top:
+      pos.y = r.pos.y - size.y;
+      break;
+    case edge::left:
+      pos.x = r.pos.x - size.x;
+      break;
+    case edge::right:
+      pos.x = r.pos.x + r.size.x;
+      break;
+  }
 }
 
 vec rect::center() const
@@ -113,12 +112,19 @@ vec rect::center() const
   return pos + vec(size.x / 2.0, size.y / 2.0);
 }
 
-vec rect::lower_center() const
+vec rect::middle_of(edge e) const
 {
-  return pos + vec(size.x / 2.0, size.y);
-}
-
-vec rect::upper_center() const
-{
-  return pos + vec(size.x / 2.0, 0.0);
+  switch(e)
+  {
+    case edge::left:
+      return pos + vec(0.0, size.y / 2.0);
+    case edge::right:
+      return pos + vec(size.x, size.y / 2.0);
+    case edge::bottom:
+      return pos + vec(size.x / 2.0, size.y);
+    case edge::top:
+      return pos + vec(size.x / 2.0, 0.0);
+    default:
+      return vec(0, 0);
+  }
 }

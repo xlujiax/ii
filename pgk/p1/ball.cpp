@@ -23,12 +23,12 @@ void ball::handle_collision_with_player(const player& paddle)
   }
   else if(rect::collide(*this, paddle.upper_corner()))
   {
-    vel = center() - paddle.upper_corner().lower_center();
+    vel = center() - paddle.upper_corner().middle_of(edge::bottom);
     normalize_speed();
   }
   else if(rect::collide(*this, paddle.lower_corner()))
   {
-    vel = center() - paddle.lower_corner().upper_center();
+    vel = center() - paddle.lower_corner().middle_of(edge::top);
     normalize_speed();
   }
 }
@@ -39,25 +39,25 @@ void ball::animate(const float dtime)
 
   if(rect::collide(*this, *top_boundary))
   {
-    stick_to_bottom(*top_boundary);
+    stick_to(edge::bottom, *top_boundary);
     vel.y *= -1;
   }
 
   if(rect::collide(*this, *bottom_boundary))
   {
-    stick_to_top(*bottom_boundary);
+    stick_to(edge::top, *bottom_boundary);
     vel.y *= -1;
   }
 
   if(rect::collide(*this, *left_paddle))
   {
-    stick_to_right(*left_paddle);
+    stick_to(edge::right, *left_paddle);
     handle_collision_with_player(*left_paddle);
   }
 
   if(rect::collide(*this, *right_paddle))
   {
-    stick_to_left(*right_paddle);
+    stick_to(edge::left, *right_paddle);
     handle_collision_with_player(*right_paddle);
   }
 }
