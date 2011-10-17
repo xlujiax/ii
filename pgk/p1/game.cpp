@@ -36,42 +36,24 @@ void game::init()
     const float width = 640;
     const float height = 480;
     
-    board1.pos.x = margin;
-    board1.pos.y = margin;
-    board1.size.x = width - 2*margin;
-    board1.size.y = height - 2*margin;;
+    board1.pos = vec(margin, margin);
+    board1.size = vec(width - 2*margin);
   }
 
   {
     const float boundary_size = 100;
 
-    {
-      top_boundary.pos.x = board1.pos.x;
-      top_boundary.pos.y = board1.pos.y - boundary_size;
-      top_boundary.size.x = board1.size.x;
-      top_boundary.size.y = boundary_size;
-    }
+    top_boundary.pos = vec(board1.pos.x, board1.pos.y - boundary_size);
+    top_boundary.size = vec(board1.size.x, boundary_size);
 
-    {
-      bottom_boundary.pos.x = board1.pos.x;
-      bottom_boundary.pos.y = board1.pos.y + board1.size.y;
-      bottom_boundary.size.x = board1.size.x;
-      bottom_boundary.size.y = boundary_size;
-    }
+    bottom_boundary.pos = vec(board1.pos.x, board1.pos.y + board1.size.y);
+    bottom_boundary.size = vec(board1.size.x, boundary_size);
 
-    {
-      left_score.pos.x = board1.pos.x - boundary_size;
-      left_score.pos.y = board1.pos.y;
-      left_score.size.x = boundary_size;
-      left_score.size.y = board1.size.y;
-    }
-    
-    {
-      right_score.pos.x = board1.pos.x + board1.size.x;
-      right_score.pos.y = board1.pos.y;
-      right_score.size.x = boundary_size;
-      right_score.size.y = board1.size.y;
-    }
+    left_score.pos = vec(board1.pos.x - boundary_size, board1.pos.y);
+    left_score.size = vec(boundary_size, board1.size.y);
+
+    right_score.pos = vec(board1.pos.x + board1.size.x, board1.pos.y);
+    right_score.size = vec(boundary_size, board1.size.y);
   }
 
   {

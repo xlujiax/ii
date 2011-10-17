@@ -4,12 +4,14 @@
 #include <ctime>
 #include <cassert>
 #include <algorithm>
+#include <numeric>
+#include <cmath>
 using namespace std;
 
 void print_result();
 
-int d = 80;
-double theta = 1.0 / 30;
+int d = 1000;
+double theta = 1.0 / double(d);
 
 typedef vector<bool> individual;
 
@@ -24,8 +26,10 @@ double uniform_random(double a, double b)
 
 bool binary_random(double p)
 {
-  assert(0.0 <= p);
-  assert(p <= 1.0);
+  if(p < 0)
+    p = 0;
+  if(p > 1.0)
+    p = 1.0;
   if(uniform_random(0.0, 1.0) < p)
     return 1;
   return 0;
@@ -67,8 +71,13 @@ void cga(double (*F)(const individual&), bool (*terminate)(const individual&, co
   F(x1);
   F(x2);
 
+  static int l = 0;
+
   while(!terminate(x1, x2))
   {
+      ++l;
+      if(l % 200 == 0)
+        print_result();
     individual x_plus;
     individual x_minus;
 
@@ -85,10 +94,14 @@ void cga(double (*F)(const individual&), bool (*terminate)(const individual&, co
 
     for(int k = 0; k < d; ++k)
     {
-      if(x_plus[k] && !x_minus[k])
-	probabilities[k] += theta;
-      if(!x_plus[k] && x_minus[k])
-	probabilities[k] -= theta;
+        if(x_plus[k] && !x_minus[k])
+            probabilities[k] += theta;
+        if(!x_plus[k] && x_minus[k])
+            probabilities[k] -= theta;
+        if(probabilities[k] > 1)
+            probabilities[k] = 1;
+        if(probabilities[k] < 0)
+            probabilities[k] = 0;
     }
 
     x1 = rand_individual();
@@ -98,17 +111,78 @@ void cga(double (*F)(const individual&), bool (*terminate)(const individual&, co
   print_result();
 }
 
+double add(double a, double b)
+{
+    return a + b;
+}
+
 void print_result()
 {
-  cout << "resulting vector of probabilities:\n";
-  for(int i = 0; i < d; ++i)
-    cout << probabilities[i] << ' ';
-  cout << endl;
+
+    double sum = 0;
+ for(int i = 0; i < d; ++i)
+    sum += probabilities[i];
+    double avg = sum / (double)d;
+
+int cons = 0;
+        int c = 0;
+    for(int i = 0; i < d; ++i)
+    {
+        if(probabilities[i] < 0.5)
+            ++c;
+        else
+            c = 0;
+        if(cons < c)
+            cons = c;
+    }
+
+  cout << "average: " << avg << "; longest almost-zeros sequence: " << cons << endl;
+
+  //cout << "resulting vector of probabilities:\n";
+
+  //for(int i = 0; i < d; ++i)
+  //  cout << probabilities[i] << ' ';
+  //cout << endl;
 }
 
 double onemax(const individual& v)
 {
   return (double)count(v.begin(), v.end(), true);
+}
+
+double zeromax(const individual& v)
+{
+  return (double)count(v.begin(), v.end(), false);
+}
+
+double deceptive_onemax(const individual& v)
+{
+    int sum = count(v.begin(), v.end(), true);
+    if(sum == 0)
+    return d + 1;
+  return (double)sum;
+}
+
+int k = 5;
+double k_deceptive_onemax(const individual& v)
+{
+    int sum = 0;
+    int i = 0;
+    while(i != d)
+    {
+        int ksum = 0;
+        for(int j = 0; j < k; ++j)
+        {
+            ++i;
+            if(v[i])
+                ksum ++;
+        }
+        if(ksum == 0)
+            sum += k + 1;
+        else
+            sum += ksum;
+    }
+    return sum;
 }
 
 bool terminate(const individual&, const individual&)
@@ -123,7 +197,7 @@ int main()
 {
   srand(time(0));
 
-  cga(onemax, terminate);
+  cga(k_deceptive_onemax, terminate);
 
   return 0;
 }
