@@ -75,9 +75,9 @@ void cga(double (*F)(const individual&), bool (*terminate)(const individual&, co
 
   while(!terminate(x1, x2))
   {
-      ++l;
-      if(l % 200 == 0)
-        print_result();
+    ++l;
+    if(l % 200 == 0)
+      print_result();
     individual x_plus;
     individual x_minus;
 
@@ -94,14 +94,14 @@ void cga(double (*F)(const individual&), bool (*terminate)(const individual&, co
 
     for(int k = 0; k < d; ++k)
     {
-        if(x_plus[k] && !x_minus[k])
-            probabilities[k] += theta;
-        if(!x_plus[k] && x_minus[k])
-            probabilities[k] -= theta;
-        if(probabilities[k] > 1)
-            probabilities[k] = 1;
-        if(probabilities[k] < 0)
-            probabilities[k] = 0;
+      if(x_plus[k] && !x_minus[k])
+        probabilities[k] += theta;
+      if(!x_plus[k] && x_minus[k])
+        probabilities[k] -= theta;
+      if(probabilities[k] > 1)
+        probabilities[k] = 1;
+      if(probabilities[k] < 0)
+        probabilities[k] = 0;
     }
 
     x1 = rand_individual();
@@ -113,28 +113,28 @@ void cga(double (*F)(const individual&), bool (*terminate)(const individual&, co
 
 double add(double a, double b)
 {
-    return a + b;
+  return a + b;
 }
 
 void print_result()
 {
 
-    double sum = 0;
- for(int i = 0; i < d; ++i)
+  double sum = 0;
+  for(int i = 0; i < d; ++i)
     sum += probabilities[i];
-    double avg = sum / (double)d;
+  double avg = sum / (double)d;
 
-int cons = 0;
-        int c = 0;
-    for(int i = 0; i < d; ++i)
-    {
-        if(probabilities[i] < 0.5)
-            ++c;
-        else
-            c = 0;
-        if(cons < c)
-            cons = c;
-    }
+  int cons = 0;
+  int c = 0;
+  for(int i = 0; i < d; ++i)
+  {
+    if(probabilities[i] < 0.5)
+      ++c;
+    else
+      c = 0;
+    if(cons < c)
+      cons = c;
+  }
 
   cout << "average: " << avg << "; longest almost-zeros sequence: " << cons << endl;
 
@@ -157,8 +157,8 @@ double zeromax(const individual& v)
 
 double deceptive_onemax(const individual& v)
 {
-    int sum = count(v.begin(), v.end(), true);
-    if(sum == 0)
+  int sum = count(v.begin(), v.end(), true);
+  if(sum == 0)
     return d + 1;
   return (double)sum;
 }
@@ -166,23 +166,23 @@ double deceptive_onemax(const individual& v)
 int k = 5;
 double k_deceptive_onemax(const individual& v)
 {
-    int sum = 0;
-    int i = 0;
-    while(i != d)
+  int sum = 0;
+  int i = 0;
+  while(i != d)
+  {
+    int ksum = 0;
+    for(int j = 0; j < k; ++j)
     {
-        int ksum = 0;
-        for(int j = 0; j < k; ++j)
-        {
-            ++i;
-            if(v[i])
-                ksum ++;
-        }
-        if(ksum == 0)
-            sum += k + 1;
-        else
-            sum += ksum;
+      ++i;
+      if(v[i])
+        ksum ++;
     }
-    return sum;
+    if(ksum == 0)
+      sum += k + 1;
+    else
+      sum += ksum;
+  }
+  return sum;
 }
 
 bool terminate(const individual&, const individual&)
