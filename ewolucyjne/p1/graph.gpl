@@ -1,0 +1,5 @@
+set yrange [0.0:1.1]
+set term postscript eps enhanced
+set output "a.eps"
+set autoscale
+plot    "a.out" using 1:2 title 'Average of probabilities' with lines

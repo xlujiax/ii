@@ -136,7 +136,10 @@ void print_result()
       cons = c;
   }
 
-  cout << "average: " << avg << "; longest almost-zeros sequence: " << cons << endl;
+  //  cout << "average: " << avg << "; longest almost-zeros sequence: " << cons << endl;
+
+  static int x = 0;
+  cout << x++ << ' ' << avg << endl;
 
   //cout << "resulting vector of probabilities:\n";
 
