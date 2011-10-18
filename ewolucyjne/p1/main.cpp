@@ -11,7 +11,7 @@ using namespace std;
 void print_result();
 
 int d = 1000;
-double theta = 1.0 / double(d*d);
+double theta = 1.0 / double(d*d*d);
 
 typedef vector<bool> individual;
 
