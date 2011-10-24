@@ -3,7 +3,7 @@ FILE=`zcat $1 | grep Googlebot | grep -o "\([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\)"`
 
 declare -A hash
 
-for ip in `echo $FILE | sort | uniq`
+for ip in `echo $FILE`
 do
     lookup=`echo ${hash[$ip]}`
     if [ -z $lookup ]
