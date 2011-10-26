@@ -112,14 +112,17 @@ pair<vector<int>, vector<int> > crossover(const vector<int>& p1, const vector<in
   vector<int> result1(p1.begin(), p1.end());
   vector<int> result2(p2.begin(), p2.end());
 
+  assert(p1.size() == n);
+  assert(p2.size() == n);
+  
   const int empty = -1;
   // range <r, s>
-  for(int i = r; r < s + 1; ++i)
+  for(int i = r; i < s + 1; ++i)
   {
     result1[i] = result2[i] = empty;
   }
   // generating result1 from <r,s> part of p2
-  for(int i = r; r < s + 1; ++i)
+  for(int i = r; i < s + 1; ++i)
   {
     int p_gene = p2[i];
     int proposed_gene = p_gene;
@@ -232,12 +235,7 @@ void population_crossover()
     if(r > s)
       swap(r, s);
 
-    cout << "a\n";
-    print_perm(*p1i);
-    print_perm(*p2i);
-
     pair<vector<int>, vector<int> > crossed = crossover(*p1i, *p2i, r, s);
-    cout << "a\n";
     population.insert(crossed.first);
     population.insert(crossed.second);
   }
