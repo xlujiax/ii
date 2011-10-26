@@ -128,6 +128,11 @@ pair<vector<int>, vector<int> > crossover(const vector<int>& p1, const vector<in
     int proposed_gene = p_gene;
     while(true)
     {
+      print_perm(result1);
+      print_perm(p1);
+      print_perm(p2);
+      cout << proposed_gene << endl;
+      
       if(result1.end() == find(result1.begin(), result1.end(), proposed_gene))
       {
         // no proposed_gene in result1
