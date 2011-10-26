@@ -150,7 +150,7 @@ pair<vector<int>, vector<int> > crossover(const vector<int>& p1, const vector<in
   }
 
   // generating result2 from <r,s> part of p1
-  for(int i = r; r < s + 1; ++i)
+  for(int i = r; i < s + 1; ++i)
   {
     int p_gene = p1[i];
     int proposed_gene = p_gene;
