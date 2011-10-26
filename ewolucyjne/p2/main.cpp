@@ -32,7 +32,7 @@ void print_data()
 
 bool is_perm(const vector<int>& p)
 {
-  vector<bool> is_in(n, true);
+  vector<bool> is_in(n, false);
   for(int i = 0; i < n; ++i)
     if(is_in[p[i]])
       return false;
@@ -222,8 +222,7 @@ void population_crossover()
   for(int i = 0; i < parents; ++i)
   {
     set<vector<int>, eval_cmp>::const_iterator p1i = population.begin();
-    int adv = rand() % ((int)population.size());
-    advance(p1i, adv);
+    advance(p1i, rand() % population.size());
 
     set<vector<int>, eval_cmp>::const_iterator p2i = population.begin();
     advance(p2i, rand() % population.size());
@@ -233,7 +232,12 @@ void population_crossover()
     if(r > s)
       swap(r, s);
 
+    cout << "a\n";
+    print_perm(*p1i);
+    print_perm(*p2i);
+
     pair<vector<int>, vector<int> > crossed = crossover(*p1i, *p2i, r, s);
+    cout << "a\n";
     population.insert(crossed.first);
     population.insert(crossed.second);
   }
@@ -257,6 +261,7 @@ void sga()
   fill_population();
   while(!termination_condition())
   {
+    cout << "iteration: " << iteration << endl;
     population_crossover();
     population_mutation();
     population_replacement();
