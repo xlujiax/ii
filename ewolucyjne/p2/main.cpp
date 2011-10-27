@@ -12,9 +12,14 @@ int a[MAX_N][MAX_N];
 int b[MAX_N][MAX_N];
 int n;
 
+double uniform_deviate ( int seed )
+{
+  return seed * ( 1.0 / ( RAND_MAX + 1.0 ) );
+}
+
 float uniform_random()
 {
-  return (float)rand() / RAND_MAX;
+  return uniform_deviate(rand());
 }
 
 void print_data()
@@ -221,6 +226,9 @@ bool termination_condition()
 
 void population_replacement()
 {
+  cout << "***" << endl;
+  cout << population.size() << endl;
+  
   // first one in population is the weakest one
   float Fmin = eval(*population.begin());
   float Fsum = 0;
@@ -242,14 +250,21 @@ void population_replacement()
      }
      //assert(0.0 <= adaptation && adaptation <= 1.0);
      if(uniform_random() <= adaptation)
+     {
+       cout << "ERASE!\n";
        population.erase(i);
+     }
 
      assert(population_size <= population.size());
    }
 
+   cout << population.size() << endl;
+
    // if after erasing with adaptation method there are still too many entities
    while(population_size < population.size())
      population.erase(population.begin());
+
+   cout << population.size() << endl;
 }
 
 void population_crossover()
