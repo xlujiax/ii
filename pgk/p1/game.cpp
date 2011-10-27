@@ -34,7 +34,6 @@ void game::init()
   {
     const float margin = 10.0;
     const float width = 640;
-    const float height = 480;
     
     board1.pos = vec(margin, margin);
     board1.size = vec(width - 2*margin);
