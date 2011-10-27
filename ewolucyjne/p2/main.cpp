@@ -12,6 +12,11 @@ int a[MAX_N][MAX_N];
 int b[MAX_N][MAX_N];
 int n;
 
+float uniform_random()
+{
+  return (float)rand() / RAND_MAX;
+}
+
 void print_data()
 {
   cout << n << '\n';
@@ -187,10 +192,12 @@ void read_input()
 
 // SGA
 set<vector<int>, eval_cmp> population;
-int population_size = 10;
-int parents = 5;
+const int population_size = 100;
+const int parents = 50;
+const int max_iter = 10000;
+const float mutation_prob = 0.01;
+
 int iteration = 0;
-float mutation_prob = 0.01;
 
 void fill_population()
 {
@@ -209,14 +216,40 @@ void print_population()
 
 bool termination_condition()
 {
-  return iteration > 10000;
+  return iteration > max_iter;
 }
 
 void population_replacement()
 {
-  assert(population_size < population.size());
-  while(population_size < population.size())
-    population.erase(population.begin());
+  // first one in population is the weakest one
+  float Fmin = eval(*population.begin());
+  float Fsum = 0;
+  for(set<vector<int>, eval_cmp>::iterator i = population.begin(); i != population.end(); ++i)
+    Fsum += eval(*i) - Fmin;
+
+   for(set<vector<int>, eval_cmp>::iterator i = population.begin(); i != population.end(); ++i)
+   {
+     float adaptation = (eval(*i) - Fmin) / Fsum;
+     if(0.0 > adaptation)
+     {
+       cout << "ad: " << adaptation << endl;
+       adaptation = 0;
+     }
+     else if(adaptation > 1.0)
+     {
+       cout << "ad: " << adaptation << endl;
+       adaptation = 1.0;
+     }
+     //assert(0.0 <= adaptation && adaptation <= 1.0);
+     if(uniform_random() <= adaptation)
+       population.erase(i);
+
+     assert(population_size <= population.size());
+   }
+
+   // if after erasing with adaptation method there are still too many entities
+   while(population_size < population.size())
+     population.erase(population.begin());
 }
 
 void population_crossover()
@@ -249,7 +282,7 @@ void population_mutation()
     int s = rand() % n;
     if(r > s)
       swap(r, s);
-    if(((float)rand() / RAND_MAX) < mutation_prob)
+    if(uniform_random() < mutation_prob)
       population.insert(mutation(*i, r, s));
   }
 }
