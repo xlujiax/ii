@@ -128,11 +128,6 @@ pair<vector<int>, vector<int> > crossover(const vector<int>& p1, const vector<in
     int proposed_gene = p_gene;
     while(true)
     {
-      print_perm(result1);
-      print_perm(p1);
-      print_perm(p2);
-      cout << proposed_gene << endl;
-      
       if(result1.end() == find(result1.begin(), result1.end(), proposed_gene))
       {
         // no proposed_gene in result1
@@ -144,7 +139,8 @@ pair<vector<int>, vector<int> > crossover(const vector<int>& p1, const vector<in
         // proposed_gene in result already
         // we should find new value
 
-        proposed_gene = p1[pos_in_perm(p2, p1[i])];
+        //proposed_gene = p1[pos_in_perm(p2, p1[i])];
+        proposed_gene = p2[pos_in_perm(p1, proposed_gene)];
       }
     }
   }
@@ -167,7 +163,8 @@ pair<vector<int>, vector<int> > crossover(const vector<int>& p1, const vector<in
         // proposed_gene in result already
         // we should find new value
 
-        proposed_gene = p2[pos_in_perm(p1, p2[i])];
+        //proposed_gene = p2[pos_in_perm(p1, p2[i])];
+	proposed_gene = p1[pos_in_perm(p2, proposed_gene)];
       }
     }
   }
@@ -264,7 +261,7 @@ void sga()
   fill_population();
   while(!termination_condition())
   {
-    cout << "iteration: " << iteration << endl;
+    //cout << "iteration: " << iteration << endl;
     population_crossover();
     population_mutation();
     population_replacement();
