@@ -66,7 +66,10 @@ void obj_format::read_from_file(const char* filename)
 	};
        
 	nvs.push_back(vx);
-	fs.push_back(nvs.size() - 1); // index of vx in nvs
+	fs.push_back(
+	  (nvs.size() - 1)  // index of vx in nvs
+	  + 1              // + 1 due to indexing from 1 in OBJ
+		     );
       }
     }
   }
