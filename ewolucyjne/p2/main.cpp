@@ -124,7 +124,7 @@ pair<vector<int>, vector<int> > crossover(const vector<int>& p1, const vector<in
 
   assert(p1.size() == n);
   assert(p2.size() == n);
-  
+
   const int empty = -1;
   // range <r, s>
   for(int i = r; i < s + 1; ++i)
@@ -172,7 +172,7 @@ pair<vector<int>, vector<int> > crossover(const vector<int>& p1, const vector<in
         // proposed_gene in result already
         // we should find new value
 
-	proposed_gene = p1[pos_in_perm(p2, proposed_gene)];
+        proposed_gene = p1[pos_in_perm(p2, proposed_gene)];
       }
     }
   }
@@ -226,45 +226,36 @@ bool termination_condition()
 
 void population_replacement()
 {
-  cout << "***" << endl;
-  cout << population.size() << endl;
-  
   // first one in population is the weakest one
   float Fmin = eval(*population.begin());
   float Fsum = 0;
   for(set<vector<int>, eval_cmp>::iterator i = population.begin(); i != population.end(); ++i)
     Fsum += eval(*i) - Fmin;
 
-   for(set<vector<int>, eval_cmp>::iterator i = population.begin(); i != population.end(); ++i)
-   {
-     float adaptation = (eval(*i) - Fmin) / Fsum;
-     if(0.0 > adaptation)
-     {
-       cout << "ad: " << adaptation << endl;
-       adaptation = 0;
-     }
-     else if(adaptation > 1.0)
-     {
-       cout << "ad: " << adaptation << endl;
-       adaptation = 1.0;
-     }
-     //assert(0.0 <= adaptation && adaptation <= 1.0);
-     if(uniform_random() <= adaptation)
-     {
-       cout << "ERASE!\n";
-       population.erase(i);
-     }
+  if(Fsum > 0.0)
+  {
+    for(set<vector<int>, eval_cmp>::iterator i = population.begin(); i != population.end(); ++i)
+    {
+      float adaptation = (eval(*i) - Fmin) / Fsum;
+      assert(0.0 <= adaptation && adaptation <= 1.0);
+      if(uniform_random() <= adaptation)
+      {
+        population.erase(i);
+      }
 
-     assert(population_size <= population.size());
-   }
+      assert(population_size <= population.size());
+    }
+  }
+  else
+  {
+    // unimplemented
+    // every one in population is a copy of the same entity
+    assert(false);
+  }
 
-   cout << population.size() << endl;
-
-   // if after erasing with adaptation method there are still too many entities
-   while(population_size < population.size())
-     population.erase(population.begin());
-
-   cout << population.size() << endl;
+  // if after erasing with adaptation method there are still too many entities
+  while(population_size < population.size())
+    population.erase(population.begin());
 }
 
 void population_crossover()
