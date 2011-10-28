@@ -5,6 +5,7 @@
 #include <string>
 #include <cassert>
 #include <vector>
+#include <map>
 
 struct obj_format
 {
