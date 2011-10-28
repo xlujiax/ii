@@ -71,7 +71,8 @@ void obj_format::read_from_file(const char* filename)
     }
   }
 
-  num_vertices = vs.size();
+  // problem: now we do not share vertices, each one has its own copy in all its calls
+  num_vertices = nvs.size();
   vertices = &nvs[0];
   
   num_indices = fs.size();
