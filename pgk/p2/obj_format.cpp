@@ -9,6 +9,11 @@ struct vertex
   float u, v;       // texture
 };
 
+struct vec3
+{
+  float x, y, z;
+};
+
 GLuint vertices_vbo;
 GLuint indices_vbo;
 
@@ -19,59 +24,67 @@ GLuint* indices;
 
 void obj_format::read_from_file(const char* filename)
 {
-  num_vertices = 8;
-  vertices = new vertex[num_vertices];
-  vertices[0] = { -1, -1, -1, -1, -1, -1 };
-  vertices[1] = {  1, -1, -1,  1, -1, -1 };
-  vertices[2] = {  1,  1, -1,  1,  1, -1 };
-  vertices[3] = { -1,  1, -1, -1,  1, -1 };
-  vertices[4] = { -1, -1,  1, -1, -1,  1 };
-  vertices[5] = {  1, -1,  1,  1, -1,  1 };
-  vertices[6] = {  1,  1,  1,  1,  1,  1 };
-  vertices[7] = { -1,  1,  1, -1,  1,  1 };
+  std::vector<vec3> vs; // vertices
+  std::vector<vec3> ns; // normals
+  std::vector<vertex> nvs; // full vertices
+  std::vector<GLuint> fs; // faces (consecutive fours)
 
-  num_indices = 6;
-  indices = new GLuint[num_indices*4];
-  indices[0]  = 0;
-  indices[1]  = 1;
-  indices[2]  = 2;
-  indices[3]  = 3;
+  FILE* model_file = fopen(filename, "r");
+  const int line_len = 100;
+  char line[line_len];
+  while(fgets(line, line_len, model_file) != NULL)
+  {
+    if(line[0] == 'v' && line[1] == ' ')
+    {
+      float x,y,z;
+      sscanf(line, "v %f %f %f", &x, &y, &z);
+      vs.push_back({ x, y, z });
+    }
+    else if(line[0] == 'v' && line[1] == 'n' && line[2] == ' ')
+    {
+      float x,y,z;
+      sscanf(line, "v %f %f %f", &x, &y, &z);
+      ns.push_back({ x, y, z });
+    }
+    else if(line[0] == 'f' && line[1] == ' ')
+    {
+      int v[4];
+      int n[4];
 
-  indices[4]  = 4;
-  indices[5]  = 5;
-  indices[6]  = 6;
-  indices[7]  = 7;
+      sscanf(line, "f %d//%d %d//%d %d//%d %d//%d",
+	&v[0], &n[0],
+	&v[1], &n[1],
+	&v[2], &n[2],
+	&v[3], &n[3]
+	     );
+      for(int i = 0; i < 4; ++i)
+      {
+	printf("f %d // %d\n", v[i], n[i]);
+	vertex vx = {
+	  vs[v[i]].x, vs[v[i]].y, vs[v[i]].z,
+	  ns[n[i]].x, ns[n[i]].y, ns[n[i]].z,
+	  0, 0
+	};
+       
+	nvs.push_back(vx);
+	fs.push_back(nvs.size() - 1); // index of vx in nvs
+      }
+    }
+  }
 
-  indices[8]  = 0;
-  indices[9]  = 1;
-  indices[10] = 5;
-  indices[11] = 4;
-
-  indices[12] = 0;
-  indices[13] = 3;
-  indices[14] = 7;
-  indices[15] = 4;
-
-  indices[16] = 3;
-  indices[17] = 2;
-  indices[18] = 6;
-  indices[19] = 7;
-
-  indices[20] = 1;
-  indices[21] = 2;
-  indices[22] = 6;
-  indices[23] = 5;
+  num_vertices = vs.size();
+  vertices = &nvs[0];
+  
+  num_indices = fs.size();
+  indices = &fs[0];
 
   glGenBuffers(1, &vertices_vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vertices_vbo);
   glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(vertex), vertices, GL_STATIC_DRAW);
-  delete []vertices;
 
   glGenBuffers(1, &indices_vbo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_vbo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, num_indices * 4 * sizeof(GLuint), indices, GL_STATIC_DRAW);
-
-  delete []indices;
 }
 
 void obj_format::draw() const

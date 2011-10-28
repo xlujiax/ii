@@ -2,7 +2,9 @@
 
 #include <GL/glew.h>
 #include <cstdio>
+#include <string>
 #include <cassert>
+#include <vector>
 
 struct obj_format
 {

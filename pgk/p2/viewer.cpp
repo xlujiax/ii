@@ -2,7 +2,7 @@
 
 void viewer::init()
 {
-  model.read_from_file("NoSuchFile.obj");
+  model.read_from_file("figure.obj");
 }
 
 void viewer::animate(float) {}
