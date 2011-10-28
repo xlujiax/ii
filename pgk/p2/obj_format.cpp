@@ -97,7 +97,7 @@ void obj_format::draw() const
   // draw 6 quads using offset of index array
   glDrawElements(GL_QUADS, 24, GL_UNSIGNED_BYTE, 0);
 
-  glDisableClientState(GL_VERTEX_ARRAY);            // deactivate vertex array
+  glDisableClientState(GL_INDEX_ARRAY);            // deactivate vertex array
 
   // bind with 0, so, switch back to normal pointer operation
   glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
