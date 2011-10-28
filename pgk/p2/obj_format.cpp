@@ -6,12 +6,14 @@ struct vertex
 {
   float x, y, z;
   float nx, ny, nz; // normal
+  float u, v;       // texture
 };
 
 GLuint vertices_vbo;
 GLuint indices_vbo;
 
 GLuint num_vertices;
+GLuint num_indices;
 vertex* vertices;
 GLuint* indices;
 
@@ -28,7 +30,8 @@ void obj_format::read_from_file(const char* filename)
   vertices[6] = {  1,  1,  1,  1,  1,  1 };
   vertices[7] = { -1,  1,  1, -1,  1,  1 };
 
-  indices = new GLuint[6*4];
+  num_indices = 6;
+  indices = new GLuint[num_indices*4];
   indices[0]  = 0;
   indices[1]  = 1;
   indices[2]  = 2;
@@ -66,7 +69,7 @@ void obj_format::read_from_file(const char* filename)
 
   glGenBuffers(1, &indices_vbo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_vbo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * 4 * sizeof(GLuint), indices, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, num_indices * 4 * sizeof(GLuint), indices, GL_STATIC_DRAW);
 
   delete []indices;
 }
@@ -80,7 +83,7 @@ void obj_format::draw() const
   glNormalPointer(GL_FLOAT, sizeof(vertex), BUFFER_OFFSET(3 * sizeof(float)));
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_vbo);
-  glDrawElements(GL_QUADS, 24, GL_UNSIGNED_BYTE, 0);
+  glDrawElements(GL_QUADS, num_indices * 4, GL_UNSIGNED_BYTE, 0);
 
   glDisableClientState(GL_INDEX_ARRAY);
 
