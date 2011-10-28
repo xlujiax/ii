@@ -1,46 +1,32 @@
 #include "obj_format.hpp"
 
-GLuint vboId1;
-GLuint vboId2;
-GLuint vCount;
-GLfloat* vertices;
+#define BUFFER_OFFSET(i) ((char *)NULL + (i))
+
+struct vertex
+{
+  float x, y, z;
+  float nx, ny, nz; // normal
+};
+
+GLuint vertices_vbo;
+GLuint indices_vbo;
+
+GLuint num_vertices;
+vertex* vertices;
 GLuint* indices;
 
 void obj_format::read_from_file(const char* filename)
 {
-  vCount = 8;
-  vertices = new GLfloat[vCount*3];
-  vertices[0] = -1;
-  vertices[1] = -1;
-  vertices[2] = -1;
-  
-  vertices[3] =  1;
-  vertices[4] = -1;
-  vertices[5] = -1;
-  
-  vertices[6] =  1;
-  vertices[7] =  1;
-  vertices[8] = -1;
-  
-  vertices[9] = -1;
-  vertices[10] =  1;
-  vertices[11] = -1;
-  
-  vertices[12] = -1;
-  vertices[13] = -1;
-  vertices[14] =  1;
-  
-  vertices[15] =  1;
-  vertices[16] = -1;
-  vertices[17] =  1;
-  
-  vertices[18] =  1;
-  vertices[19] =  1;
-  vertices[20] =  1;
-  
-  vertices[21] = -1;
-  vertices[22] =  1;
-  vertices[23] =  1;
+  num_vertices = 8;
+  vertices = new vertex[num_vertices];
+  vertices[0] = { -1, -1, -1, -1, -1, -1 };
+  vertices[1] = {  1, -1, -1,  1, -1, -1 };
+  vertices[2] = {  1,  1, -1,  1,  1, -1 };
+  vertices[3] = { -1,  1, -1, -1,  1, -1 };
+  vertices[4] = { -1, -1,  1, -1, -1,  1 };
+  vertices[5] = {  1, -1,  1,  1, -1,  1 };
+  vertices[6] = {  1,  1,  1,  1,  1,  1 };
+  vertices[7] = { -1,  1,  1, -1,  1,  1 };
 
   indices = new GLuint[6*4];
   indices[0]  = 0;
@@ -73,31 +59,28 @@ void obj_format::read_from_file(const char* filename)
   indices[22] = 6;
   indices[23] = 5;
 
-  glGenBuffersARB(1, &vboId1);
-  glBindBufferARB(GL_ARRAY_BUFFER_ARB, vboId1);
-  glBufferDataARB(GL_ARRAY_BUFFER_ARB, 8 * 3 * sizeof(float), vertices, GL_STATIC_DRAW_ARB);
+  glGenBuffersARB(1, &vertices_vbo);
+  glBindBufferARB(GL_ARRAY_BUFFER_ARB, vertices_vbo);
+  glBufferDataARB(GL_ARRAY_BUFFER_ARB, 8 * sizeof(vertex), vertices, GL_STATIC_DRAW_ARB);
   delete []vertices;
 
-  glGenBuffersARB(1, &vboId1);
-  glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, vboId1);
+  glGenBuffersARB(1, &indices_vbo);
+  glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, indices_vbo);
   glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 6 * 4 * sizeof(GLuint), indices, GL_STATIC_DRAW_ARB);
   delete []indices;
 }
 
 void obj_format::draw() const
 {
-  // bind VBOs for vertex array and index array
-  glBindBufferARB(GL_ARRAY_BUFFER_ARB, vboId1);         // for vertex coordinates
-  glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, vboId2); // for indices
+  glBindBufferARB(GL_ARRAY_BUFFER_ARB, vertices_vbo);
+  glEnableClientState(GL_INDEX_ARRAY);
+  glVertexPointer(3, GL_FLOAT, sizeof(vertex), BUFFER_OFFSET(0));
+  glNormalPointer(3, sizeof(vertex), BUFFER_OFFSET(3 * sizeof(float)));
 
-  // do same as vertex array except pointer
-  glEnableClientState(GL_INDEX_ARRAY);             // activate vertex coords array
-  glVertexPointer(3, GL_FLOAT, 0, 0);               // last param is offset, not ptr
-
-  // draw 6 quads using offset of index array
+  glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, indices_vbo);
   glDrawElements(GL_QUADS, 24, GL_UNSIGNED_BYTE, 0);
 
-  glDisableClientState(GL_INDEX_ARRAY);            // deactivate vertex array
+  glDisableClientState(GL_INDEX_ARRAY);
 
   // bind with 0, so, switch back to normal pointer operation
   glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
