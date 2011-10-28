@@ -43,7 +43,7 @@ void obj_format::read_from_file(const char* filename)
     else if(line[0] == 'v' && line[1] == 'n' && line[2] == ' ')
     {
       float x,y,z;
-      sscanf(line, "v %f %f %f", &x, &y, &z);
+      sscanf(line, "vn %f %f %f", &x, &y, &z);
       ns.push_back({ x, y, z });
     }
     else if(line[0] == 'f' && line[1] == ' ')
@@ -59,7 +59,6 @@ void obj_format::read_from_file(const char* filename)
 	     );
       for(int i = 0; i < 4; ++i)
       {
-	printf("f %d // %d\n", v[i], n[i]);
 	vertex vx = {
 	  vs[v[i]].x, vs[v[i]].y, vs[v[i]].z,
 	  ns[n[i]].x, ns[n[i]].y, ns[n[i]].z,
@@ -80,11 +79,11 @@ void obj_format::read_from_file(const char* filename)
 
   glGenBuffers(1, &vertices_vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vertices_vbo);
-  glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(vertex), vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, num_vertices * sizeof(vertex), vertices, GL_STATIC_DRAW);
 
   glGenBuffers(1, &indices_vbo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_vbo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, num_indices * 4 * sizeof(GLuint), indices, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, num_indices * sizeof(GLuint), indices, GL_STATIC_DRAW);
 }
 
 void obj_format::draw() const
@@ -98,7 +97,7 @@ void obj_format::draw() const
   glNormalPointer(GL_FLOAT, sizeof(vertex), BUFFER_OFFSET(3 * sizeof(float)));
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_vbo);
-  glDrawElements(GL_QUADS, num_indices * 4, GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_QUADS, num_indices, GL_UNSIGNED_INT, 0);
 
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_NORMAL_ARRAY);
