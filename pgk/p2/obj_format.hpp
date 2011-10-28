@@ -2,6 +2,7 @@
 
 #include <GL/glew.h>
 #include <cstdio>
+#include <cassert>
 
 struct obj_format
 {

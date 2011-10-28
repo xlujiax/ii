@@ -67,6 +67,7 @@ void obj_format::read_from_file(const char* filename)
   glGenBuffers(1, &indices_vbo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_vbo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * 4 * sizeof(GLuint), indices, GL_STATIC_DRAW);
+
   delete []indices;
 }
 
@@ -74,15 +75,17 @@ void obj_format::draw() const
 {
   glBindBuffer(GL_ARRAY_BUFFER, vertices_vbo);
   glEnableClientState(GL_INDEX_ARRAY);
+
   glVertexPointer(3, GL_FLOAT, sizeof(vertex), BUFFER_OFFSET(0));
-  glNormalPointer(3, sizeof(vertex), BUFFER_OFFSET(3 * sizeof(float)));
+  glNormalPointer(GL_FLOAT, sizeof(vertex), BUFFER_OFFSET(3 * sizeof(float)));
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_vbo);
   glDrawElements(GL_QUADS, 24, GL_UNSIGNED_BYTE, 0);
 
   glDisableClientState(GL_INDEX_ARRAY);
 
-  // bind with 0, so, switch back to normal pointer operation
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+  assert(glGetError() == GL_NO_ERROR);
 }
