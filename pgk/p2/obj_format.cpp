@@ -83,7 +83,7 @@ void obj_format::draw() const
   glNormalPointer(GL_FLOAT, sizeof(vertex), BUFFER_OFFSET(3 * sizeof(float)));
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_vbo);
-  glDrawElements(GL_QUADS, num_indices * 4, GL_UNSIGNED_BYTE, 0);
+  glDrawElements(GL_QUADS, num_indices * 4, GL_UNSIGNED_INT, 0);
 
   glDisableClientState(GL_INDEX_ARRAY);
 
