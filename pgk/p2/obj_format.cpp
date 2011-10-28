@@ -60,16 +60,13 @@ void obj_format::read_from_file(const char* filename)
       for(int i = 0; i < 4; ++i)
       {
 	vertex vx = {
-	  vs[v[i]].x, vs[v[i]].y, vs[v[i]].z,
-	  ns[n[i]].x, ns[n[i]].y, ns[n[i]].z,
+	  vs[v[i] - 1].x, vs[v[i] - 1].y, vs[v[i] - 1].z,
+	  ns[n[i] - 1].x, ns[n[i] - 1].y, ns[n[i] - 1].z,
 	  0, 0
 	};
        
 	nvs.push_back(vx);
-	fs.push_back(
-	  (nvs.size() - 1)  // index of vx in nvs
-	  + 1              // + 1 due to indexing from 1 in OBJ
-		     );
+	fs.push_back(nvs.size() - 1);
       }
     }
   }
