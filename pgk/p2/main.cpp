@@ -41,6 +41,8 @@ int main(int argc, char* argv[])
     glRotatef(-20, 0.0, 0.0, 1.0);
 
     glewInit();
+    
+    glShadeModel(GL_FLAT);
   };
 
   if(!wnd.setup(640, 480))
