@@ -21,13 +21,13 @@ GLuint num_vertices;
 GLuint num_indices;
 vertex* vertices;
 GLuint* indices;
+std::vector<vertex> nvs; // full vertices
+std::vector<GLuint> fs; // faces (consecutive fours)
 
 void obj_format::read_from_file(const char* filename)
 {
   std::vector<vec3> vs; // vertices
   std::vector<vec3> ns; // normals
-  std::vector<vertex> nvs; // full vertices
-  std::vector<GLuint> fs; // faces (consecutive fours)
 
   FILE* model_file = fopen(filename, "r");
   const int line_len = 100;
