@@ -60,6 +60,13 @@ int main(int argc, char* argv[])
     main_viewer.draw();
 
     SDL_GL_SwapBuffers();
+
+    const int gl_error = glGetError();
+    if(gl_error != GL_NO_ERROR)
+    {
+      printf("OpenGL error (main.cpp): %s\n", gluErrorString(gl_error));
+      exit(0);
+    }
   };
 
   wnd.main_loop();
