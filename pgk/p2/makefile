@@ -1,4 +1,4 @@
-opengl_libs = -lGL -lGLU
+opengl_libs = -lGL -lGLU -lGLEW
 sdl_libs = `sdl-config --cflags --libs`
 error_flags = -Wall -Werror
 std_flag = -std=c++0x
