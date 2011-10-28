@@ -86,27 +86,20 @@ void obj_format::read_from_file(const char* filename)
 
 void obj_format::draw() const
 {
-  printf("step0\n");
-
   // bind VBOs for vertex array and index array
   glBindBufferARB(GL_ARRAY_BUFFER_ARB, vboId1);         // for vertex coordinates
   glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, vboId2); // for indices
 
-  printf("step2\n");
   // do same as vertex array except pointer
   glEnableClientState(GL_INDEX_ARRAY);             // activate vertex coords array
   glVertexPointer(3, GL_FLOAT, 0, 0);               // last param is offset, not ptr
 
-  printf("step3\n");
   // draw 6 quads using offset of index array
   glDrawElements(GL_QUADS, 24, GL_UNSIGNED_BYTE, 0);
 
-  printf("step4\n");
   glDisableClientState(GL_VERTEX_ARRAY);            // deactivate vertex array
 
-  printf("step5\n");
   // bind with 0, so, switch back to normal pointer operation
   glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
   glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 0);
-  printf("step6\n");
 }
