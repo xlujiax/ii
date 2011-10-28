@@ -250,6 +250,7 @@ void population_replacement()
   {
     // unimplemented
     // every one in population is a copy of the same entity
+    // or just all have the same cost
     assert(false);
   }
 
