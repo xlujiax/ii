@@ -77,9 +77,11 @@ void obj_format::read_from_file(const char* filename)
 void obj_format::draw() const
 {
   glBindBuffer(GL_ARRAY_BUFFER, vertices_vbo);
-  glEnableClientState(GL_INDEX_ARRAY);
 
+  glEnableClientState(GL_VERTEX_ARRAY);
   glVertexPointer(3, GL_FLOAT, sizeof(vertex), BUFFER_OFFSET(0));
+
+  glEnableClientState(GL_NORMAL_ARRAY);
   glNormalPointer(GL_FLOAT, sizeof(vertex), BUFFER_OFFSET(3 * sizeof(float)));
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_vbo);
