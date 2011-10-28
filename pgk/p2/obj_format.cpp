@@ -59,30 +59,30 @@ void obj_format::read_from_file(const char* filename)
   indices[22] = 6;
   indices[23] = 5;
 
-  glGenBuffersARB(1, &vertices_vbo);
-  glBindBufferARB(GL_ARRAY_BUFFER_ARB, vertices_vbo);
-  glBufferDataARB(GL_ARRAY_BUFFER_ARB, 8 * sizeof(vertex), vertices, GL_STATIC_DRAW_ARB);
+  glGenBuffers(1, &vertices_vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, vertices_vbo);
+  glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(vertex), vertices, GL_STATIC_DRAW);
   delete []vertices;
 
-  glGenBuffersARB(1, &indices_vbo);
-  glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, indices_vbo);
-  glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 6 * 4 * sizeof(GLuint), indices, GL_STATIC_DRAW_ARB);
+  glGenBuffers(1, &indices_vbo);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_vbo);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * 4 * sizeof(GLuint), indices, GL_STATIC_DRAW);
   delete []indices;
 }
 
 void obj_format::draw() const
 {
-  glBindBufferARB(GL_ARRAY_BUFFER_ARB, vertices_vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, vertices_vbo);
   glEnableClientState(GL_INDEX_ARRAY);
   glVertexPointer(3, GL_FLOAT, sizeof(vertex), BUFFER_OFFSET(0));
   glNormalPointer(3, sizeof(vertex), BUFFER_OFFSET(3 * sizeof(float)));
 
-  glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, indices_vbo);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_vbo);
   glDrawElements(GL_QUADS, 24, GL_UNSIGNED_BYTE, 0);
 
   glDisableClientState(GL_INDEX_ARRAY);
 
   // bind with 0, so, switch back to normal pointer operation
-  glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
-  glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
