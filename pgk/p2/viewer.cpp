@@ -29,12 +29,12 @@ void viewer::draw() const
 
 void viewer::mousewheelup()
 {
-  zoom += 0.1;
+  zoom += 0.5;
 }
 
 void viewer::mousewheeldown()
 {
-  zoom -= 0.1;
+  zoom -= 0.5;
 }
 
 void viewer::mouseup()
