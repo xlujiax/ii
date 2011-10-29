@@ -31,14 +31,10 @@ int main(int argc, char* argv[])
       10.0               // z far
 		   );
     glMatrixMode(GL_MODELVIEW);
-    gluLookAt(0.0, 0.0, 5.0,  // eye
+    gluLookAt(-2.0, 3.0, 7.0,  // eye
       0.0, 0.0, 0.0,          // at
       0.0, 1.0, 0.0           // up is in positive Y direction
 	      );
-
-    glTranslatef(0.0, 0.0, -1.0);
-    glRotatef(60, 1.0, 0.0, 0.0);
-    glRotatef(-20, 0.0, 0.0, 1.0);
 
     glewInit();
     
