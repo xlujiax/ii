@@ -48,8 +48,8 @@ int main(int argc, char* argv[])
   frame_timer.init();
   main_viewer.init();
 
-  wnd.keydown = [&](const char k) {  };
-  wnd.keyup = [&](const char k) {  };
+  wnd.keydown = [&](const char k) { main_viewer.keydown(k); };
+  wnd.keyup = [&](const char k) { main_viewer.keyup(k); };
   
   wnd.mouseup = [&]() { main_viewer.mouseup(); };
   wnd.mousedown = [&]() { main_viewer.mousedown(); };
