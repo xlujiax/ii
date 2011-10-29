@@ -31,6 +31,7 @@ int main(int argc, char* argv[])
       10.0               // z far
 		   );
     glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
     gluLookAt(0.0, 0.0, 5.0,  // eye
       0.0, 0.0, 0.0,          // at
       0.0, 1.0, 0.0           // up is in positive Y direction
