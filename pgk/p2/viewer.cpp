@@ -5,10 +5,10 @@ void viewer::init()
   model.read_from_file("figure.obj");
   pressed = false;
 
-  zoom = 0.0;
-  r1 = 0.0;
-  r2 = 0.0;
-  r3 = 0.0;
+  zoom = -4.0;
+  r1 = 50.0;
+  r2 = -30.0;
+  r3 = 11.0;
 }
 
 void viewer::animate(float)

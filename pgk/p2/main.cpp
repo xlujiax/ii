@@ -13,12 +13,32 @@ int main(int argc, char* argv[])
   window wnd;
 
   wnd.setup_opengl = [](const int width, const int height) {
-    GLfloat light_diffuse[] = {0.8, 0.5, 0.5, 1.0};
-    GLfloat light_position[] = {1.0, 1.0, 1.0, 0.0};
+    {
+      GLfloat light_diffuse[] = {0.8, 0.5, 0.5, 1.0};
+      GLfloat light_position[] = {1.0, 1.0, 1.0, 0.0};
 
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-    glEnable(GL_LIGHT0);
+      glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+      glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+      glEnable(GL_LIGHT0);
+    }
+    
+    {
+      GLfloat light_diffuse[] = {0.3, 0.5, 0.5, 1.0};
+      GLfloat light_position[] = {1.0, -1.0, -1.0, 0.0};
+
+      glLightfv(GL_LIGHT1, GL_DIFFUSE, light_diffuse);
+      glLightfv(GL_LIGHT1, GL_POSITION, light_position);
+      glEnable(GL_LIGHT1);
+    }
+    
+    {
+      GLfloat light_diffuse[] = {0.5, 0.5, 0.5, 1.0};
+      GLfloat light_position[] = {-5.0, -5.0, -5.0, 0.0};
+
+      glLightfv(GL_LIGHT2, GL_DIFFUSE, light_diffuse);
+      glLightfv(GL_LIGHT2, GL_POSITION, light_position);
+      glEnable(GL_LIGHT2);
+    }
     glEnable(GL_LIGHTING);
 
     glEnable(GL_DEPTH_TEST);
@@ -28,7 +48,7 @@ int main(int argc, char* argv[])
     gluPerspective(40.0, // field of view in degrees
       4.0 / 3.0,         // aspect ratio
       1.0,               // z near
-      10.0               // z far
+      50.0               // z far
 		   );
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
