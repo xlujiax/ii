@@ -13,16 +13,14 @@ int main(int argc, char* argv[])
   window wnd;
 
   wnd.setup_opengl = [](const int width, const int height) {
-    GLfloat light_diffuse[] = {0.8, 0.5, 0.5, 1.0};  /* Red diffuse light. */
-    GLfloat light_position[] = {1.0, 1.0, 1.0, 0.0};  /* Infinite light location. */
+    GLfloat light_diffuse[] = {0.8, 0.5, 0.5, 1.0};
+    GLfloat light_position[] = {1.0, 1.0, 1.0, 0.0};
 
-    /* Enable a single OpenGL light. */
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
     glEnable(GL_LIGHT0);
     glEnable(GL_LIGHTING);
 
-    /* Use depth buffering for hidden surface elimination. */
     glEnable(GL_DEPTH_TEST);
 
     glViewport(0, 0, width, height);
@@ -37,7 +35,7 @@ int main(int argc, char* argv[])
       0.0, 0.0, 0.0,          // at
       0.0, 1.0, 0.0           // up is in positive Y direction
 	      );
-    /* Adjust cube position to be asthetic angle. */
+
     glTranslatef(0.0, 0.0, -1.0);
     glRotatef(60, 1.0, 0.0, 0.0);
     glRotatef(-20, 0.0, 0.0, 1.0);
