@@ -9,7 +9,18 @@ void viewer::init()
 void viewer::animate(float) {}
 void viewer::draw() const
 {
+  const float zoom = 0.0;
+  const float r1 = 0;
+  const float r2 = 0;
+  const float r3 = 0;
+  glPushMatrix();
+  glTranslatef(0.0, 0.0, zoom);
+  glRotatef(r1, 1.0, 0.0, 0.0);
+  glRotatef(r2, 0.0, 1.0, 0.0);
+  glRotatef(r3, 0.0, 0.0, 1.0);
+
   model.draw();
+  glPopMatrix();
 }
 
 void viewer::mouseup()

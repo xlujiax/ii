@@ -37,10 +37,6 @@ int main(int argc, char* argv[])
       0.0, 1.0, 0.0           // up is in positive Y direction
 	      );
 
-    glTranslatef(0.0, 0.0, -1.0);
-    glRotatef(60, 1.0, 0.0, 0.0);
-    glRotatef(-20, 0.0, 0.0, 1.0);
-
     glewInit();
     
     glShadeModel(GL_FLAT);
