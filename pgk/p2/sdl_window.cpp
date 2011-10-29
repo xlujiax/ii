@@ -1,7 +1,10 @@
 #include "sdl_window.hpp"
 
-bool window::setup(const int width, const int height)
+bool window::setup(const int width_param, const int height_param)
 {
+  width = width_param;
+  height = height_param;
+  
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cout << "Couldn't initialize SDL: "
 	      << SDL_GetError() << std::endl;
@@ -34,8 +37,10 @@ bool window::setup(const int width, const int height)
 }
 
 
-void window::handle_resize(const int width, const int height)
+void window::handle_resize(const int width_param, const int height_param)
 {
+  width = width_param;
+  height = height_param;
   SDL_SetVideoMode(width, height, get_bits_per_pixel(), SDL_OPENGL | SDL_RESIZABLE);
 
   glViewport(0, 0, width, height);
@@ -84,10 +89,23 @@ void window::main_loop()
 	    mouseup();
 	  break;
 	case SDL_MOUSEMOTION:
-	  mousemotion(
-	    static_cast<float>(event.motion.x), static_cast<float>(event.motion.y),
-	    static_cast<float>(event.motion.xrel), static_cast<float>(event.motion.yrel)
-		      );
+	  {
+	    const float x_screen = static_cast<float>(event.motion.x);
+	    const float y_screen = static_cast<float>(event.motion.y);
+
+	    // scaling from <0,width> to <-1,1>
+	    const float x_scaled =
+	      2.0 * (x_screen - static_cast<float>(width) / 2.0)
+	      / static_cast<float>(width);
+	    const float y_scaled = 
+	      2.0 * (y_screen - static_cast<float>(height) / 2.0)
+	      / static_cast<float>(height);
+
+	    mousemotion(
+	      x_scaled, y_scaled,
+	      static_cast<float>(event.motion.xrel), static_cast<float>(event.motion.yrel)
+			);
+	  }
 	  break;
 	case SDL_VIDEORESIZE:
 	  handle_resize(event.resize.w, event.resize.h);
