@@ -74,7 +74,10 @@ void window::main_loop()
 	    mouseup();
 	  break;
 	case SDL_MOUSEMOTION:
-	  mousemotion(event.motion.xrel, event.motion.yrel);
+	  mousemotion(
+	    static_cast<float>(event.motion.x), static_cast<float>(event.motion.y),
+	    static_cast<float>(event.motion.xrel), static_cast<float>(event.motion.yrel)
+		      );
 	  break;
 	case SDL_VIDEORESIZE:
 	  handle_resize(event.resize.w, event.resize.h);

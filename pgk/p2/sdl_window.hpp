@@ -19,7 +19,10 @@ public:
   void (*keydown)(const char);
   void (*mouseup)();
   void (*mousedown)();
-  void (*mousemotion)(const int x, const int y);
+  void (*mousemotion)(
+    const float x, const float y,
+    const float xrel, const float yrel
+		      );
   void (*frame)();
 
   void main_loop();

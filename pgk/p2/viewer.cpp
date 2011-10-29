@@ -22,8 +22,11 @@ void viewer::mousedown()
   pressed = true;
 }
 
-void viewer::mousemotion(const int x, const int y)
+void viewer::mousemotion(
+  const float x, const float y,
+  const float xrel, const float yrel
+			 )
 {
   if(pressed)
-    printf("mouse: (%d, %d)\n", x, y);
+    printf("mouse: (%f, %f), d(%f, %f)\n", x, y, xrel, yrel);
 }
