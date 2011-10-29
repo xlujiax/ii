@@ -13,7 +13,6 @@ void viewer::init()
 
 void viewer::animate(float)
 {
-  
 }
 
 void viewer::draw() const
@@ -44,7 +43,12 @@ void viewer::mousemotion(
 			 )
 {
   if(pressed)
+  {
+    r2 += 0.5 * xrel;
+    r1 += 0.5 * yrel;
+
     printf("mouse: (%f, %f), d(%f, %f)\n", x, y, xrel, yrel);
+  }
 }
 
 void viewer::keydown(const char k)
