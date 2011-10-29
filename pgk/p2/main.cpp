@@ -53,6 +53,10 @@ int main(int argc, char* argv[])
   
   wnd.mouseup = [&]() { main_viewer.mouseup(); };
   wnd.mousedown = [&]() { main_viewer.mousedown(); };
+
+  wnd.mousewheelup = [&]() { main_viewer.mousewheelup(); };
+  wnd.mousewheeldown = [&]() { main_viewer.mousewheeldown(); };
+
   wnd.mousemotion = [&](
     const float x, const float y,
     const float xrel, const float yrel)

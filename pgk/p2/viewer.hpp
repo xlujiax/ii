@@ -23,6 +23,10 @@ struct viewer
   bool pressed;
   void mouseup();
   void mousedown();
+
+  void mousewheelup();
+  void mousewheeldown();
+
   void mousemotion(
     const float x, const float y,
     const float xrel, const float yrel

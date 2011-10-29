@@ -17,6 +17,8 @@ public:
   void (*setup_opengl)(const int width, const int height);
   void (*keyup)(const char);
   void (*keydown)(const char);
+  void (*mousewheelup)();
+  void (*mousewheeldown)();
   void (*mouseup)();
   void (*mousedown)();
   void (*mousemotion)(

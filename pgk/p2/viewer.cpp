@@ -27,6 +27,16 @@ void viewer::draw() const
   glPopMatrix();
 }
 
+void viewer::mousewheelup()
+{
+  zoom += 0.1;
+}
+
+void viewer::mousewheeldown()
+{
+  zoom -= 0.1;
+}
+
 void viewer::mouseup()
 {
   pressed = false;

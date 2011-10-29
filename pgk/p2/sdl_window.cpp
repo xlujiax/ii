@@ -66,8 +66,18 @@ void window::main_loop()
 	  keyup(event.key.keysym.sym);
           break;
 	case SDL_MOUSEBUTTONDOWN:
-	  if(event.button.button == SDL_BUTTON_LEFT)
-	    mousedown();
+	  switch(event.button.button)
+	  {
+	    case SDL_BUTTON_LEFT:
+	      mousedown();
+	      break;
+	    case SDL_BUTTON_WHEELUP:
+	      mousewheelup();
+	      break;
+	    case SDL_BUTTON_WHEELDOWN:
+	      mousewheeldown();
+	      break;
+	  }
 	  break;
 	case SDL_MOUSEBUTTONUP:
 	  if(event.button.button == SDL_BUTTON_LEFT)
