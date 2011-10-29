@@ -53,6 +53,10 @@ int main(int argc, char* argv[])
 
   wnd.keydown = [&](const char k) {  };
   wnd.keyup = [&](const char k) {  };
+  
+  wnd.mouseup = [&]() { main_viewer.mouseup(); };
+  wnd.mousedown = [&]() { main_viewer.mousedown(); };
+  wnd.mousemotion = [&](const int x, const int y) { main_viewer.mousemotion(x, y); };
 
   wnd.frame = [&]() {
     const float delta_time = frame_timer.delta_time();

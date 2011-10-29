@@ -65,6 +65,17 @@ void window::main_loop()
 	case SDL_KEYUP:
 	  keyup(event.key.keysym.sym);
           break;
+	case SDL_MOUSEBUTTONDOWN:
+	  if(event.button.button == SDL_BUTTON_LEFT)
+	    mousedown();
+	  break;
+	case SDL_MOUSEBUTTONUP:
+	  if(event.button.button == SDL_BUTTON_LEFT)
+	    mouseup();
+	  break;
+	case SDL_MOUSEMOTION:
+	  mousemotion(event.motion.xrel, event.motion.yrel);
+	  break;
 	case SDL_VIDEORESIZE:
 	  handle_resize(event.resize.w, event.resize.h);
 	  break;
