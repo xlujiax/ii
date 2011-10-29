@@ -23,7 +23,9 @@ int main(int argc, char* argv[])
     glEnable(GL_LIGHTING);
 
     /* Use depth buffering for hidden surface elimination. */
-    glEnable(GL_DEPTH_TEST);glViewport(0, 0, width, height);
+    glEnable(GL_DEPTH_TEST);
+
+    glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     gluPerspective(40.0, // field of view in degrees
       4.0 / 3.0,         // aspect ratio
