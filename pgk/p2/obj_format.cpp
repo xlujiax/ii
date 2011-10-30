@@ -2,13 +2,6 @@
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
-struct vertex
-{
-  float x, y, z;
-  float nx, ny, nz; // normal
-  float u, v;       // texture
-};
-
 GLuint vertices_vbo;
 GLuint indices_vbo;
 
@@ -68,6 +61,44 @@ std::vector<vec3> obj_format::read_normals(const std::vector<std::string>& lines
   return ns;
 }
 
+// vertices and their normals are indexed differently in OBJ;
+// this function packs them to one structure
+std::vector<vertex> obj_format::pack_into_vertex_structure(
+  const std::vector<std::string>& lines,
+  const std::vector<vec3>& vs,
+  const std::vector<vec3>& ns
+					       ) const
+{
+  std::vector<vertex> nvs;
+  nvs.resize(vs.size());
+
+  for(auto line : lines)
+    if(classify_line(line) == line_type::normal)
+    {
+      int v[4];
+      int n[4];
+
+      sscanf(line.c_str(), "f %d//%d %d//%d %d//%d %d//%d",
+	&v[0], &n[0],
+	&v[1], &n[1],
+	&v[2], &n[2],
+	&v[3], &n[3]
+	     );
+      for(int i = 0; i < 4; ++i)
+      {
+	vertex vx = {
+	  vs[v[i] - 1].x, vs[v[i] - 1].y, vs[v[i] - 1].z,
+	  ns[n[i] - 1].x, ns[n[i] - 1].y, ns[n[i] - 1].z,
+	  0, 0
+	};
+
+	const int index_in_vbo = v[i] - 1; // could be index of normal or vertex, both viable, I've choosen vertex index
+	nvs[index_in_vbo] = vx;
+      }
+    }
+  return nvs;
+}
+
 void obj_format::read_from_file(const char* filename)
 {
   auto model = file_to_memory(filename);
@@ -76,8 +107,8 @@ void obj_format::read_from_file(const char* filename)
   std::vector<vec3> ns = read_normals(model);
 
   assert(ns.size() == vs.size()); // normal per vertex
-  
-  nvs.resize(vs.size());
+
+  nvs = pack_into_vertex_structure(model, vs, ns);
 
   for(auto line : model)
   {
@@ -104,14 +135,7 @@ void obj_format::read_from_file(const char* filename)
 		 );
 	  for(int i = 0; i < 4; ++i)
 	  {
-	    vertex vx = {
-	      vs[v[i] - 1].x, vs[v[i] - 1].y, vs[v[i] - 1].z,
-	      ns[n[i] - 1].x, ns[n[i] - 1].y, ns[n[i] - 1].z,
-	      0, 0
-	    };
-
 	    const int index_in_vbo = v[i] - 1; // could be index of normal or vertex, both viable, I've choosen vertex index
-	    nvs[index_in_vbo] = vx;
        
 	    fs.push_back(index_in_vbo);
 	  }

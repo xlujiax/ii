@@ -12,6 +12,13 @@ struct vec3
   float x, y, z;
 };
 
+struct vertex
+{
+  float x, y, z;
+  float nx, ny, nz; // normal
+  float u, v;       // texture
+};
+
 class obj_format
 {
 private:
@@ -25,6 +32,11 @@ private:
   line_type classify_line(const std::string& line) const;
   std::vector<vec3> read_vertices(const std::vector<std::string>& lines) const;
   std::vector<vec3> read_normals(const std::vector<std::string>& lines) const;
+  std::vector<vertex> pack_into_vertex_structure(
+    const std::vector<std::string>& lines,
+    const std::vector<vec3>& vs,
+    const std::vector<vec3>& ns
+						 ) const;
 public:
   void read_from_file(const char* filename);
   void draw() const;
