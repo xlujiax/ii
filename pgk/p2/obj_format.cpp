@@ -43,21 +43,19 @@ void obj_format::read_from_file(const char* filename)
 
   std::map<int, vertex> map_nvs;
 
-  FILE* model_file = fopen(filename, "r");
-  const int line_len = 100;
-  char line[line_len];
-  while(fgets(line, line_len, model_file) != NULL)
+  auto model = file_to_memory(filename);
+  for(auto line : model)
   {
     if(line[0] == 'v' && line[1] == ' ')
     {
       float x,y,z;
-      sscanf(line, "v %f %f %f", &x, &y, &z);
+      sscanf(line.c_str(), "v %f %f %f", &x, &y, &z);
       vs.push_back({ x, y, z });
     }
     else if(line[0] == 'v' && line[1] == 'n' && line[2] == ' ')
     {
       float x,y,z;
-      sscanf(line, "vn %f %f %f", &x, &y, &z);
+      sscanf(line.c_str(), "vn %f %f %f", &x, &y, &z);
       ns.push_back({ x, y, z });
     }
     else if(line[0] == 'f' && line[1] == ' ')
@@ -65,7 +63,7 @@ void obj_format::read_from_file(const char* filename)
       int v[4];
       int n[4];
 
-      sscanf(line, "f %d//%d %d//%d %d//%d %d//%d",
+      sscanf(line.c_str(), "f %d//%d %d//%d %d//%d %d//%d",
 	&v[0], &n[0],
 	&v[1], &n[1],
 	&v[2], &n[2],
