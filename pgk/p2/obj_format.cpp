@@ -2,16 +2,6 @@
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
-GLuint vertices_vbo;
-GLuint indices_vbo;
-
-GLuint num_vertices;
-GLuint num_indices;
-vertex* vertices;
-GLuint* indices;
-std::vector<vertex> nvs; // full vertices
-std::vector<GLuint> fs; // faces (consecutive fours)
-
 std::vector<std::string> obj_format::file_to_memory(
   const char* filename,
   const unsigned int max_line_len) const
@@ -99,7 +89,7 @@ std::vector<vertex> obj_format::pack_into_vertex_structure(
   return nvs;
 }
 
-std::vector<GLuint> obj_format::read_faces(const std::vector<std::string>& lines,
+std::vector<GLuint> obj_format::read_indices(const std::vector<std::string>& lines,
   const std::vector<vertex>& nvs) const
 {
   std::vector<GLuint> fs;
@@ -135,22 +125,16 @@ void obj_format::read_from_file(const char* filename)
 
   assert(ns.size() == vs.size()); // normal per vertex
 
-  nvs = pack_into_vertex_structure(model, vs, ns);
-  fs = read_faces(model, nvs);
-
-  num_vertices = nvs.size();
-  vertices = &nvs[0];
-  
-  num_indices = fs.size();
-  indices = &fs[0];
+  vertices = pack_into_vertex_structure(model, vs, ns);
+  indices = read_indices(model, vertices);
 
   glGenBuffers(1, &vertices_vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vertices_vbo);
-  glBufferData(GL_ARRAY_BUFFER, num_vertices * sizeof(vertex), vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vertex), &vertices[0], GL_STATIC_DRAW);
 
   glGenBuffers(1, &indices_vbo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_vbo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, num_indices * sizeof(GLuint), indices, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
 }
 
 void obj_format::draw() const
@@ -164,7 +148,7 @@ void obj_format::draw() const
   glNormalPointer(GL_FLOAT, sizeof(vertex), BUFFER_OFFSET(3 * sizeof(float)));
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_vbo);
-  glDrawElements(GL_QUADS, num_indices, GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_QUADS, indices.size(), GL_UNSIGNED_INT, 0);
 
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_NORMAL_ARRAY);

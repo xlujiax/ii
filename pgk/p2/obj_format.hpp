@@ -22,6 +22,12 @@ struct vertex
 class obj_format
 {
 private:
+  GLuint vertices_vbo;
+  GLuint indices_vbo;
+
+  std::vector<vertex> vertices; // full vertices
+  std::vector<GLuint> indices; // faces (consecutive fours)
+
   std::vector<std::string> file_to_memory(const char* filename, const unsigned int max_line_len = 100) const;
 
   enum class line_type
@@ -37,7 +43,7 @@ private:
     const std::vector<vec3>& vs,
     const std::vector<vec3>& ns
 						 ) const;
-  std::vector<GLuint> read_faces(const std::vector<std::string>& lines,
+  std::vector<GLuint> read_indices(const std::vector<std::string>& lines,
     const std::vector<vertex>& nvs) const;
 public:
   void read_from_file(const char* filename);
