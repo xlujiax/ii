@@ -120,8 +120,8 @@ void obj_format::read_from_file(const char* filename)
 {
   auto model = file_to_memory(filename);
 
-  std::vector<vec3> vs = read_vertices(model);
-  std::vector<vec3> ns = read_normals(model);
+  auto vs = read_vertices(model);
+  auto ns = read_normals(model);
 
   assert(ns.size() == vs.size()); // normal per vertex
 
