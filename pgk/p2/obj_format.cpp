@@ -9,11 +9,6 @@ struct vertex
   float u, v;       // texture
 };
 
-struct vec3
-{
-  float x, y, z;
-};
-
 GLuint vertices_vbo;
 GLuint indices_vbo;
 
@@ -49,7 +44,7 @@ std::vector<vec3> obj_format::read_vertices(const std::vector<std::string>& line
 {
   std::vector<vec3> vs;
   
-  for(auto line : model)
+  for(auto line : lines)
     if(classify_line(line) == line_type::vertex)
     {
       float x,y,z;
@@ -57,6 +52,20 @@ std::vector<vec3> obj_format::read_vertices(const std::vector<std::string>& line
       vs.push_back({ x, y, z });
     }
   return vs;
+}
+
+std::vector<vec3> obj_format::read_normals(const std::vector<std::string>& lines) const
+{
+  std::vector<vec3> ns;
+  
+  for(auto line : lines)
+    if(classify_line(line) == line_type::normal)
+    {
+      float x,y,z;
+      sscanf(line.c_str(), "vn %f %f %f", &x, &y, &z);
+      ns.push_back({ x, y, z });
+    }
+  return ns;
 }
 
 void obj_format::read_from_file(const char* filename)
