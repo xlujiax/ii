@@ -45,6 +45,20 @@ obj_format::line_type obj_format::classify_line(const std::string& line) const
   else return line_type::unclassified;
 }
 
+std::vector<vec3> obj_format::read_vertices(const std::vector<std::string>& lines) const
+{
+  std::vector<vec3> vs;
+  
+  for(auto line : model)
+    if(classify_line(line) == line_type::vertex)
+    {
+      float x,y,z;
+      sscanf(line.c_str(), "v %f %f %f", &x, &y, &z);
+      vs.push_back({ x, y, z });
+    }
+  return vs;
+}
+
 void obj_format::read_from_file(const char* filename)
 {
   std::vector<vec3> vs; // vertices

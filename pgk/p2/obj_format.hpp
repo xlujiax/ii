@@ -18,6 +18,7 @@ private:
   };
 
   line_type classify_line(const std::string& line) const;
+  std::vector<vec3> obj_format::read_vertices(const std::vector<std::string>& lines) const;
 public:
   void read_from_file(const char* filename);
   void draw() const;
