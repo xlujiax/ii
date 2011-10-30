@@ -24,6 +24,13 @@ GLuint* indices;
 std::vector<vertex> nvs; // full vertices
 std::vector<GLuint> fs; // faces (consecutive fours)
 
+std::vector<std::string> obj_format::file_to_memory(
+  const char* filename,
+  const unsigned int max_line_len) const
+{
+  return std::vector<std::string>();
+}
+
 void obj_format::read_from_file(const char* filename)
 {
   std::vector<vec3> vs; // vertices
