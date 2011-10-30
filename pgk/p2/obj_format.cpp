@@ -28,7 +28,12 @@ std::vector<std::string> obj_format::file_to_memory(
   const char* filename,
   const unsigned int max_line_len) const
 {
-  return std::vector<std::string>();
+  FILE* file = fopen(filename, "r");
+  char line[max_line_len];
+  std::vector<std::string> lines;
+  while(fgets(line, max_line_len, file) != NULL)
+    lines.push_back(line);
+  return lines;
 }
 
 void obj_format::read_from_file(const char* filename)
