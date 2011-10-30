@@ -73,7 +73,7 @@ std::vector<vertex> obj_format::pack_into_vertex_structure(
   nvs.resize(vs.size());
 
   for(auto line : lines)
-    if(classify_line(line) == line_type::normal)
+    if(classify_line(line) == line_type::face)
     {
       int v[4];
       int n[4];
@@ -87,8 +87,8 @@ std::vector<vertex> obj_format::pack_into_vertex_structure(
       for(int i = 0; i < 4; ++i)
       {
 	vertex vx = {
-	  vs[v[i] - 1].x, vs[v[i] - 1].y, vs[v[i] - 1].z,
-	  ns[n[i] - 1].x, ns[n[i] - 1].y, ns[n[i] - 1].z,
+	  vs.at(v[i] - 1).x, vs.at(v[i] - 1).y, vs.at(v[i] - 1).z,
+	  ns.at(n[i] - 1).x, ns.at(n[i] - 1).y, ns.at(n[i] - 1).z,
 	  0, 0
 	};
 
