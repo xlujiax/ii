@@ -70,12 +70,13 @@ std::vector<vec3> obj_format::read_normals(const std::vector<std::string>& lines
 
 void obj_format::read_from_file(const char* filename)
 {
-  std::vector<vec3> vs; // vertices
-  std::vector<vec3> ns; // normals
+  auto model = file_to_memory(filename);
+
+  std::vector<vec3> vs = read_vertices(model);
+  std::vector<vec3> ns = read_normals(model);
 
   std::map<int, vertex> map_nvs;
 
-  auto model = file_to_memory(filename);
   for(auto line : model)
   {
     switch(classify_line(line))
@@ -85,18 +86,8 @@ void obj_format::read_from_file(const char* filename)
 	break;
 	
       case line_type::vertex:
-	{
-	  float x,y,z;
-	  sscanf(line.c_str(), "v %f %f %f", &x, &y, &z);
-	  vs.push_back({ x, y, z });
-	}
-	break;
       case line_type::normal:
-	{
-	  float x,y,z;
-	  sscanf(line.c_str(), "vn %f %f %f", &x, &y, &z);
-	  ns.push_back({ x, y, z });
-	}
+	// already gathered this information
 	break;
       case line_type::face:
 	{
