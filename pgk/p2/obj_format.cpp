@@ -36,6 +36,15 @@ std::vector<std::string> obj_format::file_to_memory(
   return lines;
 }
 
+line_type classify_line(const std::string& line) const
+{
+  if(line.substr(0,2) == "v ") return line_type::vertex;
+  else if(line.substr(0,3) == "vn ") return line_type::normal;
+  else if(line.substr(0,2) == "f ") return line_type::face;
+  else if(line[0] == '#') return line_type::comment;
+  else return line_type::unclassified;
+}
+
 void obj_format::read_from_file(const char* filename)
 {
   std::vector<vec3> vs; // vertices
