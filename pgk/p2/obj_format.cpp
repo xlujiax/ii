@@ -75,7 +75,9 @@ void obj_format::read_from_file(const char* filename)
   std::vector<vec3> vs = read_vertices(model);
   std::vector<vec3> ns = read_normals(model);
 
-  std::map<int, vertex> map_nvs;
+  assert(ns.size() == vs.size()); // normal per vertex
+  
+  nvs.resize(vs.size());
 
   for(auto line : model)
   {
@@ -108,19 +110,8 @@ void obj_format::read_from_file(const char* filename)
 	      0, 0
 	    };
 
-	    const int index_in_vbo = v[i] - 1; // could be index of normal or texture
-	    if(map_nvs.end() == map_nvs.find(index_in_vbo))
-	      map_nvs[index_in_vbo] = vx;
-	    else
-	    {
-	      vertex before = (*map_nvs.find(index_in_vbo)).second;
-	      assert(before.x == vx.x);
-	      assert(before.y == vx.y);
-	      assert(before.z == vx.z);
-	      assert(before.nx == vx.nx);
-	      assert(before.ny == vx.ny);
-	      assert(before.nz == vx.nz);
-	    }
+	    const int index_in_vbo = v[i] - 1; // could be index of normal or vertex, both viable, I've choosen vertex index
+	    nvs[index_in_vbo] = vx;
        
 	    fs.push_back(index_in_vbo);
 	  }
@@ -128,10 +119,6 @@ void obj_format::read_from_file(const char* filename)
 	break;
     }
   }
-
-  nvs.reserve(map_nvs.size());
-  for(auto i = map_nvs.begin(); i != map_nvs.end(); ++i)
-    nvs.push_back(i->second);
 
   num_vertices = nvs.size();
   vertices = &nvs[0];
