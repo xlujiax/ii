@@ -99,6 +99,33 @@ std::vector<vertex> obj_format::pack_into_vertex_structure(
   return nvs;
 }
 
+std::vector<GLuint> obj_format::read_faces(const std::vector<std::string>& lines,
+  const std::vector<vertex>& nvs) const
+{
+  std::vector<GLuint> fs;
+
+  for(auto line : lines)
+    if(classify_line(line) == line_type::face)
+    {
+      int v[4];
+      int n[4];
+
+      sscanf(line.c_str(), "f %d//%d %d//%d %d//%d %d//%d",
+	&v[0], &n[0],
+	&v[1], &n[1],
+	&v[2], &n[2],
+	&v[3], &n[3]
+	     );
+      for(int i = 0; i < 4; ++i)
+      {
+	const int index_in_vbo = v[i] - 1; // could be index of normal or vertex, both viable, I've choosen vertex index
+       
+	fs.push_back(index_in_vbo);
+      }
+    }
+  return fs;
+}
+
 void obj_format::read_from_file(const char* filename)
 {
   auto model = file_to_memory(filename);
@@ -109,40 +136,7 @@ void obj_format::read_from_file(const char* filename)
   assert(ns.size() == vs.size()); // normal per vertex
 
   nvs = pack_into_vertex_structure(model, vs, ns);
-
-  for(auto line : model)
-  {
-    switch(classify_line(line))
-    {
-      case line_type::comment:
-      case line_type::unclassified:
-	break;
-	
-      case line_type::vertex:
-      case line_type::normal:
-	// already gathered this information
-	break;
-      case line_type::face:
-	{
-	  int v[4];
-	  int n[4];
-
-	  sscanf(line.c_str(), "f %d//%d %d//%d %d//%d %d//%d",
-	    &v[0], &n[0],
-	    &v[1], &n[1],
-	    &v[2], &n[2],
-	    &v[3], &n[3]
-		 );
-	  for(int i = 0; i < 4; ++i)
-	  {
-	    const int index_in_vbo = v[i] - 1; // could be index of normal or vertex, both viable, I've choosen vertex index
-       
-	    fs.push_back(index_in_vbo);
-	  }
-	}
-	break;
-    }
-  }
+  fs = read_faces(model, nvs);
 
   num_vertices = nvs.size();
   vertices = &nvs[0];

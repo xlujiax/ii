@@ -37,6 +37,8 @@ private:
     const std::vector<vec3>& vs,
     const std::vector<vec3>& ns
 						 ) const;
+  std::vector<GLuint> read_faces(const std::vector<std::string>& lines,
+    const std::vector<vertex>& nvs) const;
 public:
   void read_from_file(const char* filename);
   void draw() const;
