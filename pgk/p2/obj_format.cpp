@@ -171,7 +171,7 @@ void obj_format::draw() const
 
   glEnableClientState(GL_TEXTURE_COORD_ARRAY);
   glClientActiveTexture(GL_TEXTURE0);
-  glTexCoordPointer(2, GL_FLOAT, sizeof(vertex), BUFFER_OFFSET(5 * sizeof(float)));
+  glTexCoordPointer(2, GL_FLOAT, sizeof(vertex), BUFFER_OFFSET(6 * sizeof(float)));
   
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_vbo);
   glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
