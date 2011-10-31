@@ -65,16 +65,15 @@ std::vector<vertex> obj_format::pack_into_vertex_structure(
   for(auto line : lines)
     if(classify_line(line) == line_type::face)
     {
-      int v[4];
-      int n[4];
+      int v[3];
+      int n[3];
 
-      sscanf(line.c_str(), "f %d//%d %d//%d %d//%d %d//%d",
+      sscanf(line.c_str(), "f %d//%d %d//%d %d//%d",
 	&v[0], &n[0],
 	&v[1], &n[1],
-	&v[2], &n[2],
-	&v[3], &n[3]
+	&v[2], &n[2]
 	     );
-      for(int i = 0; i < 4; ++i)
+      for(int i = 0; i < 3; ++i)
       {
 	vertex vx = {
 	  vs.at(v[i] - 1).x, vs.at(v[i] - 1).y, vs.at(v[i] - 1).z,
@@ -97,16 +96,15 @@ std::vector<GLuint> obj_format::read_indices(const std::vector<std::string>& lin
   for(auto line : lines)
     if(classify_line(line) == line_type::face)
     {
-      int v[4];
-      int n[4];
+      int v[3];
+      int n[3];
 
-      sscanf(line.c_str(), "f %d//%d %d//%d %d//%d %d//%d",
+      sscanf(line.c_str(), "f %d//%d %d//%d %d//%d",
 	&v[0], &n[0],
 	&v[1], &n[1],
-	&v[2], &n[2],
-	&v[3], &n[3]
+	&v[2], &n[2]
 	     );
-      for(int i = 0; i < 4; ++i)
+      for(int i = 0; i < 3; ++i)
       {
 	const int index_in_vbo = v[i] - 1; // could be index of normal or vertex, both viable, I've choosen vertex index
        
@@ -148,7 +146,7 @@ void obj_format::draw() const
   glNormalPointer(GL_FLOAT, sizeof(vertex), BUFFER_OFFSET(3 * sizeof(float)));
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_vbo);
-  glDrawElements(GL_QUADS, indices.size(), GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_NORMAL_ARRAY);
