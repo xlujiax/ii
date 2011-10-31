@@ -57,7 +57,7 @@ std::vector<vertex> obj_format::pack_into_vertex_structure(
   const std::vector<std::string>& lines,
   const std::vector<vec3>& vs,
   const std::vector<vec3>& ns
-					       ) const
+							   ) const
 {
   std::vector<vertex> nvs;
   nvs.resize(vs.size());

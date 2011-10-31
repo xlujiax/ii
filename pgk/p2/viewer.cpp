@@ -2,7 +2,7 @@
 
 void viewer::init()
 {
-  model.read_from_file("figure_triangulated.obj");
+  model.read_from_file("sphere.obj");
   pressed = false;
 
   zoom = -4.0;
