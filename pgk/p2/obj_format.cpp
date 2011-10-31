@@ -18,6 +18,7 @@ obj_format::line_type obj_format::classify_line(const std::string& line) const
 {
   if(line.substr(0,2) == "v ") return line_type::vertex;
   else if(line.substr(0,3) == "vn ") return line_type::normal;
+  else if(line.substr(0,3) == "vt ") return line_type::texture;
   else if(line.substr(0,2) == "f ") return line_type::face;
   else if(line[0] == '#') return line_type::comment;
   else return line_type::unclassified;
@@ -51,12 +52,27 @@ std::vector<vec3> obj_format::read_normals(const std::vector<std::string>& lines
   return ns;
 }
 
+std::vector<vec3> obj_format::read_textures(const std::vector<std::string>& lines) const
+{
+  std::vector<vec3> ts;
+  
+  for(auto line : lines)
+    if(classify_line(line) == line_type::normal)
+    {
+      float u, v;
+      sscanf(line.c_str(), "vt %f %f", &u, &v);
+      ts.push_back({ u, v, 0.0 });
+    }
+  return ts;
+}
+
 // vertices and their normals are indexed differently in OBJ;
 // this function packs them to one structure
 std::vector<vertex> obj_format::pack_into_vertex_structure(
   const std::vector<std::string>& lines,
   const std::vector<vec3>& vs,
-  const std::vector<vec3>& ns
+  const std::vector<vec3>& ns,
+  const std::vector<vec3>& ts
 							   ) const
 {
   std::vector<vertex> nvs;
@@ -67,18 +83,19 @@ std::vector<vertex> obj_format::pack_into_vertex_structure(
     {
       int v[3];
       int n[3];
+      int t[3];
 
-      sscanf(line.c_str(), "f %d//%d %d//%d %d//%d",
-	&v[0], &n[0],
-	&v[1], &n[1],
-	&v[2], &n[2]
+      sscanf(line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d",
+	&v[0], &t[0], &n[0],
+	&v[1], &t[1], &n[0],
+	&v[2], &t[2], &n[0]
 	     );
       for(int i = 0; i < 3; ++i)
       {
 	vertex vx = {
 	  vs.at(v[i] - 1).x, vs.at(v[i] - 1).y, vs.at(v[i] - 1).z,
 	  ns.at(n[i] - 1).x, ns.at(n[i] - 1).y, ns.at(n[i] - 1).z,
-	  0, 0
+	  ts.at(t[i] - 1).x, ts.at(t[i] - 1).y
 	};
 
 	const int index_in_vbo = v[i] - 1; // could be index of normal or vertex, both viable, I've choosen vertex index
@@ -97,12 +114,12 @@ std::vector<GLuint> obj_format::read_indices(const std::vector<std::string>& lin
     if(classify_line(line) == line_type::face)
     {
       int v[3];
-      int n[3];
+      int unused;
 
-      sscanf(line.c_str(), "f %d//%d %d//%d %d//%d",
-	&v[0], &n[0],
-	&v[1], &n[1],
-	&v[2], &n[2]
+      sscanf(line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d",
+	&v[0], &unused, &unused,
+	&v[1], &unused, &unused,
+	&v[2], &unused, &unused
 	     );
       for(int i = 0; i < 3; ++i)
       {
@@ -120,10 +137,11 @@ void obj_format::read_from_file(const char* filename)
 
   auto vs = read_vertices(model);
   auto ns = read_normals(model);
+  auto ts = read_textures(model);
 
   assert(ns.size() == vs.size()); // normal per vertex
 
-  vertices = pack_into_vertex_structure(model, vs, ns);
+  vertices = pack_into_vertex_structure(model, vs, ns, ts);
   indices = read_indices(model, vertices);
 
   glGenBuffers(1, &vertices_vbo);

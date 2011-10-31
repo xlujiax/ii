@@ -2,7 +2,7 @@
 
 void viewer::init()
 {
-  model.read_from_file("sphere.obj");
+  model.read_from_file("monkey.obj");
   pressed = false;
 
   zoom = -4.0;
