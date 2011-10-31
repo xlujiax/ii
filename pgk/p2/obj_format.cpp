@@ -153,6 +153,10 @@ void obj_format::read_from_file(const char* filename)
   glGenBuffers(1, &indices_vbo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_vbo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
+
+  texture_id = load_texture("wall.png", texture_width, texture_height);
+  glEnable(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, texture_id);
 }
 
 void obj_format::draw() const

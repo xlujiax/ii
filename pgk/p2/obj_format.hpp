@@ -6,6 +6,7 @@
 #include <cassert>
 #include <vector>
 #include <map>
+#include "load_texture.hpp"
 
 struct vec3
 {
@@ -24,6 +25,9 @@ class obj_format
 private:
   GLuint vertices_vbo;
   GLuint indices_vbo;
+
+  int texture_width, texture_height;
+  GLuint texture_id;
 
   std::vector<vertex> vertices; // full vertices
   std::vector<GLuint> indices; // faces (consecutive fours)
