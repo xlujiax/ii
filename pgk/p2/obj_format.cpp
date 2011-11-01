@@ -155,6 +155,8 @@ void obj_format::read_from_file(const char* filename)
   texture_id = load_texture("wall.png", texture_width, texture_height);
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, texture_id);
+
+  glShadeModel(GL_SMOOTH);
 }
 
 void obj_format::draw() const
