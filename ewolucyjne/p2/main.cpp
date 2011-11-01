@@ -251,7 +251,6 @@ void population_replacement()
     // unimplemented
     // every one in population is a copy of the same entity
     // or just all have the same cost
-    assert(false);
   }
 
   // if after erasing with adaptation method there are still too many entities
@@ -294,11 +293,24 @@ void population_mutation()
   }
 }
 
+void print_progress()
+{
+  const float percent = 100.0 * (float)iteration / (float)max_iter;
+  static float last_perc = 0;
+  const float perc_step = 5;
+  if(percent > last_perc)
+  {
+    cout << ((int)percent) << "%" << endl;
+    last_perc += perc_step;
+  }
+}
+
 void sga()
 {
   fill_population();
   while(!termination_condition())
   {
+    print_progress();
     population_crossover();
     population_mutation();
     population_replacement();
