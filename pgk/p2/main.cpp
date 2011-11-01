@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 
   wnd.setup_opengl = [](const int width, const int height) {
     {
-      GLfloat light_diffuse[] = {0.8, 0.5, 0.5, 1.0};
+      GLfloat light_diffuse[] = {1.0, 1.0, 1.0, 1.0};
       GLfloat light_position[] = {1.0, 1.0, 1.0, 0.0};
 
       glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
     }
     
     {
-      GLfloat light_diffuse[] = {0.3, 0.5, 0.5, 1.0};
+      GLfloat light_diffuse[] = {1.0, 1.0, 1.0, 1.0};
       GLfloat light_position[] = {1.0, -1.0, -1.0, 0.0};
 
       glLightfv(GL_LIGHT1, GL_DIFFUSE, light_diffuse);
@@ -32,12 +32,22 @@ int main(int argc, char* argv[])
     }
     
     {
-      GLfloat light_diffuse[] = {0.5, 0.5, 0.5, 1.0};
+      GLfloat light_diffuse[] = {1.0, 1.0, 1.0, 1.0};
       GLfloat light_position[] = {-5.0, -5.0, -5.0, 0.0};
 
       glLightfv(GL_LIGHT2, GL_DIFFUSE, light_diffuse);
       glLightfv(GL_LIGHT2, GL_POSITION, light_position);
       glEnable(GL_LIGHT2);
+    }
+
+    
+    {
+      GLfloat light_diffuse[] = {1.0, 1.0, 1.0, 1.0};
+      GLfloat light_position[] = {-5.0, 0.0, 0.0, 0.0, 0.0};
+
+      glLightfv(GL_LIGHT3, GL_DIFFUSE, light_diffuse);
+      glLightfv(GL_LIGHT3, GL_POSITION, light_position);
+      glEnable(GL_LIGHT3);
     }
     glEnable(GL_LIGHTING);
 
