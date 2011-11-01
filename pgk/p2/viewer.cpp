@@ -57,7 +57,7 @@ void viewer::mousemotion(
     r2 += 0.5 * xrel;
     r1 += 0.5 * yrel;
 
-    printf("mouse: (%f, %f), d(%f, %f)\n", x, y, xrel, yrel);
+    // printf("mouse: (%f, %f), d(%f, %f)\n", x, y, xrel, yrel);
   }
 }
 

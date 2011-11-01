@@ -92,13 +92,11 @@ std::vector<vertex> obj_format::pack_into_vertex_structure(
 	     );
       for(int i = 0; i < 3; ++i)
       {
-	printf("asdf %d\n", t[i]);
 	vertex vx = {
 	  vs.at(v[i] - 1).x, vs.at(v[i] - 1).y, vs.at(v[i] - 1).z,
 	  ns.at(n[i] - 1).x, ns.at(n[i] - 1).y, ns.at(n[i] - 1).z,
 	  ts.at(t[i] - 1).x, ts.at(t[i] - 1).y
 	};
-	printf("bsdf\n");
 
 	const int index_in_vbo = v[i] - 1; // could be index of normal or vertex, both viable, I've choosen vertex index
 	nvs[index_in_vbo] = vx;
@@ -169,8 +167,8 @@ void obj_format::draw() const
   glEnableClientState(GL_NORMAL_ARRAY);
   glNormalPointer(GL_FLOAT, sizeof(vertex), BUFFER_OFFSET(3 * sizeof(float)));
 
-  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
   glClientActiveTexture(GL_TEXTURE0);
+  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
   glTexCoordPointer(2, GL_FLOAT, sizeof(vertex), BUFFER_OFFSET(6 * sizeof(float)));
   
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_vbo);
