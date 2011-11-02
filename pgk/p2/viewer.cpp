@@ -23,6 +23,12 @@ void viewer::draw() const
   glRotatef(r2, 0.0, 1.0, 0.0);
   glRotatef(r3, 0.0, 0.0, 1.0);
 
+  float current_matrix[16];
+  glGetFloatv(GL_MODELVIEW_MATRIX, current_matrix);
+  glLoadIdentity();
+  glTranslatef(0.3, 0.3, 0);
+  glMultMatrixf(current_matrix);
+
   model.draw();
   glPopMatrix();
 }

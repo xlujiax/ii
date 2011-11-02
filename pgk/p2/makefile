@@ -4,7 +4,7 @@ error_flags = -Wall -Werror
 std_flag = -std=c++0x
 
 libs = $(opengl_libs) $(sdl_libs)
-modules = timer.o sdl_window.o obj_format.o viewer.o load_texture.o
+modules = timer.o sdl_window.o obj_format.o viewer.o load_texture.o vec.o
 
 output = viewer.e
 
@@ -15,6 +15,9 @@ sdl_window.o: sdl_window.cpp sdl_window.hpp
 
 timer.o: timer.cpp timer.hpp
 	g++ $(error_flags) $(std_flag) -c timer.cpp $(libs)
+
+vec.o: vec.cpp vec.hpp
+	g++ $(error_flags) $(std_flag) -c vec.cpp $(libs)
 
 load_texture.o: load_texture.cpp load_texture.hpp
 	g++ $(error_flags) $(std_flag) -c load_texture.cpp $(libs)

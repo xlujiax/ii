@@ -6,12 +6,10 @@
 #include <cassert>
 #include <vector>
 #include <map>
-#include "load_texture.hpp"
 
-struct vec3
-{
-  float x, y, z;
-};
+#include "load_texture.hpp"
+#include "vec.hpp"
+
 
 struct vertex
 {
