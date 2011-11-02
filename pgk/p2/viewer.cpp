@@ -44,6 +44,7 @@ void viewer::mouseup()
 
 void viewer::mousedown(const float x, const float y)
 {
+  last_click = { x, y };
   pressed = true;
 }
 
@@ -51,7 +52,8 @@ void viewer::mousemotion(const float x, const float y)
 {
   if(pressed)
   {
-
+    // use last_click
+    last_click = { x, y };
   }
 }
 

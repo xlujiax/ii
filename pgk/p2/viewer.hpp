@@ -3,6 +3,7 @@
 #include <cstdio>
 
 #include "obj_format.hpp"
+#include "vec.hpp"
 
 struct viewer
 {
@@ -11,6 +12,8 @@ struct viewer
   float r2;
   float r3;
 
+  vec2 last_click;
+  
   obj_format model;
   
   void init();
