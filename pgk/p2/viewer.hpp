@@ -10,7 +10,7 @@ struct viewer
   float r1;
   float r2;
   float r3;
-  
+
   obj_format model;
   
   void init();
@@ -27,8 +27,5 @@ struct viewer
   void mousewheelup();
   void mousewheeldown();
 
-  void mousemotion(
-    const float x, const float y,
-    const float xrel, const float yrel
-		   );
+  void mousemotion(const float x, const float y);
 };

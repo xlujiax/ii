@@ -23,12 +23,6 @@ void viewer::draw() const
   glRotatef(r2, 0.0, 1.0, 0.0);
   glRotatef(r3, 0.0, 0.0, 1.0);
 
-  float current_matrix[16];
-  glGetFloatv(GL_MODELVIEW_MATRIX, current_matrix);
-  glLoadIdentity();
-  glTranslatef(0.3, 0.3, 0);
-  glMultMatrixf(current_matrix);
-
   model.draw();
   glPopMatrix();
 }
@@ -53,17 +47,11 @@ void viewer::mousedown()
   pressed = true;
 }
 
-void viewer::mousemotion(
-  const float x, const float y,
-  const float xrel, const float yrel
-			 )
+void viewer::mousemotion(const float x, const float y)
 {
   if(pressed)
   {
-    r2 += 0.5 * xrel;
-    r1 += 0.5 * yrel;
 
-    // printf("mouse: (%f, %f), d(%f, %f)\n", x, y, xrel, yrel);
   }
 }
 

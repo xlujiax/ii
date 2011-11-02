@@ -101,10 +101,7 @@ void window::main_loop()
 	      2.0 * (y_screen - static_cast<float>(height) / 2.0)
 	      / static_cast<float>(height);
 
-	    mousemotion(
-	      x_scaled, y_scaled,
-	      static_cast<float>(event.motion.xrel), static_cast<float>(event.motion.yrel)
-			);
+	    mousemotion(x_scaled, y_scaled);
 	  }
 	  break;
 	case SDL_VIDEORESIZE:

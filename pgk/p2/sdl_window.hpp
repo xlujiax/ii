@@ -23,10 +23,7 @@ public:
   void (*mousewheeldown)();
   void (*mouseup)();
   void (*mousedown)();
-  void (*mousemotion)(
-    const float x, const float y,
-    const float xrel, const float yrel
-		      );
+  void (*mousemotion)(const float x, const float y);
   void (*frame)();
 
   void main_loop();
