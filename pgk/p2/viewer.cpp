@@ -6,13 +6,8 @@ void viewer::init()
   pressed = false;
 
   zoom = -4.0;
-  r1 = 50.0;
-  r2 = -30.0;
-  r3 = 11.0;
 
   arc_ball_radius = 3.0;
-  
-  glTranslatef(0.0, 0.0, zoom);
 }
 
 void viewer::animate(float)
@@ -21,7 +16,14 @@ void viewer::animate(float)
 
 void viewer::draw() const
 {
+  glPushMatrix();
+    
+  glLoadIdentity();
+  glMultMatrixf(&last_rot[0]);
+  glTranslatef(0.0, 0.0, zoom);
+  
   model.draw();
+  glPopMatrix();
 }
 
 void viewer::mousewheelup()
@@ -65,13 +67,15 @@ void viewer::mousemotion(const float x, const float y)
     const vec3 last_arc = screen_to_arc(last_click);
 
     const vec3 axis = vec3::cross(actual_arc, last_arc);
-    const float angle = vec3::angle(actual_arc, last_arc);
+    const float dot = vec3::dot(actual_arc, last_arc);
 
-    //float current_matrix[16];
-    //glGetFloatv(GL_MODELVIEW_MATRIX, current_matrix);
-    //glLoadIdentity();
-    glRotatef(rad_to_deg(angle), axis.x, axis.y, axis.z);
-    //glMultMatrixf(current_matrix);
+    quat qrot;
+    qrot.x = axis.x;
+    qrot.y = axis.y;
+    qrot.z = axis.z;
+    qrot.w = dot;
+
+    last_rot = multiply_matrices(last_rot, qrot.get_rotation_matrix());
     
     // use last_click
     last_click = { x, y };

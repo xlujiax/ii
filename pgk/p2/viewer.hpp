@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <cassert>
 #include <cmath>
+#include <array>
 
 #include "obj_format.hpp"
 #include "vec.hpp"
@@ -10,12 +11,11 @@
 struct viewer
 {
   float zoom;
-  float r1;
-  float r2;
-  float r3;
 
   vec2 last_click;
   float arc_ball_radius;
+
+  std::array<float, 16> last_rot;
   
   obj_format model;
   
