@@ -76,6 +76,7 @@ void viewer::mousemotion(const float x, const float y)
     qrot.y = axis.y;
     qrot.z = axis.z;
     qrot.w = dot;
+    qrot.normalize();
 
     last_rot = multiply_matrices(last_rot, qrot.get_rotation_matrix());
     
