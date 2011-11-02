@@ -7,7 +7,7 @@ void viewer::init()
 
   zoom = -4.0;
 
-  arc_ball_radius = 3.0;
+  arc_ball_radius = 2.0;
 
   last_rot = identity_matrix();
 }
