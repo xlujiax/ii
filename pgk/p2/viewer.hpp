@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cstdio>
+#include <cassert>
+#include <cmath>
 
 #include "obj_format.hpp"
 #include "vec.hpp"
@@ -13,6 +15,7 @@ struct viewer
   float r3;
 
   vec2 last_click;
+  float arc_ball_radius;
   
   obj_format model;
   
@@ -31,4 +34,6 @@ struct viewer
   void mousewheeldown();
 
   void mousemotion(const float x, const float y);
+
+  vec3 screen_to_arc(const vec2& s) const;
 };

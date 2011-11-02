@@ -9,6 +9,8 @@ void viewer::init()
   r1 = 50.0;
   r2 = -30.0;
   r3 = 11.0;
+
+  arc_ball_radius = 3.0;
 }
 
 void viewer::animate(float)
@@ -48,10 +50,32 @@ void viewer::mousedown(const float x, const float y)
   pressed = true;
 }
 
+vec3 viewer::screen_to_arc(const vec2& s) const
+{
+  assert(-1.0 <= s.x);
+  assert(s.x <= 1.0);
+  assert(-1.0 <= s.y);
+  assert(s.y <= 1.0);
+  
+  return { s.x, s.y,
+      sqrtf(arc_ball_radius*arc_ball_radius - s.length()) };
+}
+
 void viewer::mousemotion(const float x, const float y)
 {
   if(pressed)
   {
+    const vec2 actual_click = { x, y };
+    const vec3 actual_arc = screen_to_arc(actual_click);
+    const vec3 last_arc = screen_to_arc(last_click);
+
+    const vec3 axis = vec3::cross(actual_arc, last_arc);
+    const float angle = vec3::angle(actual_arc, last_arc);
+
+    glPushMatrix();
+    glRotatef(angle, axis.x, axis.y, axis.z);
+    glPopMatrix();
+    
     // use last_click
     last_click = { x, y };
   }
