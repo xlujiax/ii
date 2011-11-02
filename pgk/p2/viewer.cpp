@@ -21,8 +21,8 @@ void viewer::draw() const
   glPushMatrix();
     
   glLoadIdentity();
-  glMultMatrixf(&last_rot[0]);
   glTranslatef(0.0, 0.0, zoom);
+  glMultMatrixf(&last_rot[0]);
   
   model.draw();
   glPopMatrix();
@@ -56,7 +56,7 @@ vec3 viewer::screen_to_arc(const vec2& s) const
   assert(-1.0 <= s.y);
   assert(s.y <= 1.0);
   
-  return { -s.x, s.y,
+  return { s.x, -s.y,
       sqrtf(arc_ball_radius*arc_ball_radius - s.length()) };
 }
 
