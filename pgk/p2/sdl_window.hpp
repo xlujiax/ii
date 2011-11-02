@@ -22,7 +22,7 @@ public:
   void (*mousewheelup)();
   void (*mousewheeldown)();
   void (*mouseup)();
-  void (*mousedown)();
+  void (*mousedown)(const float x, const float y);
   void (*mousemotion)(const float x, const float y);
   void (*frame)();
 

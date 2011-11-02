@@ -82,7 +82,11 @@ int main(int argc, char* argv[])
   wnd.keyup = [&](const char k) { main_viewer.keyup(k); };
   
   wnd.mouseup = [&]() { main_viewer.mouseup(); };
-  wnd.mousedown = [&]() { main_viewer.mousedown(); };
+  wnd.mousedown = [&](
+    const float x, const float y)
+    {
+      main_viewer.mousedown(x, y);
+    };
 
   wnd.mousewheelup = [&]() { main_viewer.mousewheelup(); };
   wnd.mousewheeldown = [&]() { main_viewer.mousewheeldown(); };

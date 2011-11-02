@@ -22,7 +22,7 @@ struct viewer
   
   bool pressed;
   void mouseup();
-  void mousedown();
+  void mousedown(const float x, const float y);
 
   void mousewheelup();
   void mousewheeldown();

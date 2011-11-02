@@ -42,7 +42,7 @@ void viewer::mouseup()
   pressed = false;
 }
 
-void viewer::mousedown()
+void viewer::mousedown(const float x, const float y)
 {
   pressed = true;
 }

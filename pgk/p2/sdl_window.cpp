@@ -74,7 +74,20 @@ void window::main_loop()
 	  switch(event.button.button)
 	  {
 	    case SDL_BUTTON_LEFT:
-	      mousedown();
+	      {
+		const float x_screen = static_cast<float>(event.button.x);
+		const float y_screen = static_cast<float>(event.button.y);
+
+		// scaling from <0,width> to <-1,1>
+		const float x_scaled =
+		  2.0 * (x_screen - static_cast<float>(width) / 2.0)
+		  / static_cast<float>(width);
+		const float y_scaled = 
+		  2.0 * (y_screen - static_cast<float>(height) / 2.0)
+		  / static_cast<float>(height);
+		
+		mousedown(x_scaled, y_scaled);
+	      }
 	      break;
 	    case SDL_BUTTON_WHEELUP:
 	      mousewheelup();
