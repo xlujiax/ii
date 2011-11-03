@@ -111,6 +111,8 @@ std::vector<vertex> obj_format::pack_into_vertex_structure(
 	  ts.at(t[i] - 1).x, ts.at(t[i] - 1).y
 	};
 
+	printf("ts[%d] = %f %f\n", t[i], vx.u, vx.v);
+
 	const int index_in_vbo = v[i] - 1; // could be index of normal or vertex, both viable, I've choosen vertex index
 	nvs[index_in_vbo] = vx;
       }
@@ -174,9 +176,14 @@ void obj_format::read_from_file(const char* filename)
     static_cast<int>(ts.size()),
     static_cast<int>(indices.size()));
 
+  for(auto t : ts)
+  {
+    printf("uv: %f %f\n", t.x, t.y);
+  }
+
   for(auto vx : vertices)
   {
-    printf("%f %f\n", vx.u, vx.v);
+    printf("x: %f y: %f z: %f u: %f v: %f\n", vx.x, vx.y, vx.z, vx.u, vx.v);
   }
   
 
