@@ -1,8 +1,8 @@
 #include "viewer.hpp"
 
-void viewer::init()
+void viewer::init(const char* filename)
 {
-  model.read_from_file("monkey.obj");
+  model.read_from_file(filename);
   pressed = false;
 
   zoom = -4.0;

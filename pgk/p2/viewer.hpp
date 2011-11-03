@@ -19,7 +19,7 @@ struct viewer
   
   obj_format model;
   
-  void init();
+  void init(const char*);
   void draw() const;
   void animate(float delta_time);
 

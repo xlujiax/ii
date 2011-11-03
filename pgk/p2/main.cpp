@@ -76,7 +76,12 @@ int main(int argc, char* argv[])
     return 1;
 
   frame_timer.init();
-  main_viewer.init();
+  if(argc != 2)
+  {
+    printf("Must supply model\n");
+    exit(0);
+  }
+  main_viewer.init(argv[1]);
 
   wnd.keydown = [&](const char k) { main_viewer.keydown(k); };
   wnd.keyup = [&](const char k) { main_viewer.keyup(k); };
