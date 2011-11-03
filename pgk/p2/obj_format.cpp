@@ -25,6 +25,18 @@ obj_format::line_type obj_format::classify_line(const std::string& line) const
   else return line_type::unclassified;
 }
 
+std::string obj_format::read_material_file(const std::vector<std::string>& lines) const
+{
+  for(auto line : lines)
+    if(classify_line(line) == line_type::material)
+    {
+      char material_file[30];
+      sscanf(line.c_str(), "mtllib %s", material_file);
+      return std::string(material_file);
+    }
+  return "";
+}
+
 std::vector<vec3> obj_format::read_vertices(const std::vector<std::string>& lines) const
 {
   std::vector<vec3> vs;
