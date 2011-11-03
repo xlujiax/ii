@@ -20,6 +20,7 @@ obj_format::line_type obj_format::classify_line(const std::string& line) const
   else if(line.substr(0,3) == "vn ") return line_type::normal;
   else if(line.substr(0,3) == "vt ") return line_type::texture;
   else if(line.substr(0,2) == "f ") return line_type::face;
+  else if(line.substr(0,7) == "mtllib ") return line_type::material;
   else if(line[0] == '#') return line_type::comment;
   else return line_type::unclassified;
 }

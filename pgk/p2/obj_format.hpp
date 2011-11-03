@@ -34,7 +34,7 @@ private:
 
   enum class line_type
   {
-    vertex, normal, texture, face, comment, unclassified
+    vertex, normal, texture, face, comment, material, unclassified
   };
 
   line_type classify_line(const std::string& line) const;
