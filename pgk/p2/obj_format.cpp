@@ -165,10 +165,15 @@ void obj_format::read_from_file(const char* filename)
   auto ns = read_normals(model);
   auto ts = read_textures(model);
 
-  assert(ns.size() == vs.size()); // normal per vertex
-
   vertices = pack_into_vertex_structure(model, vs, ns, ts);
   indices = read_indices(model, vertices);
+
+  printf("Read:\n%d vertices\n%d normals\n%d texture coordinates\n%d indices\n",
+    static_cast<int>(vs.size()),
+    static_cast<int>(ns.size()),
+    static_cast<int>(ts.size()),
+    static_cast<int>(indices.size()));
+  
 
   glGenBuffers(1, &vertices_vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vertices_vbo);
@@ -186,6 +191,7 @@ void obj_format::read_from_file(const char* filename)
   glBindTexture(GL_TEXTURE_2D, texture_id);
 
   glShadeModel(GL_SMOOTH);
+
 }
 
 void obj_format::draw() const
