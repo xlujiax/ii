@@ -40,14 +40,14 @@ private:
   line_type classify_line(const std::string& line) const;
   std::vector<vec3> read_vertices(const std::vector<std::string>& lines) const;
   std::vector<vec3> read_normals(const std::vector<std::string>& lines) const;
-  std::vector<vec3> read_textures(const std::vector<std::string>& lines) const;
+  std::vector<vec2> read_textures(const std::vector<std::string>& lines) const;
   std::string read_material_file(const std::vector<std::string>& lines) const;
   std::string read_texture_filename(const std::vector<std::string>& lines) const;
   std::vector<vertex> pack_into_vertex_structure(
     const std::vector<std::string>& lines,
     const std::vector<vec3>& vs,
     const std::vector<vec3>& ns,
-    const std::vector<vec3>& ts
+    const std::vector<vec2>& ts
 						 ) const;
   std::vector<GLuint> read_indices(const std::vector<std::string>& lines,
     const std::vector<vertex>& nvs) const;

@@ -65,16 +65,16 @@ std::vector<vec3> obj_format::read_normals(const std::vector<std::string>& lines
   return ns;
 }
 
-std::vector<vec3> obj_format::read_textures(const std::vector<std::string>& lines) const
+std::vector<vec2> obj_format::read_textures(const std::vector<std::string>& lines) const
 {
-  std::vector<vec3> ts;
+  std::vector<vec2> ts;
   
   for(auto line : lines)
     if(classify_line(line) == line_type::texture)
     {
       float u, v;
       sscanf(line.c_str(), "vt %f %f", &u, &v);
-      ts.push_back({ u, v, 0.0 });
+      ts.push_back({ u, v });
     }
   return ts;
 }
@@ -85,7 +85,7 @@ std::vector<vertex> obj_format::pack_into_vertex_structure(
   const std::vector<std::string>& lines,
   const std::vector<vec3>& vs,
   const std::vector<vec3>& ns,
-  const std::vector<vec3>& ts
+  const std::vector<vec2>& ts
 							   ) const
 {
   std::vector<vertex> nvs;
