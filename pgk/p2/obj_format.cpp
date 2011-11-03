@@ -144,6 +144,19 @@ std::vector<GLuint> obj_format::read_indices(const std::vector<std::string>& lin
   return fs;
 }
 
+std::string obj_format::read_texture_filename(const std::vector<std::string>& lines) const
+{
+  for(auto line : lines)
+    if(line.substr(0,4) == "map_")
+    {
+      char head[20];
+      char filename[40];
+      sscanf(line.c_str(), "%s %s", head, filename);
+      return std::string(filename);
+    }
+  return "";
+}
+
 void obj_format::read_from_file(const char* filename)
 {
   auto model = file_to_memory(filename);
@@ -165,7 +178,10 @@ void obj_format::read_from_file(const char* filename)
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_vbo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
 
-  texture_id = load_texture("wall.png", texture_width, texture_height);
+  std::string mtl_file = read_material_file(model);
+  auto materials = file_to_memory(mtl_file.c_str());
+  std::string texture_file = read_texture_filename(materials);
+  texture_id = load_texture(texture_file.c_str(), texture_width, texture_height);
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, texture_id);
 
