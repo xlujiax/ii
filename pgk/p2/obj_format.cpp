@@ -173,6 +173,11 @@ void obj_format::read_from_file(const char* filename)
     static_cast<int>(ns.size()),
     static_cast<int>(ts.size()),
     static_cast<int>(indices.size()));
+
+  for(auto vx : vertices)
+  {
+    printf("%f %f\n", vx.u, vx.v);
+  }
   
 
   glGenBuffers(1, &vertices_vbo);
@@ -188,6 +193,7 @@ void obj_format::read_from_file(const char* filename)
   std::string texture_file = read_texture_filename(materials);
   texture_id = load_texture(texture_file.c_str(), texture_width, texture_height);
   glEnable(GL_TEXTURE_2D);
+  glClientActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, texture_id);
 
   glShadeModel(GL_SMOOTH);
@@ -204,7 +210,6 @@ void obj_format::draw() const
   glEnableClientState(GL_NORMAL_ARRAY);
   glNormalPointer(GL_FLOAT, sizeof(vertex), BUFFER_OFFSET(3 * sizeof(float)));
 
-  glClientActiveTexture(GL_TEXTURE0);
   glEnableClientState(GL_TEXTURE_COORD_ARRAY);
   glTexCoordPointer(2, GL_FLOAT, sizeof(vertex), BUFFER_OFFSET(6 * sizeof(float)));
   
