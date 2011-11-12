@@ -89,7 +89,7 @@ std::vector<vertex> obj_format::pack_into_vertex_structure(
 							   ) const
 {
   std::vector<vertex> nvs;
-  nvs.resize(vs.size());
+  nvs.reserve(vs.size()); // guaranteed to be at least vs.size amount
 
   for(auto line : lines)
     if(classify_line(line) == line_type::face)
@@ -111,8 +111,7 @@ std::vector<vertex> obj_format::pack_into_vertex_structure(
 	  ts.at(t[i] - 1).x, ts.at(t[i] - 1).y
 	};
 
-	const int index_in_vbo = v[i] - 1; // could be index of normal or vertex, both viable, I've choosen vertex index
-	nvs[index_in_vbo] = vx;
+	nvs.push_back(vx);
       }
     }
   return nvs;
@@ -122,25 +121,12 @@ std::vector<GLuint> obj_format::read_indices(const std::vector<std::string>& lin
   const std::vector<vertex>& nvs) const
 {
   std::vector<GLuint> fs;
-
-  for(auto line : lines)
-    if(classify_line(line) == line_type::face)
+  fs.reserve(nvs.size());
+  int i = 0;
+  std::generate_n(std::back_inserter(fs), nvs.size(), [&]
     {
-      int v[3];
-      int unused;
-
-      sscanf(line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d",
-	&v[0], &unused, &unused,
-	&v[1], &unused, &unused,
-	&v[2], &unused, &unused
-	     );
-      for(int i = 0; i < 3; ++i)
-      {
-	const int index_in_vbo = v[i] - 1; // could be index of normal or vertex, both viable, I've choosen vertex index
-       
-	fs.push_back(index_in_vbo);
-      }
-    }
+      return i++;
+    });
   return fs;
 }
 
