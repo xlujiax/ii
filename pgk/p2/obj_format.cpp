@@ -121,6 +121,7 @@ std::vector<GLuint> obj_format::read_indices(const std::vector<std::string>& lin
   const std::vector<vertex>& nvs) const
 {
   std::vector<GLuint> fs;
+  fs.reserve(nvs.size());
 
   int i = 0;
 
@@ -178,9 +179,7 @@ void obj_format::read_from_file(const char* filename)
   std::string texture_file = read_texture_filename(materials);
   texture_id = load_texture(texture_file.c_str());
 
-  printf("Texture: %d\n",  texture_id);
   glEnable(GL_TEXTURE_2D);
-  // glBindTexture(GL_TEXTURE_2D, texture_id);
 
   glShadeModel(GL_SMOOTH);
 
