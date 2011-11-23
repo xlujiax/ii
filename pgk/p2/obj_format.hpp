@@ -6,6 +6,7 @@
 #include <cassert>
 #include <vector>
 #include <map>
+#include <iostream>
 
 #include "load_texture.hpp"
 #include "vec.hpp"
