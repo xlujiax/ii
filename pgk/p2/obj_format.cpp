@@ -108,7 +108,7 @@ std::vector<vertex> obj_format::pack_into_vertex_structure(
 	vertex vx = {
 	  vs.at(v[i] - 1).x, vs.at(v[i] - 1).y, vs.at(v[i] - 1).z,
 	  ns.at(n[i] - 1).x, ns.at(n[i] - 1).y, ns.at(n[i] - 1).z,
-	  ts.at(t[i] - 1).x, ts.at(t[i] - 1).y
+	  ts.at(t[i] - 1).x, 1.0f - ts.at(t[i] - 1).y
 	};
 
         nvs.push_back(vx);
