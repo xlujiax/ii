@@ -1,3 +1,4 @@
+compiler = g++-4.5
 opengl_libs = -lGL -lGLU -lGLEW -lpng
 sdl_libs = `sdl-config --cflags --libs`
 error_flags = -Wall -Werror
@@ -11,25 +12,25 @@ output = viewer.e
 all: viewer.e
 
 sdl_window.o: sdl_window.cpp sdl_window.hpp
-	g++ $(error_flags) $(std_flag) -c sdl_window.cpp $(libs)
+	$(compiler) $(error_flags) $(std_flag) -c sdl_window.cpp $(libs)
 
 timer.o: timer.cpp timer.hpp
-	g++ $(error_flags) $(std_flag) -c timer.cpp $(libs)
+	$(compiler) $(error_flags) $(std_flag) -c timer.cpp $(libs)
 
 vec.o: vec.cpp vec.hpp
-	g++ $(error_flags) $(std_flag) -c vec.cpp $(libs)
+	$(compiler) $(error_flags) $(std_flag) -c vec.cpp $(libs)
 
 load_texture.o: load_texture.cpp load_texture.hpp
-	g++ $(error_flags) $(std_flag) -c load_texture.cpp $(libs)
+	$(compiler) $(error_flags) $(std_flag) -c load_texture.cpp $(libs)
 
 obj_format.o: obj_format.cpp obj_format.hpp
-	g++ $(error_flags) $(std_flag) -c obj_format.cpp $(libs)
+	$(compiler) $(error_flags) $(std_flag) -c obj_format.cpp $(libs)
 
 viewer.o: viewer.cpp viewer.hpp
-	g++ $(error_flags) $(std_flag) -c viewer.cpp $(libs)
+	$(compiler) $(error_flags) $(std_flag) -c viewer.cpp $(libs)
 
 $(output): main.cpp $(modules)
-	g++ $(error_flags) $(std_flag) main.cpp $(modules) $(libs) -o $(output)
+	$(compiler) $(error_flags) $(std_flag) main.cpp $(modules) $(libs) -o $(output)
 
 clear:
 	rm $(modules) $(output)

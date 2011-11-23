@@ -27,11 +27,11 @@ obj_format::line_type obj_format::classify_line(const std::string& line) const
 
 std::string obj_format::read_material_file(const std::vector<std::string>& lines) const
 {
-  for(auto line : lines)
-    if(classify_line(line) == line_type::material)
+  for(auto line = lines.begin(); line != lines.end(); ++line)
+    if(classify_line(*line) == line_type::material)
     {
       char material_file[30];
-      sscanf(line.c_str(), "mtllib %s", material_file);
+      sscanf(line->c_str(), "mtllib %s", material_file);
       return std::string(material_file);
     }
   return "";
@@ -40,13 +40,13 @@ std::string obj_format::read_material_file(const std::vector<std::string>& lines
 std::vector<vec3> obj_format::read_vertices(const std::vector<std::string>& lines) const
 {
   std::vector<vec3> vs;
-  
-  for(auto line : lines)
-    if(classify_line(line) == line_type::vertex)
+
+  for(auto line = lines.begin(); line != lines.end(); ++line)
+    if(classify_line(*line) == line_type::vertex)
     {
       float x,y,z;
-      sscanf(line.c_str(), "v %f %f %f", &x, &y, &z);
-      vs.push_back({ x, y, z });
+      sscanf(line->c_str(), "v %f %f %f", &x, &y, &z);
+      vs.push_back(vec3(x, y, z));
     }
   return vs;
 }
@@ -54,13 +54,13 @@ std::vector<vec3> obj_format::read_vertices(const std::vector<std::string>& line
 std::vector<vec3> obj_format::read_normals(const std::vector<std::string>& lines) const
 {
   std::vector<vec3> ns;
-  
-  for(auto line : lines)
-    if(classify_line(line) == line_type::normal)
+
+  for(auto line = lines.begin(); line != lines.end(); ++line)
+    if(classify_line(*line) == line_type::normal)
     {
       float x,y,z;
-      sscanf(line.c_str(), "vn %f %f %f", &x, &y, &z);
-      ns.push_back({ x, y, z });
+      sscanf(line->c_str(), "vn %f %f %f", &x, &y, &z);
+      ns.push_back(vec3(x, y, z));
     }
   return ns;
 }
@@ -69,12 +69,12 @@ std::vector<vec2> obj_format::read_textures(const std::vector<std::string>& line
 {
   std::vector<vec2> ts;
   
-  for(auto line : lines)
-    if(classify_line(line) == line_type::texture)
+  for(auto line = lines.begin(); line != lines.end(); ++line)
+    if(classify_line(*line) == line_type::texture)
     {
       float u, v;
-      sscanf(line.c_str(), "vt %f %f", &u, &v);
-      ts.push_back({ u, v });
+      sscanf(line->c_str(), "vt %f %f", &u, &v);
+      ts.push_back(vec2(u, v));
     }
   return ts;
 }
@@ -91,14 +91,14 @@ std::vector<vertex> obj_format::pack_into_vertex_structure(
   std::vector<vertex> nvs;
   nvs.resize(vs.size());
 
-  for(auto line : lines)
-    if(classify_line(line) == line_type::face)
+  for(auto line = lines.begin(); line != lines.end(); ++line)
+    if(classify_line(*line) == line_type::face)
     {
       int v[3];
       int n[3];
       int t[3];
 
-      sscanf(line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d",
+      sscanf(line->c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d",
 	&v[0], &t[0], &n[0],
 	&v[1], &t[1], &n[1],
 	&v[2], &t[2], &n[2]
@@ -123,13 +123,13 @@ std::vector<GLuint> obj_format::read_indices(const std::vector<std::string>& lin
 {
   std::vector<GLuint> fs;
 
-  for(auto line : lines)
-    if(classify_line(line) == line_type::face)
+  for(auto line = lines.begin(); line != lines.end(); ++line)
+    if(classify_line(*line) == line_type::face)
     {
       int v[3];
       int unused;
 
-      sscanf(line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d",
+      sscanf(line->c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d",
 	&v[0], &unused, &unused,
 	&v[1], &unused, &unused,
 	&v[2], &unused, &unused
@@ -146,16 +146,17 @@ std::vector<GLuint> obj_format::read_indices(const std::vector<std::string>& lin
 
 std::string obj_format::read_texture_filename(const std::vector<std::string>& lines) const
 {
-  for(auto line : lines)
-    if(line.substr(0,4) == "map_")
+  for(auto line = lines.begin(); line != lines.end(); ++line)
+    if(line->substr(0,4) == "map_")
     {
       char head[20];
       char filename[40];
-      sscanf(line.c_str(), "%s %s", head, filename);
+      sscanf(line->c_str(), "%s %s", head, filename);
       return std::string(filename);
     }
   return "";
 }
+
 
 void obj_format::read_from_file(const char* filename)
 {
