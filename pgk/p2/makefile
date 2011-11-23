@@ -1,5 +1,5 @@
 compiler = g++-4.5
-opengl_libs = -lGL -lGLU -lGLEW -lpng
+opengl_libs = -lGL -lGLU -lGLEW -lSDL_image
 sdl_libs = `sdl-config --cflags --libs`
 error_flags = -Wall -Werror
 std_flag = -std=c++0x
