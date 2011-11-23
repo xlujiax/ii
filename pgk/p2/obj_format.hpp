@@ -5,7 +5,7 @@
 #include <string>
 #include <cassert>
 #include <vector>
-#include <algorithm>
+#include <map>
 
 #include "load_texture.hpp"
 #include "vec.hpp"
