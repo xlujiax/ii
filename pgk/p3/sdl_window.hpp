@@ -10,7 +10,7 @@ struct window
 private:
   const SDL_VideoInfo* video;
   int get_bits_per_pixel() { return video->vfmt->BitsPerPixel; }
-  void create_viewport(const int width_param, const int height_param);
+  bool create_viewport(const int width_param, const int height_param);
 public:
   int width;
   int height;
