@@ -23,9 +23,9 @@ class viewer
   void init_program();
 
   struct {
-    bool w,s,a,d;
+    bool w,s,a,d,e,r;
   } keys;
-  float offx, offy;
+  float offx, offy, offz;
 public:
   void init();
   void draw() const;

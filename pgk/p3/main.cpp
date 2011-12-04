@@ -14,6 +14,11 @@ int main(int argc, char* argv[])
 
   wnd.setup_opengl = [](const int width, const int height) {
     glViewport(0, 0, (GLsizei) width, (GLsizei) height);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+    glDepthRange(0.0f, 1.0f);
   };
 
   if(!wnd.setup(640, 480))

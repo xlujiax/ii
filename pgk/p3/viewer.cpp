@@ -2,9 +2,12 @@
 
 void viewer::init_program()
 {
-  keys.w = keys.s = keys.a = keys.d = false;
+  keys.w = keys.s =
+    keys.a = keys.d =
+    keys.e = keys.r = false;
   offx = 0.15f;
   offy = 0.15f;
+  offz = 0.15f;
   
   std::vector<GLuint> shaderList;
 
@@ -17,7 +20,7 @@ void viewer::init_program()
 
   perspectiveMatrixUnif = glGetUniformLocation(theProgram, "perspectiveMatrix");
 
-  float fFrustumScale = 1.0f; float fzNear = 0.5f; float fzFar = 3.0f;
+  float fFrustumScale = 1.0f; float fzNear = 0.0f; float fzFar = 1.0f;
 
   float theMatrix[16];
   memset(theMatrix, 0, sizeof(float) * 16);
@@ -156,10 +159,12 @@ void viewer::init()
 
 void viewer::draw() const
 {
+  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+  glClearDepth(1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glUseProgram(theProgram);
-  glUniform2f(offsetUniform, offx, offy);
+  glUniform3f(offsetUniform, offx, offy, offz);
 
   size_t colorData = sizeof(vertexData) / 2;
   glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
@@ -182,6 +187,8 @@ void viewer::update(const float delta_time)
   if(keys.s) offy -= speed * delta_time;
   if(keys.a) offx -= speed * delta_time;
   if(keys.d) offx += speed * delta_time;
+  if(keys.e) offz -= speed * delta_time;
+  if(keys.r) offz += speed * delta_time;
 }
 
 void viewer::keydown(const char k)
@@ -192,6 +199,8 @@ void viewer::keydown(const char k)
     case 's': keys.s = true; break;
     case 'a': keys.a = true; break;
     case 'd': keys.d = true; break;
+    case 'e': keys.e = true; break;
+    case 'r': keys.r = true; break;
   }
 }
 
@@ -203,5 +212,7 @@ void viewer::keyup(const char k)
     case 's': keys.s = false; break;
     case 'a': keys.a = false; break;
     case 'd': keys.d = false; break;
+    case 'e': keys.e = false; break;
+    case 'r': keys.r = false; break;
   }
 }
