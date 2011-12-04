@@ -51,8 +51,6 @@ void InitializeProgram()
   shaderList.push_back(shader(GL_FRAGMENT_SHADER, "shaders/sh.frag").get_id());
 
   theProgram = CreateProgram(shaderList);
-
-  std::for_each(shaderList.begin(), shaderList.end(), glDeleteShader);
 }
 
 const float vertexPositions[] = {

@@ -14,5 +14,6 @@ class shader
   static GLuint compile_shader(GLenum eShaderType, const std::string &strShaderFile);
 public:
   shader(GLenum eShaderType, const std::string& file);
+  ~shader();
   GLuint get_id() const { return id; }
 };

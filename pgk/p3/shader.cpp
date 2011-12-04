@@ -5,6 +5,10 @@ shader::shader(GLenum eShaderType, const std::string& file)
   id = compile_shader(eShaderType, file_contents(file));
 }
 
+shader::~shader()
+{
+  glDeleteShader(id);
+}
 
 std::string shader::file_contents(const std::string& file)
 {
