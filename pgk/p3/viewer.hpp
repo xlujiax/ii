@@ -21,8 +21,16 @@ class viewer
 
   void init_vbo();
   void init_program();
+
+  struct {
+    bool w,s,a,d;
+  } keys;
+  float offx, offy;
 public:
   void init();
   void draw() const;
   void update(const float delta_time);
+
+  void keydown(const char);
+  void keyup(const char);
 };

@@ -2,6 +2,10 @@
 
 void viewer::init_program()
 {
+  keys.w = keys.s = keys.a = keys.d = false;
+  offx = 0.15f;
+  offy = 0.15f;
+  
   std::vector<GLuint> shaderList;
 
   shaderList.push_back(LoadShader(GL_VERTEX_SHADER, "shaders/sh.vert"));
@@ -155,7 +159,7 @@ void viewer::draw() const
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glUseProgram(theProgram);
-  glUniform2f(offsetUniform, 0.15f, 0.15f);
+  glUniform2f(offsetUniform, offx, offy);
 
   size_t colorData = sizeof(vertexData) / 2;
   glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
@@ -171,4 +175,33 @@ void viewer::draw() const
   glUseProgram(0);
 }
 
-void viewer::update(const float delta_time) {}
+void viewer::update(const float delta_time)
+{
+  const float speed = 0.001;
+  if(keys.w) offy += speed * delta_time;
+  if(keys.s) offy -= speed * delta_time;
+  if(keys.a) offx -= speed * delta_time;
+  if(keys.d) offx += speed * delta_time;
+}
+
+void viewer::keydown(const char k)
+{
+  switch(k)
+  {
+    case 'w': keys.w = true; break;
+    case 's': keys.s = true; break;
+    case 'a': keys.a = true; break;
+    case 'd': keys.d = true; break;
+  }
+}
+
+void viewer::keyup(const char k)
+{
+  switch(k)
+  {
+    case 'w': keys.w = false; break;
+    case 's': keys.s = false; break;
+    case 'a': keys.a = false; break;
+    case 'd': keys.d = false; break;
+  }
+}
