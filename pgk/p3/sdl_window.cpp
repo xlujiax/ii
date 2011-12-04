@@ -37,7 +37,7 @@ bool window::setup(const int width_param, const int height_param)
 }
 
 
-void window::handle_resize(const int width_param, const int height_param)
+void window::create_viewport(const int width_param, const int height_param)
 {
   width = width_param;
   height = height_param;
@@ -122,7 +122,7 @@ void window::main_loop()
 	  }
 	  break;
 	case SDL_VIDEORESIZE:
-	  handle_resize(event.resize.w, event.resize.h);
+	  create_viewport(event.resize.w, event.resize.h);
 	  break;
         case SDL_QUIT:
           exit(0);
