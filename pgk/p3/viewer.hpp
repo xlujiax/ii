@@ -13,8 +13,10 @@
 class viewer
 {
   GLuint theProgram;
-  GLuint positionBufferObject;
+  GLuint vertexBufferObject;
   GLuint vao;
+  
+  GLuint offsetUniform;
 
   void init_vbo();
   void init_program();
