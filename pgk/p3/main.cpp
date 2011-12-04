@@ -47,8 +47,11 @@ void InitializeProgram()
 {
   std::vector<GLuint> shaderList;
 
-  shaderList.push_back(shader(GL_VERTEX_SHADER, "shaders/sh.vert").get_id());
-  shaderList.push_back(shader(GL_FRAGMENT_SHADER, "shaders/sh.frag").get_id());
+  shader vertex_shader(GL_VERTEX_SHADER, "shaders/sh.vert");
+  shader fragment_shader(GL_FRAGMENT_SHADER, "shaders/sh.frag");
+
+  shaderList.push_back(vertex_shader.get_id());
+  shaderList.push_back(fragment_shader.get_id());
 
   theProgram = CreateProgram(shaderList);
 }
