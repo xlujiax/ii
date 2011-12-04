@@ -41,7 +41,11 @@ void window::handle_resize(const int width_param, const int height_param)
 {
   width = width_param;
   height = height_param;
-  SDL_SetVideoMode(width, height, get_bits_per_pixel(), SDL_OPENGL | SDL_RESIZABLE);
+  if(SDL_SetVideoMode(width, height, get_bits_per_pixel(), SDL_OPENGL | SDL_RESIZABLE) == 0) {
+    std::cout << "Couldn't set video mode: "
+	 << SDL_GetError() << std::endl;
+    exit(0);
+  }
 
   setup_opengl(width, height);
 }
