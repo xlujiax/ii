@@ -2,9 +2,6 @@
 
 bool window::setup(const int width_param, const int height_param)
 {
-  width = width_param;
-  height = height_param;
-  
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cout << "Couldn't initialize SDL: "
 	      << SDL_GetError() << std::endl;
@@ -25,13 +22,7 @@ bool window::setup(const int width_param, const int height_param)
   SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16 );
   SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
-  if(SDL_SetVideoMode(width, height, get_bits_per_pixel(), SDL_OPENGL | SDL_RESIZABLE) == 0) {
-    std::cout << "Couldn't set video mode: "
-	 << SDL_GetError() << std::endl;
-    return false;
-  }
-
-  setup_opengl(width, height);
+  create_viewport(width_param, height_param);
 
   return true;
 }
