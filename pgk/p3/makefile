@@ -11,17 +11,11 @@ output = viewer.e
 
 all: viewer.e
 
-sdl_window.o: sdl_window.cpp sdl_window.hpp
-	$(compiler) $(error_flags) $(std_flag) -c sdl_window.cpp $(libs)
-
-timer.o: timer.cpp timer.hpp
-	$(compiler) $(error_flags) $(std_flag) -c timer.cpp $(libs)
-
-shader.o: shader.cpp shader.hpp
-	$(compiler) $(error_flags) $(std_flag) -c shader.cpp $(libs)
+%.o: %.cpp %.hpp
+	$(compiler) $(error_flags) $(std_flag) -c $< $(libs)
 
 $(output): main.cpp $(modules)
-	$(compiler) $(error_flags) $(std_flag) main.cpp $(modules) $(libs) -o $(output)
+	$(compiler) $(error_flags) $(std_flag) $< $(modules) $(libs) -o $(output)
 
 clear:
 	rm $(modules) $(output)
