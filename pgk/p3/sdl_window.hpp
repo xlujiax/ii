@@ -11,9 +11,9 @@ private:
   const SDL_VideoInfo* video;
   int get_bits_per_pixel() { return video->vfmt->BitsPerPixel; }
   bool create_viewport(const int width_param, const int height_param);
-public:
   int width;
   int height;
+public:
   bool setup(const int width_param, const int height_param);
 
   void (*setup_opengl)(const int width, const int height);
