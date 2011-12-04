@@ -12,6 +12,12 @@
 
 class viewer
 {
+  GLuint theProgram;
+  GLuint positionBufferObject;
+  GLuint vao;
+
+  void init_vbo();
+  void init_program();
 public:
   void init();
   void draw() const;

@@ -1,8 +1,6 @@
 #include "viewer.hpp"
 
-GLuint theProgram;
-
-void InitializeProgram()
+void viewer::init_program()
 {
   std::vector<GLuint> shaderList;
 
@@ -18,11 +16,7 @@ const float vertexPositions[] = {
   -0.75f, -0.75f, 0.0f, 1.0f,
 };
 
-GLuint positionBufferObject;
-GLuint vao;
-
-
-void InitializeVertexBuffer()
+void viewer::init_vbo()
 {
   glGenBuffers(1, &positionBufferObject);
 
@@ -34,8 +28,8 @@ void InitializeVertexBuffer()
 
 void viewer::init()
 {
-  InitializeProgram();
-  InitializeVertexBuffer();
+  init_program();
+  init_vbo();
 
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
