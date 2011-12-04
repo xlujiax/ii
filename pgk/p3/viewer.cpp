@@ -32,11 +32,13 @@ std::array<float, 16> viewer::translation_matrix() const
 
 std::array<float, 16> viewer::rotation_matrix() const
 {
+  const float c = cosf(rot);
+  const float s = sinf(rot);
   std::array<float, 16> m;
   m.fill(0.0f);
   m[0] = 1.0f;
-  m[5] = 1.0f;
-  m[10] = 1.0f;
+  m[5] = c; m[6] = -s;
+  m[9] = s; m[10] = c;
   m[15] = 1.0f;
   
   return m;
@@ -46,10 +48,12 @@ void viewer::init_program()
 {
   keys.w = keys.s =
     keys.a = keys.d =
-    keys.e = keys.r = false;
+    keys.q = keys.e =
+    keys.r = keys.t = false;
   offx = 0.15f;
   offy = 0.15f;
   offz = -1.85f;
+  rot = 0.0f;
 
   std::vector<GLuint> shaderList;
 
@@ -59,7 +63,6 @@ void viewer::init_program()
   theProgram = CreateProgram(shaderList);
 
   offsetUniform = glGetUniformLocation(theProgram, "offset");
-
   perspectiveMatrixUnif = glGetUniformLocation(theProgram, "perspectiveMatrix");
   translationMatrixUnif = glGetUniformLocation(theProgram, "translationMatrix");
   rotationMatrixUnif = glGetUniformLocation(theProgram, "rotationMatrix");
@@ -68,108 +71,6 @@ void viewer::init_program()
   glUniformMatrix4fv(perspectiveMatrixUnif, 1, GL_FALSE, &perspective_matrix()[0]);
   glUseProgram(0);
 }
-
-const float vertexData[] = {
-  0.25f,  0.25f, 0.75f, 1.0f,
-  0.25f, -0.25f, 0.75f, 1.0f,
-  -0.25f,  0.25f, 0.75f, 1.0f,
-
-  0.25f, -0.25f, 0.75f, 1.0f,
-  -0.25f, -0.25f, 0.75f, 1.0f,
-  -0.25f,  0.25f, 0.75f, 1.0f,
-
-  0.25f,  0.25f, -0.75f, 1.0f,
-  -0.25f,  0.25f, -0.75f, 1.0f,
-  0.25f, -0.25f, -0.75f, 1.0f,
-
-  0.25f, -0.25f, -0.75f, 1.0f,
-  -0.25f,  0.25f, -0.75f, 1.0f,
-  -0.25f, -0.25f, -0.75f, 1.0f,
-
-  -0.25f,  0.25f,  0.75f, 1.0f,
-  -0.25f, -0.25f,  0.75f, 1.0f,
-  -0.25f, -0.25f, -0.75f, 1.0f,
-
-  -0.25f,  0.25f,  0.75f, 1.0f,
-  -0.25f, -0.25f, -0.75f, 1.0f,
-  -0.25f,  0.25f, -0.75f, 1.0f,
-
-  0.25f,  0.25f,  0.75f, 1.0f,
-  0.25f, -0.25f, -0.75f, 1.0f,
-  0.25f, -0.25f,  0.75f, 1.0f,
-
-  0.25f,  0.25f,  0.75f, 1.0f,
-  0.25f,  0.25f, -0.75f, 1.0f,
-  0.25f, -0.25f, -0.75f, 1.0f,
-
-  0.25f,  0.25f, -0.75f, 1.0f,
-  0.25f,  0.25f,  0.75f, 1.0f,
-  -0.25f,  0.25f,  0.75f, 1.0f,
-
-  0.25f,  0.25f, -0.75f, 1.0f,
-  -0.25f,  0.25f,  0.75f, 1.0f,
-  -0.25f,  0.25f, -0.75f, 1.0f,
-
-  0.25f, -0.25f, -0.75f, 1.0f,
-  -0.25f, -0.25f,  0.75f, 1.0f,
-  0.25f, -0.25f,  0.75f, 1.0f,
-
-  0.25f, -0.25f, -0.75f, 1.0f,
-  -0.25f, -0.25f, -0.75f, 1.0f,
-  -0.25f, -0.25f,  0.75f, 1.0f,
-
-
-
-
-  0.0f, 0.0f, 1.0f, 1.0f,
-  0.0f, 0.0f, 1.0f, 1.0f,
-  0.0f, 0.0f, 1.0f, 1.0f,
-
-  0.0f, 0.0f, 1.0f, 1.0f,
-  0.0f, 0.0f, 1.0f, 1.0f,
-  0.0f, 0.0f, 1.0f, 1.0f,
-
-  0.8f, 0.8f, 0.8f, 1.0f,
-  0.8f, 0.8f, 0.8f, 1.0f,
-  0.8f, 0.8f, 0.8f, 1.0f,
-
-  0.8f, 0.8f, 0.8f, 1.0f,
-  0.8f, 0.8f, 0.8f, 1.0f,
-  0.8f, 0.8f, 0.8f, 1.0f,
-
-  0.0f, 1.0f, 0.0f, 1.0f,
-  0.0f, 1.0f, 0.0f, 1.0f,
-  0.0f, 1.0f, 0.0f, 1.0f,
-
-  0.0f, 1.0f, 0.0f, 1.0f,
-  0.0f, 1.0f, 0.0f, 1.0f,
-  0.0f, 1.0f, 0.0f, 1.0f,
-
-  0.5f, 0.5f, 0.0f, 1.0f,
-  0.5f, 0.5f, 0.0f, 1.0f,
-  0.5f, 0.5f, 0.0f, 1.0f,
-
-  0.5f, 0.5f, 0.0f, 1.0f,
-  0.5f, 0.5f, 0.0f, 1.0f,
-  0.5f, 0.5f, 0.0f, 1.0f,
-
-  1.0f, 0.0f, 0.0f, 1.0f,
-  1.0f, 0.0f, 0.0f, 1.0f,
-  1.0f, 0.0f, 0.0f, 1.0f,
-
-  1.0f, 0.0f, 0.0f, 1.0f,
-  1.0f, 0.0f, 0.0f, 1.0f,
-  1.0f, 0.0f, 0.0f, 1.0f,
-
-  0.0f, 1.0f, 1.0f, 1.0f,
-  0.0f, 1.0f, 1.0f, 1.0f,
-  0.0f, 1.0f, 1.0f, 1.0f,
-
-  0.0f, 1.0f, 1.0f, 1.0f,
-  0.0f, 1.0f, 1.0f, 1.0f,
-  0.0f, 1.0f, 1.0f, 1.0f,
-
-};
 
 void viewer::init_vbo()
 {
@@ -222,12 +123,14 @@ void viewer::draw() const
 void viewer::update(const float delta_time)
 {
   const float speed = 0.001;
-  if(keys.w) offy += speed * delta_time;
-  if(keys.s) offy -= speed * delta_time;
+  if(keys.w) offz += speed * delta_time;
+  if(keys.s) offz -= speed * delta_time;
   if(keys.a) offx -= speed * delta_time;
   if(keys.d) offx += speed * delta_time;
-  if(keys.e) offz -= speed * delta_time;
-  if(keys.r) offz += speed * delta_time;
+  if(keys.t) offy -= speed * delta_time;
+  if(keys.r) offy += speed * delta_time;
+  if(keys.q) rot -= speed * delta_time;
+  if(keys.e) rot += speed * delta_time;
 }
 
 void viewer::keydown(const char k)
@@ -238,8 +141,10 @@ void viewer::keydown(const char k)
     case 's': keys.s = true; break;
     case 'a': keys.a = true; break;
     case 'd': keys.d = true; break;
+    case 'q': keys.q = true; break;
     case 'e': keys.e = true; break;
     case 'r': keys.r = true; break;
+    case 't': keys.t = true; break;
   }
 }
 
@@ -251,7 +156,9 @@ void viewer::keyup(const char k)
     case 's': keys.s = false; break;
     case 'a': keys.a = false; break;
     case 'd': keys.d = false; break;
+    case 'q': keys.q = false; break;
     case 'e': keys.e = false; break;
     case 'r': keys.r = false; break;
+    case 't': keys.t = false; break;
   }
 }

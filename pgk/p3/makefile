@@ -5,7 +5,7 @@ error_flags = -Wall -Werror
 std_flag = -std=c++0x
 
 libs = $(opengl_libs) $(sdl_libs)
-modules = timer.o sdl_window.o shader.o viewer.o
+modules = timer.o sdl_window.o shader.o viewer.o loader.o
 
 output = viewer.e
 

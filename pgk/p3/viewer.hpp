@@ -5,11 +5,13 @@
 #include <vector>
 #include <algorithm>
 #include <array>
+#include <cmath>
 
 #include <GL/glew.h>
 #include <SDL.h>
 
 #include "shader.hpp"
+#include "loader.hpp"
 
 class viewer
 {
@@ -30,9 +32,9 @@ class viewer
   void init_program();
 
   struct {
-    bool w,s,a,d,e,r;
+    bool w,s,a,d,q,e,r,t;
   } keys;
-  float offx, offy, offz;
+  float offx, offy, offz, rot;
 public:
   void init();
   void draw() const;
