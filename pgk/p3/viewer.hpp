@@ -17,6 +17,7 @@ class viewer
   GLuint vao;
   
   GLuint offsetUniform;
+  GLuint perspectiveMatrixUnif;
 
   void init_vbo();
   void init_program();

@@ -10,6 +10,23 @@ void viewer::init_program()
   theProgram = CreateProgram(shaderList);
 
   offsetUniform = glGetUniformLocation(theProgram, "offset");
+
+  perspectiveMatrixUnif = glGetUniformLocation(theProgram, "perspectiveMatrix");
+
+  float fFrustumScale = 1.0f; float fzNear = 0.5f; float fzFar = 3.0f;
+
+  float theMatrix[16];
+  memset(theMatrix, 0, sizeof(float) * 16);
+
+  theMatrix[0] = fFrustumScale;
+  theMatrix[5] = fFrustumScale;
+  theMatrix[10] = (fzFar + fzNear) / (fzNear - fzFar);
+  theMatrix[14] = (2 * fzFar * fzNear) / (fzNear - fzFar);
+  theMatrix[11] = -1.0f;
+
+  glUseProgram(theProgram);
+  glUniformMatrix4fv(perspectiveMatrixUnif, 1, GL_FALSE, theMatrix);
+  glUseProgram(0);
 }
 
 const float vertexData[] = {
@@ -138,7 +155,7 @@ void viewer::draw() const
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glUseProgram(theProgram);
-  glUniform2f(offsetUniform, 0.5f, 0.25f);
+  glUniform2f(offsetUniform, 0.15f, 0.15f);
 
   size_t colorData = sizeof(vertexData) / 2;
   glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
