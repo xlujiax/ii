@@ -5,7 +5,7 @@ error_flags = -Wall -Werror
 std_flag = -std=c++0x
 
 libs = $(opengl_libs) $(sdl_libs)
-modules = timer.o sdl_window.o
+modules = timer.o sdl_window.o shader.o
 
 output = viewer.e
 
@@ -16,6 +16,9 @@ sdl_window.o: sdl_window.cpp sdl_window.hpp
 
 timer.o: timer.cpp timer.hpp
 	$(compiler) $(error_flags) $(std_flag) -c timer.cpp $(libs)
+
+shader.o: shader.cpp shader.hpp
+	$(compiler) $(error_flags) $(std_flag) -c shader.cpp $(libs)
 
 $(output): main.cpp $(modules)
 	$(compiler) $(error_flags) $(std_flag) main.cpp $(modules) $(libs) -o $(output)

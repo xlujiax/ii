@@ -8,6 +8,7 @@
 
 #include "sdl_window.hpp"
 #include "timer.hpp"
+#include "shader.hpp"
 
 timer frame_timer;
 
