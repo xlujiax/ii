@@ -4,6 +4,7 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
+#include <array>
 
 #include <GL/glew.h>
 #include <SDL.h>
@@ -12,12 +13,18 @@
 
 class viewer
 {
+  std::array<float, 16> perspective_matrix() const;
+  std::array<float, 16> translation_matrix() const;
+  std::array<float, 16> rotation_matrix() const;
+
   GLuint theProgram;
   GLuint vertexBufferObject;
   GLuint vao;
   
   GLuint offsetUniform;
   GLuint perspectiveMatrixUnif;
+  GLuint translationMatrixUnif;
+  GLuint rotationMatrixUnif;
 
   void init_vbo();
   void init_program();

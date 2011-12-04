@@ -1,5 +1,47 @@
 #include "viewer.hpp"
 
+std::array<float, 16> viewer::perspective_matrix() const
+{
+  float fFrustumScale = 1.0f; float fzNear = 0.0f; float fzFar = 1.0f;
+
+  std::array<float, 16> m;
+  m.fill(0.0f);
+  m[0] = fFrustumScale;
+  m[5] = fFrustumScale;
+  m[10] = (fzFar + fzNear) / (fzNear - fzFar);
+  m[14] = (2 * fzFar * fzNear) / (fzNear - fzFar);
+  m[11] = -1.0f;
+  return m;
+}
+
+std::array<float, 16> viewer::translation_matrix() const
+{
+  std::array<float, 16> m;
+  m.fill(0.0f);
+  m[0] = 1.0f;
+  m[5] = 1.0f;
+  m[10] = 1.0f;
+  m[15] = 1.0f;
+  
+  m[3] = offx;
+  m[7] = offy;
+  m[11] = offz;
+  
+  return m;
+}
+
+std::array<float, 16> viewer::rotation_matrix() const
+{
+  std::array<float, 16> m;
+  m.fill(0.0f);
+  m[0] = 1.0f;
+  m[5] = 1.0f;
+  m[10] = 1.0f;
+  m[15] = 1.0f;
+  
+  return m;
+}
+
 void viewer::init_program()
 {
   keys.w = keys.s =
@@ -19,20 +61,11 @@ void viewer::init_program()
   offsetUniform = glGetUniformLocation(theProgram, "offset");
 
   perspectiveMatrixUnif = glGetUniformLocation(theProgram, "perspectiveMatrix");
-
-  float fFrustumScale = 1.0f; float fzNear = 0.0f; float fzFar = 1.0f;
-
-  float theMatrix[16];
-  memset(theMatrix, 0, sizeof(float) * 16);
-
-  theMatrix[0] = fFrustumScale;
-  theMatrix[5] = fFrustumScale;
-  theMatrix[10] = (fzFar + fzNear) / (fzNear - fzFar);
-  theMatrix[14] = (2 * fzFar * fzNear) / (fzNear - fzFar);
-  theMatrix[11] = -1.0f;
+  translationMatrixUnif = glGetUniformLocation(theProgram, "translationMatrix");
+  rotationMatrixUnif = glGetUniformLocation(theProgram, "rotationMatrix");
 
   glUseProgram(theProgram);
-  glUniformMatrix4fv(perspectiveMatrixUnif, 1, GL_FALSE, theMatrix);
+  glUniformMatrix4fv(perspectiveMatrixUnif, 1, GL_FALSE, &perspective_matrix()[0]);
   glUseProgram(0);
 }
 
@@ -169,6 +202,8 @@ void viewer::draw() const
 
   glUseProgram(theProgram);
   glUniform3f(offsetUniform, offx, offy, offz);
+  glUniformMatrix4fv(translationMatrixUnif, 1, GL_FALSE, &translation_matrix()[0]);
+  glUniformMatrix4fv(rotationMatrixUnif, 1, GL_FALSE, &rotation_matrix()[0]);
 
   size_t colorData = sizeof(vertexData) / 2;
   glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
