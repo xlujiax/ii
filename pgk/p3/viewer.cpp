@@ -7,8 +7,8 @@ void viewer::init_program()
     keys.e = keys.r = false;
   offx = 0.15f;
   offy = 0.15f;
-  offz = 0.15f;
-  
+  offz = -1.85f;
+
   std::vector<GLuint> shaderList;
 
   shaderList.push_back(LoadShader(GL_VERTEX_SHADER, "shaders/sh.vert"));
@@ -145,6 +145,10 @@ void viewer::init_vbo()
   glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
+  glFrontFace(GL_CW);
 }
 
 

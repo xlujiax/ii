@@ -1,5 +1,4 @@
-#include <fstream>
-#include <sstream>
+#include <iostream>
 
 #include "sdl_window.hpp"
 #include "timer.hpp"
