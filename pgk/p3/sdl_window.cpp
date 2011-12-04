@@ -43,7 +43,7 @@ void window::handle_resize(const int width_param, const int height_param)
   height = height_param;
   SDL_SetVideoMode(width, height, get_bits_per_pixel(), SDL_OPENGL | SDL_RESIZABLE);
 
-  glViewport(0, 0, width, height);
+  setup_opengl(width, height);
 }
 
 void window::main_loop()
