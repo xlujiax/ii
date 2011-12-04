@@ -1,47 +1,32 @@
 #include "shader.hpp"
 
-shader::shader(GLenum eShaderType, const std::string& file)
+GLuint LoadShader(GLenum eShaderType, const std::string &strFilename)
 {
-  id = compile_shader(eShaderType, file_contents(file));
-}
-
-shader::shader(shader&& s)
-{
-  id = s.id;
-  s.id = 0; // glCreateShader never returns 0
-}
-
-shader::~shader()
-{
-  if(id != 0)
-    glDeleteShader(id);
-}
-
-std::string shader::file_contents(const std::string& file)
-{
-  std::ifstream shaderFile(file.c_str());
+  std::ifstream shaderFile(strFilename.c_str());
   std::stringstream shaderData;
   shaderData << shaderFile.rdbuf();
-  return shaderData.str();
+  shaderFile.close();
+
+  return CreateShader(eShaderType, shaderData.str());
 }
 
-GLuint shader::compile_shader(GLenum eShaderType, const std::string &strShaderFile)
+GLuint CreateShader(GLenum eShaderType, const std::string &strShaderFile)
 {
-  GLuint shader_id = glCreateShader(eShaderType);
+  GLuint shader = glCreateShader(eShaderType);
   const char *strFileData = strShaderFile.c_str();
-  glShaderSource(shader_id, 1, &strFileData, NULL);
+  glShaderSource(shader, 1, &strFileData, NULL);
 
-  glCompileShader(shader_id);
+  glCompileShader(shader);
 
   GLint status;
-  glGetShaderiv(shader_id, GL_COMPILE_STATUS, &status);
+  glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
   if (status == GL_FALSE)
   {
     GLint infoLogLength;
-    glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &infoLogLength);
+    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
 
     GLchar *strInfoLog = new GLchar[infoLogLength + 1];
-    glGetShaderInfoLog(shader_id, infoLogLength, NULL, strInfoLog);
+    glGetShaderInfoLog(shader, infoLogLength, NULL, strInfoLog);
 
     const char *strShaderType = NULL;
     switch(eShaderType)
@@ -51,10 +36,38 @@ GLuint shader::compile_shader(GLenum eShaderType, const std::string &strShaderFi
       case GL_FRAGMENT_SHADER: strShaderType = "fragment"; break;
     }
 
-    std::cerr << "Compile failure in " << strShaderType << " shader:\n" <<
-      strInfoLog << "\n";
+    fprintf(stderr, "Compile failure in %s shader:\n%s\n", strShaderType, strInfoLog);
     delete[] strInfoLog;
   }
 
-  return shader_id;
+  return shader;
+}
+
+
+GLuint CreateProgram(const std::vector<GLuint> &shaderList)
+{
+  GLuint program = glCreateProgram();
+
+  for(size_t iLoop = 0; iLoop < shaderList.size(); iLoop++)
+    glAttachShader(program, shaderList[iLoop]);
+
+  glLinkProgram(program);
+
+  GLint status;
+  glGetProgramiv (program, GL_LINK_STATUS, &status);
+  if (status == GL_FALSE)
+  {
+    GLint infoLogLength;
+    glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+    GLchar *strInfoLog = new GLchar[infoLogLength + 1];
+    glGetProgramInfoLog(program, infoLogLength, NULL, strInfoLog);
+    fprintf(stderr, "Linker failure: %s\n", strInfoLog);
+    delete[] strInfoLog;
+  }
+
+  for(size_t iLoop = 0; iLoop < shaderList.size(); iLoop++)
+    glDetachShader(program, shaderList[iLoop]);
+
+  return program;
 }

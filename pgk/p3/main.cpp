@@ -12,46 +12,14 @@
 
 timer frame_timer;
 
-
-GLuint CreateProgram(const std::vector<GLuint> &shaderList)
-{
-  GLuint program = glCreateProgram();
-
-  for(size_t iLoop = 0; iLoop < shaderList.size(); iLoop++)
-    glAttachShader(program, shaderList[iLoop]);
-
-  glLinkProgram(program);
-
-  GLint status;
-  glGetProgramiv (program, GL_LINK_STATUS, &status);
-  if (status == GL_FALSE)
-  {
-    GLint infoLogLength;
-    glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
-
-    GLchar *strInfoLog = new GLchar[infoLogLength + 1];
-    glGetProgramInfoLog(program, infoLogLength, NULL, strInfoLog);
-    fprintf(stderr, "Linker failure: %s\n", strInfoLog);
-    delete[] strInfoLog;
-  }
-
-  for(size_t iLoop = 0; iLoop < shaderList.size(); iLoop++)
-    glDetachShader(program, shaderList[iLoop]);
-
-  return program;
-}
-
 GLuint theProgram;
 
 void InitializeProgram()
 {
   std::vector<GLuint> shaderList;
 
-  shader vertex_shader(GL_VERTEX_SHADER, "shaders/sh.vert");
-  shader fragment_shader(GL_FRAGMENT_SHADER, "shaders/sh.frag");
-
-  shaderList.push_back(vertex_shader.get_id());
-  shaderList.push_back(fragment_shader.get_id());
+  shaderList.push_back(LoadShader(GL_VERTEX_SHADER, "shaders/sh.vert"));
+  shaderList.push_back(LoadShader(GL_FRAGMENT_SHADER, "shaders/sh.frag"));
 
   theProgram = CreateProgram(shaderList);
 }
