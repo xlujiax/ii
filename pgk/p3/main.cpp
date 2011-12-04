@@ -1,3 +1,5 @@
+#include <fstream>
+#include <sstream>
 #include <vector>
 #include <algorithm>
 
@@ -8,6 +10,18 @@
 #include "timer.hpp"
 
 timer frame_timer;
+
+GLuint CreateShader(GLenum eShaderType, const std::string &strShaderFile);
+
+GLuint LoadShader(GLenum eShaderType, const std::string &strFilename)
+{
+  std::ifstream shaderFile(strFilename.c_str());
+  std::stringstream shaderData;
+  shaderData << shaderFile.rdbuf();
+  shaderFile.close();
+
+  return CreateShader(eShaderType, shaderData.str());
+}
 
 GLuint CreateShader(GLenum eShaderType, const std::string &strShaderFile)
 {
@@ -73,31 +87,12 @@ GLuint CreateProgram(const std::vector<GLuint> &shaderList)
 
 GLuint theProgram;
 
-const std::string strVertexShader(
-  "#version 330\n"
-  "layout(location = 0) in vec4 position;\n"
-  "void main()\n"
-  "{\n"
-  "   gl_Position = position;\n"
-  "}\n"
-                                  );
-
-const std::string strFragmentShader(
-  "#version 330\n"
-  "out vec4 outputColor;\n"
-  "void main()\n"
-  "{\n"
-  "   outputColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);\n"
-  "}\n"
-                                    );
-
-
 void InitializeProgram()
 {
   std::vector<GLuint> shaderList;
 
-  shaderList.push_back(CreateShader(GL_VERTEX_SHADER, strVertexShader));
-  shaderList.push_back(CreateShader(GL_FRAGMENT_SHADER, strFragmentShader));
+  shaderList.push_back(LoadShader(GL_VERTEX_SHADER, "shaders/sh.vert"));
+  shaderList.push_back(LoadShader(GL_FRAGMENT_SHADER, "shaders/sh.frag"));
 
   theProgram = CreateProgram(shaderList);
 
@@ -133,7 +128,7 @@ int main(int argc, char* argv[])
 
   if(!wnd.setup(640, 480))
     return 1;
-  
+
   glewInit();
 
   InitializeProgram();
