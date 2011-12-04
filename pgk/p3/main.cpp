@@ -12,51 +12,6 @@
 
 timer frame_timer;
 
-GLuint CreateShader(GLenum eShaderType, const std::string &strShaderFile);
-
-GLuint LoadShader(GLenum eShaderType, const std::string &strFilename)
-{
-  std::ifstream shaderFile(strFilename.c_str());
-  std::stringstream shaderData;
-  shaderData << shaderFile.rdbuf();
-  shaderFile.close();
-
-  return CreateShader(eShaderType, shaderData.str());
-}
-
-GLuint CreateShader(GLenum eShaderType, const std::string &strShaderFile)
-{
-  GLuint shader = glCreateShader(eShaderType);
-  const char *strFileData = strShaderFile.c_str();
-  glShaderSource(shader, 1, &strFileData, NULL);
-
-  glCompileShader(shader);
-
-  GLint status;
-  glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
-  if (status == GL_FALSE)
-  {
-    GLint infoLogLength;
-    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
-
-    GLchar *strInfoLog = new GLchar[infoLogLength + 1];
-    glGetShaderInfoLog(shader, infoLogLength, NULL, strInfoLog);
-
-    const char *strShaderType = NULL;
-    switch(eShaderType)
-    {
-      case GL_VERTEX_SHADER: strShaderType = "vertex"; break;
-      case GL_GEOMETRY_SHADER: strShaderType = "geometry"; break;
-      case GL_FRAGMENT_SHADER: strShaderType = "fragment"; break;
-    }
-
-    fprintf(stderr, "Compile failure in %s shader:\n%s\n", strShaderType, strInfoLog);
-    delete[] strInfoLog;
-  }
-
-  return shader;
-}
-
 
 GLuint CreateProgram(const std::vector<GLuint> &shaderList)
 {
@@ -92,8 +47,8 @@ void InitializeProgram()
 {
   std::vector<GLuint> shaderList;
 
-  shaderList.push_back(LoadShader(GL_VERTEX_SHADER, "shaders/sh.vert"));
-  shaderList.push_back(LoadShader(GL_FRAGMENT_SHADER, "shaders/sh.frag"));
+  shaderList.push_back(shader(GL_VERTEX_SHADER, "shaders/sh.vert").get_id());
+  shaderList.push_back(shader(GL_FRAGMENT_SHADER, "shaders/sh.frag").get_id());
 
   theProgram = CreateProgram(shaderList);
 
