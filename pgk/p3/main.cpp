@@ -9,8 +9,10 @@
 #include "sdl_window.hpp"
 #include "timer.hpp"
 #include "shader.hpp"
+#include "viewer.hpp"
 
 timer frame_timer;
+viewer main_viewer;
 
 GLuint theProgram;
 
@@ -56,6 +58,9 @@ int main(int argc, char* argv[])
 
   glewInit();
 
+  main_viewer.init();
+  main_viewer.init();
+
   InitializeProgram();
   InitializeVertexBuffer();
 
@@ -82,7 +87,9 @@ int main(int argc, char* argv[])
     };
 
   wnd.frame = [&]() {
-    // const float delta_time = frame_timer.delta_time();
+    const float delta_time = frame_timer.delta_time();
+    main_viewer.update(delta_time);
+    main_viewer.draw();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
