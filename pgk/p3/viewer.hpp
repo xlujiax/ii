@@ -23,7 +23,6 @@ class viewer
   GLuint vertexBufferObject;
   GLuint vao;
   
-  GLuint offsetUniform;
   GLuint perspectiveMatrixUnif;
   GLuint translationMatrixUnif;
   GLuint rotationMatrixUnif;

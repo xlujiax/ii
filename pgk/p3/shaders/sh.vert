@@ -12,7 +12,7 @@ uniform mat4 rotationMatrix;
 
 void main()
 {
-  vec4 cameraPos = position + vec4(offset.x, offset.y, offset.z, 0.0);
+  vec4 cameraPos = position;
 
   gl_Position =
     perspectiveMatrix *

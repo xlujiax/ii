@@ -23,9 +23,9 @@ std::array<float, 16> viewer::translation_matrix() const
   m[10] = 1.0f;
   m[15] = 1.0f;
   
-  m[3] = offx;
-  m[7] = offy;
-  m[11] = offz;
+  m[12] = offx;
+  m[13] = offy;
+  m[14] = offz;
   
   return m;
 }
@@ -62,7 +62,6 @@ void viewer::init_program()
 
   theProgram = CreateProgram(shaderList);
 
-  offsetUniform = glGetUniformLocation(theProgram, "offset");
   perspectiveMatrixUnif = glGetUniformLocation(theProgram, "perspectiveMatrix");
   translationMatrixUnif = glGetUniformLocation(theProgram, "translationMatrix");
   rotationMatrixUnif = glGetUniformLocation(theProgram, "rotationMatrix");
@@ -102,7 +101,6 @@ void viewer::draw() const
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glUseProgram(theProgram);
-  glUniform3f(offsetUniform, offx, offy, offz);
   glUniformMatrix4fv(translationMatrixUnif, 1, GL_FALSE, &translation_matrix()[0]);
   glUniformMatrix4fv(rotationMatrixUnif, 1, GL_FALSE, &rotation_matrix()[0]);
 
