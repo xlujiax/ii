@@ -152,13 +152,22 @@ void viewer::init_program()
     rotationXMatrixUnif[i] = glGetUniformLocation(shader_programs[i], "rotationXMatrix");
     rotationYMatrixUnif[i] = glGetUniformLocation(shader_programs[i], "rotationYMatrix");
     rotationZMatrixUnif[i] = glGetUniformLocation(shader_programs[i], "rotationZMatrix");
-    lightUnif[i] = glGetUniformLocation(shader_programs[i], "light");
+    dirLightsUnif[i] = glGetUniformLocation(shader_programs[i], "dir_lights");
+    numLightsUnif[i] = glGetUniformLocation(shader_programs[i], "num_lights");
 
     glUseProgram(shader_programs[i]);
     glUniformMatrix4fv(perspectiveMatrixUnif[i], 1, GL_FALSE, &perspective_matrix()[0]);
 
-    float light[] = { 0.5, 0.7, 0.3 };
-    glUniform3fv(lightUnif[i], 1, light);
+    float lights[] =
+      {
+        0.5, 0.7, 0.3,
+        -0.5, -0.7, -0.3,
+        0.5, -0.7, 0.3,
+        0.5, 0.7, -0.3
+      };
+    const int num_lights = sizeof(lights) / sizeof(float) / 3;
+    glUniform3fv(dirLightsUnif[i], num_lights, lights);
+    glUniform1i(numLightsUnif[i], num_lights);
     
     glUseProgram(0);
   }
