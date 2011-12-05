@@ -157,7 +157,7 @@ void viewer::init_program()
     glUseProgram(shader_programs[i]);
     glUniformMatrix4fv(perspectiveMatrixUnif[i], 1, GL_FALSE, &perspective_matrix()[0]);
 
-    float light[] = { 0.5, 0.5, 0.5 };
+    float light[] = { 0.5, 0.7, 0.3 };
     glUniform3fv(lightUnif[i], 1, light);
     
     glUseProgram(0);
