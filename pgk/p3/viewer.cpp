@@ -79,9 +79,9 @@ std::array<float, 16> viewer::rotation_z_matrix() const
 void viewer::init_program()
 {
   offx = 0.15f;
-  offy = 0.15f;
+  offy = -1.0f;
   offz = -1.85f;
-  rot_x = 0.0f;
+  rot_x = 0.3f;
   rot_y = 0.0f;
   rot_z = 0.0f;
 
