@@ -161,13 +161,13 @@ void viewer::update(const float delta_time)
   const float speed = 0.001;
   if(keydown('w'))
   {
-    offx += cosf(rot_y + 3.1415 / 2.0) * speed * delta_time;
-    offz += sinf(rot_y + 3.1415 / 2.0) * speed * delta_time;
+    offx -= sinf(rot_y) * speed * delta_time;
+    offz += cosf(rot_y) * speed * delta_time;
   }
   if(keydown('s'))
   {
-    offx -= cosf(rot_y + 3.1415 / 2.0) * speed * delta_time;
-    offz -= sinf(rot_y + 3.1415 / 2.0) * speed * delta_time;
+    offx += sinf(rot_y) * speed * delta_time;
+    offz -= cosf(rot_y) * speed * delta_time;
   }
 
   if(keydown('a'))
