@@ -159,12 +159,27 @@ void viewer::draw() const
 void viewer::update(const float delta_time)
 {
   const float speed = 0.001;
-  if(keydown('w')) offz += speed * delta_time;
-  if(keydown('s')) offz -= speed * delta_time;
-  if(keydown('a')) offx -= speed * delta_time;
-  if(keydown('d')) offx += speed * delta_time;
-  if(keydown('f')) offy -= speed * delta_time;
-  if(keydown('r')) offy += speed * delta_time;
+  if(keydown('w'))
+  {
+    offx += cosf(rot_y + 3.1415 / 2.0) * speed * delta_time;
+    offz += sinf(rot_y + 3.1415 / 2.0) * speed * delta_time;
+  }
+  if(keydown('s'))
+  {
+    offx -= cosf(rot_y + 3.1415 / 2.0) * speed * delta_time;
+    offz -= sinf(rot_y + 3.1415 / 2.0) * speed * delta_time;
+  }
+
+  if(keydown('a'))
+  {
+    offx += cosf(rot_y) * speed * delta_time;
+    offz += sinf(rot_y) * speed * delta_time;
+  }
+  if(keydown('d'))
+  {
+    offx -= cosf(rot_y) * speed * delta_time;
+    offz -= sinf(rot_y) * speed * delta_time;
+  }
 
   const float rot_speed = 0.0005;
   if(keydown('q')) rot_y -= rot_speed * delta_time;
