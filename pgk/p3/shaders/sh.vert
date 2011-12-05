@@ -18,10 +18,10 @@ void main()
 
   gl_Position =
     perspectiveMatrix *
-    translationMatrix *
     rotationXMatrix *
     rotationYMatrix *
     rotationZMatrix *
+    translationMatrix *
     cameraPos;
   
   theColor = color;
