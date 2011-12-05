@@ -39,6 +39,7 @@ class viewer
   GLuint rotationXMatrixUnif[3];
   GLuint rotationYMatrixUnif[3];
   GLuint rotationZMatrixUnif[3];
+  GLuint lightUnif[3];
 
   void init_vbo();
   void init_program();

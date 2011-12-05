@@ -133,6 +133,7 @@ void viewer::init_program()
   {
     std::vector<GLuint> shaderList;
     shaderList.push_back(LoadShader(GL_VERTEX_SHADER, "shaders/normals.vert"));
+    shaderList.push_back(LoadShader(GL_GEOMETRY_SHADER, "shaders/normals.geom"));
     shaderList.push_back(LoadShader(GL_FRAGMENT_SHADER, "shaders/normals.frag"));
     shader_programs[ShaderSet::normals] = CreateProgram(shaderList);
   }
@@ -151,9 +152,14 @@ void viewer::init_program()
     rotationXMatrixUnif[i] = glGetUniformLocation(shader_programs[i], "rotationXMatrix");
     rotationYMatrixUnif[i] = glGetUniformLocation(shader_programs[i], "rotationYMatrix");
     rotationZMatrixUnif[i] = glGetUniformLocation(shader_programs[i], "rotationZMatrix");
+    lightUnif[i] = glGetUniformLocation(shader_programs[i], "light");
 
     glUseProgram(shader_programs[i]);
     glUniformMatrix4fv(perspectiveMatrixUnif[i], 1, GL_FALSE, &perspective_matrix()[0]);
+
+    float light[] = { 0.5, 0.5, 0.5 };
+    glUniform3fv(lightUnif[i], 1, light);
+    
     glUseProgram(0);
   }
 }
