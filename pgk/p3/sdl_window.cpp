@@ -56,14 +56,9 @@ void window::main_loop()
             case SDLK_ESCAPE:
               exit(0);
               break;
-
             default:
-	      keydown(event.key.keysym.sym);
               break;
           }
-          break;
-	case SDL_KEYUP:
-	  keyup(event.key.keysym.sym);
           break;
 	case SDL_MOUSEBUTTONDOWN:
 	  switch(event.button.button)

@@ -38,11 +38,12 @@ class viewer
     bool w,s,a,d,q,e,r,t;
   } keys;
   float offx, offy, offz, rot_x, rot_y, rot_z;
+  Uint8 *keystate;
 public:
   void init();
   void draw() const;
   void update(const float delta_time);
 
-  void keydown(const char);
-  void keyup(const char);
+  bool keydown(const int c) { return keystate[c]; }
+  void set_keystate(Uint8* k) { keystate = k; }
 };

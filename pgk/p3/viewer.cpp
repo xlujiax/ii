@@ -159,42 +159,12 @@ void viewer::draw() const
 void viewer::update(const float delta_time)
 {
   const float speed = 0.001;
-  if(keys.w) offz += speed * delta_time;
-  if(keys.s) offz -= speed * delta_time;
-  if(keys.a) offx -= speed * delta_time;
-  if(keys.d) offx += speed * delta_time;
-  if(keys.t) offy -= speed * delta_time;
-  if(keys.r) offy += speed * delta_time;
-  if(keys.q) rot_y -= speed * delta_time;
-  if(keys.e) rot_y += speed * delta_time;
-}
-
-void viewer::keydown(const char k)
-{
-  switch(k)
-  {
-    case 'w': keys.w = true; break;
-    case 's': keys.s = true; break;
-    case 'a': keys.a = true; break;
-    case 'd': keys.d = true; break;
-    case 'q': keys.q = true; break;
-    case 'e': keys.e = true; break;
-    case 'r': keys.r = true; break;
-    case 't': keys.t = true; break;
-  }
-}
-
-void viewer::keyup(const char k)
-{
-  switch(k)
-  {
-    case 'w': keys.w = false; break;
-    case 's': keys.s = false; break;
-    case 'a': keys.a = false; break;
-    case 'd': keys.d = false; break;
-    case 'q': keys.q = false; break;
-    case 'e': keys.e = false; break;
-    case 'r': keys.r = false; break;
-    case 't': keys.t = false; break;
-  }
+  if(keydown('w')) offz += speed * delta_time;
+  if(keydown('s')) offz -= speed * delta_time;
+  if(keydown('a')) offx -= speed * delta_time;
+  if(keydown('d')) offx += speed * delta_time;
+  if(keydown('t')) offy -= speed * delta_time;
+  if(keydown('r')) offy += speed * delta_time;
+  if(keydown('q')) rot_y -= speed * delta_time;
+  if(keydown('e')) rot_y += speed * delta_time;
 }

@@ -17,8 +17,6 @@ public:
   bool setup(const int width_param, const int height_param);
 
   void (*setup_opengl)(const int width, const int height);
-  void (*keyup)(const char);
-  void (*keydown)(const char);
   void (*mousewheelup)();
   void (*mousewheeldown)();
   void (*mouseup)();
@@ -27,4 +25,6 @@ public:
   void (*frame)();
 
   void main_loop();
+
+  Uint8* get_keystate() { return SDL_GetKeyState(NULL); }
 };

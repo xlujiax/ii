@@ -6,11 +6,10 @@
 
 timer frame_timer;
 viewer main_viewer;
+window wnd;
 
 int main(int argc, char* argv[])
 {
-  window wnd;
-
   wnd.setup_opengl = [](const int width, const int height) {
     glViewport(0, 0, (GLsizei) width, (GLsizei) height);
 
@@ -28,9 +27,6 @@ int main(int argc, char* argv[])
   main_viewer.init();
   frame_timer.init();
 
-  wnd.keydown = [&](const char k) { main_viewer.keydown(k); };
-  wnd.keyup = [&](const char k) { main_viewer.keyup(k); };
-
   wnd.mouseup = [&]() { };
   wnd.mousedown = [&](
     const float x, const float y)
@@ -46,6 +42,8 @@ int main(int argc, char* argv[])
     };
 
   wnd.frame = [&]() {
+    main_viewer.set_keystate(wnd.get_keystate());
+
     const float delta_time = frame_timer.delta_time();
     main_viewer.update(delta_time);
 
