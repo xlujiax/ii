@@ -2,15 +2,45 @@
 
 std::array<float, 16> viewer::perspective_matrix() const
 {
-  float fFrustumScale = 1.0f; float fzNear = 0.0f; float fzFar = 1.0f;
+  float fov = 60;
+  float aspect = 1;
+  float znear = 1;
+  float zfar = 100;
+  float xymax = znear * tan(fov * 3.1415 / 360.0);
+  float ymin = -xymax;
+  float xmin = -xymax;
+
+  float width = xymax - xmin;
+  float height = xymax - ymin;
+
+  float depth = zfar - znear;
+  float q = -(zfar + znear) / depth;
+  float qn = -2 * (zfar * znear) / depth;
+
+  float w = 2 * znear / width;
+  w = w / aspect;
+  float h = 2 * znear / height;
 
   std::array<float, 16> m;
-  m.fill(0.0f);
-  m[0] = fFrustumScale;
-  m[5] = fFrustumScale;
-  m[10] = (fzFar + fzNear) / (fzNear - fzFar);
-  m[14] = (2 * fzFar * fzNear) / (fzNear - fzFar);
-  m[11] = -1.0f;
+  m[0]  = w;
+  m[1]  = 0;
+  m[2]  = 0;
+  m[3]  = 0;
+
+  m[4]  = 0;
+  m[5]  = h;
+  m[6]  = 0;
+  m[7]  = 0;
+
+  m[8]  = 0;
+  m[9]  = 0;
+  m[10] = q;
+  m[11] = -1;
+
+  m[12] = 0;
+  m[13] = 0;
+  m[14] = qn;
+  m[15] = 0;
   return m;
 }
 
@@ -68,8 +98,8 @@ std::array<float, 16> viewer::rotation_z_matrix() const
   m.fill(0.0f);
   m[0] = c;
   m[1] = s;
-  m[5] = c;
   m[4] = -s;
+  m[5] = c;
   m[10] = 1.0f;
   m[15] = 1.0f;
   
@@ -78,10 +108,10 @@ std::array<float, 16> viewer::rotation_z_matrix() const
 
 void viewer::init_program()
 {
-  offx = 0.15f;
-  offy = -1.0f;
-  offz = -1.85f;
-  rot_x = 0.3f;
+  offx = 0.35f;
+  offy = -0.0f;
+  offz = -2.5f;
+  rot_x = 0.0f;
   rot_y = 0.0f;
   rot_z = 0.0f;
 
