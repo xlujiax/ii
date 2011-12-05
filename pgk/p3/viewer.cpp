@@ -78,16 +78,18 @@ std::array<float, 16> viewer::rotation_z_matrix() const
 
 void viewer::init_program()
 {
-  keys.w = keys.s =
-    keys.a = keys.d =
-    keys.q = keys.e =
-    keys.r = keys.t = false;
   offx = 0.15f;
   offy = 0.15f;
   offz = -1.85f;
   rot_x = 0.0f;
   rot_y = 0.0f;
   rot_z = 0.0f;
+
+  mouse_move_x = 0;
+  mouse_move_y = 0;
+  last_mouse_x = 0;
+  last_mouse_y = 0;
+  mouse_click = false;
 
   std::vector<GLuint> shaderList;
 
@@ -188,4 +190,38 @@ void viewer::update(const float delta_time)
   if(keydown('x')) rot_x += rot_speed * delta_time;
   if(keydown('c')) rot_z -= rot_speed * delta_time;
   if(keydown('v')) rot_z += rot_speed * delta_time;
+
+  if(mouse_click)
+  {
+    const float mouse_rot_speed = 0.001;
+    rot_y += mouse_move_x * mouse_rot_speed * delta_time;
+    rot_x += mouse_move_y * mouse_rot_speed * delta_time;
+  }
+}
+
+void viewer::mousemotion(const float x, const float y)
+{
+  if(mouse_click)
+  {
+    mouse_move_x = x - last_mouse_x;
+    mouse_move_y = y - last_mouse_y;
+
+    const float tolerance = 0.1;
+    if(fabs(mouse_move_x) < tolerance)
+      mouse_move_x = 0;
+    if(fabs(mouse_move_y) < tolerance)
+      mouse_move_y = 0;
+  }
+}
+
+void viewer::mousedown(const float x, const float y)
+{
+  last_mouse_x = x;
+  last_mouse_y = y;
+  mouse_click = true;
+}
+
+void viewer::mouseup()
+{
+  mouse_click = false;
 }

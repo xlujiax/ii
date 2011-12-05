@@ -27,19 +27,13 @@ int main(int argc, char* argv[])
   main_viewer.init();
   frame_timer.init();
 
-  wnd.mouseup = [&]() { };
-  wnd.mousedown = [&](
-    const float x, const float y)
-    {
-    };
+  wnd.mouseup = [&]() { main_viewer.mouseup(); };
+  wnd.mousedown = [&](const float x, const float y) { main_viewer.mousedown(x, y); };
 
-  wnd.mousewheelup = [&]() {  };
-  wnd.mousewheeldown = [&]() {  };
+  wnd.mousewheelup = [&]() { };
+  wnd.mousewheeldown = [&]() { };
 
-  wnd.mousemotion = [&](
-    const float x, const float y)
-    {
-    };
+  wnd.mousemotion = [&](const float x, const float y) { main_viewer.mousemotion(x, y); };
 
   wnd.frame = [&]() {
     main_viewer.set_keystate(wnd.get_keystate());
