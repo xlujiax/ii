@@ -1,10 +1,11 @@
 #version 330
 
-smooth in vec4 theColor;
+smooth in float height;
 
 out vec4 outputColor;
 
 void main()
 {
-  outputColor = theColor;
+  float h = (height + 0.3) * 2;
+  outputColor = vec4(h,h,h,h);
 }
