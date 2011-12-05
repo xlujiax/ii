@@ -163,8 +163,14 @@ void viewer::update(const float delta_time)
   if(keydown('s')) offz -= speed * delta_time;
   if(keydown('a')) offx -= speed * delta_time;
   if(keydown('d')) offx += speed * delta_time;
-  if(keydown('t')) offy -= speed * delta_time;
+  if(keydown('f')) offy -= speed * delta_time;
   if(keydown('r')) offy += speed * delta_time;
-  if(keydown('q')) rot_y -= speed * delta_time;
-  if(keydown('e')) rot_y += speed * delta_time;
+
+  const float rot_speed = 0.0005;
+  if(keydown('q')) rot_y -= rot_speed * delta_time;
+  if(keydown('e')) rot_y += rot_speed * delta_time;
+  if(keydown('z')) rot_x -= rot_speed * delta_time;
+  if(keydown('x')) rot_x += rot_speed * delta_time;
+  if(keydown('c')) rot_z -= rot_speed * delta_time;
+  if(keydown('v')) rot_z += rot_speed * delta_time;
 }
