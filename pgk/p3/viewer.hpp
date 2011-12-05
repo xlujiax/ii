@@ -17,7 +17,9 @@ class viewer
 {
   std::array<float, 16> perspective_matrix() const;
   std::array<float, 16> translation_matrix() const;
-  std::array<float, 16> rotation_matrix() const;
+  std::array<float, 16> rotation_x_matrix() const;
+  std::array<float, 16> rotation_y_matrix() const;
+  std::array<float, 16> rotation_z_matrix() const;
 
   GLuint theProgram;
   GLuint vertexBufferObject;
@@ -25,7 +27,9 @@ class viewer
   
   GLuint perspectiveMatrixUnif;
   GLuint translationMatrixUnif;
-  GLuint rotationMatrixUnif;
+  GLuint rotationXMatrixUnif;
+  GLuint rotationYMatrixUnif;
+  GLuint rotationZMatrixUnif;
 
   void init_vbo();
   void init_program();
@@ -33,7 +37,7 @@ class viewer
   struct {
     bool w,s,a,d,q,e,r,t;
   } keys;
-  float offx, offy, offz, rot;
+  float offx, offy, offz, rot_x, rot_y, rot_z;
 public:
   void init();
   void draw() const;

@@ -8,7 +8,9 @@ smooth out vec4 theColor;
 uniform vec3 offset;
 uniform mat4 perspectiveMatrix;
 uniform mat4 translationMatrix;
-uniform mat4 rotationMatrix;
+uniform mat4 rotationXMatrix;
+uniform mat4 rotationYMatrix;
+uniform mat4 rotationZMatrix;
 
 void main()
 {
@@ -17,7 +19,9 @@ void main()
   gl_Position =
     perspectiveMatrix *
     translationMatrix *
-    rotationMatrix *
+    rotationXMatrix *
+    rotationYMatrix *
+    rotationZMatrix *
     cameraPos;
   
   theColor = color;

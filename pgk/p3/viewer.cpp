@@ -30,15 +30,47 @@ std::array<float, 16> viewer::translation_matrix() const
   return m;
 }
 
-std::array<float, 16> viewer::rotation_matrix() const
+std::array<float, 16> viewer::rotation_x_matrix() const
 {
-  const float c = cosf(rot);
-  const float s = sinf(rot);
+  const float c = cosf(rot_x);
+  const float s = sinf(rot_x);
   std::array<float, 16> m;
   m.fill(0.0f);
   m[0] = 1.0f;
-  m[5] = c; m[6] = -s;
-  m[9] = s; m[10] = c;
+  m[5] = c; m[6] = s;
+  m[9] = -s; m[10] = c;
+  m[15] = 1.0f;
+  
+  return m;
+}
+
+std::array<float, 16> viewer::rotation_y_matrix() const
+{
+  const float c = cosf(rot_y);
+  const float s = sinf(rot_y);
+  std::array<float, 16> m;
+  m.fill(0.0f);
+  m[0] = c;
+  m[2] = -s;
+  m[5] = 1;
+  m[8] = s;
+  m[10] = c;
+  m[15] = 1.0f;
+  
+  return m;
+}
+
+std::array<float, 16> viewer::rotation_z_matrix() const
+{
+  const float c = cosf(rot_z);
+  const float s = sinf(rot_z);
+  std::array<float, 16> m;
+  m.fill(0.0f);
+  m[0] = c;
+  m[1] = s;
+  m[5] = c;
+  m[4] = -s;
+  m[10] = 1.0f;
   m[15] = 1.0f;
   
   return m;
@@ -53,7 +85,9 @@ void viewer::init_program()
   offx = 0.15f;
   offy = 0.15f;
   offz = -1.85f;
-  rot = 0.0f;
+  rot_x = 0.0f;
+  rot_y = 0.0f;
+  rot_z = 0.0f;
 
   std::vector<GLuint> shaderList;
 
@@ -64,7 +98,9 @@ void viewer::init_program()
 
   perspectiveMatrixUnif = glGetUniformLocation(theProgram, "perspectiveMatrix");
   translationMatrixUnif = glGetUniformLocation(theProgram, "translationMatrix");
-  rotationMatrixUnif = glGetUniformLocation(theProgram, "rotationMatrix");
+  rotationXMatrixUnif = glGetUniformLocation(theProgram, "rotationXMatrix");
+  rotationYMatrixUnif = glGetUniformLocation(theProgram, "rotationYMatrix");
+  rotationZMatrixUnif = glGetUniformLocation(theProgram, "rotationZMatrix");
 
   glUseProgram(theProgram);
   glUniformMatrix4fv(perspectiveMatrixUnif, 1, GL_FALSE, &perspective_matrix()[0]);
@@ -102,7 +138,9 @@ void viewer::draw() const
 
   glUseProgram(theProgram);
   glUniformMatrix4fv(translationMatrixUnif, 1, GL_FALSE, &translation_matrix()[0]);
-  glUniformMatrix4fv(rotationMatrixUnif, 1, GL_FALSE, &rotation_matrix()[0]);
+  glUniformMatrix4fv(rotationXMatrixUnif, 1, GL_FALSE, &rotation_x_matrix()[0]);
+  glUniformMatrix4fv(rotationYMatrixUnif, 1, GL_FALSE, &rotation_y_matrix()[0]);
+  glUniformMatrix4fv(rotationZMatrixUnif, 1, GL_FALSE, &rotation_z_matrix()[0]);
 
   size_t colorData = sizeof(vertexData) / 2;
   glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
@@ -127,8 +165,8 @@ void viewer::update(const float delta_time)
   if(keys.d) offx += speed * delta_time;
   if(keys.t) offy -= speed * delta_time;
   if(keys.r) offy += speed * delta_time;
-  if(keys.q) rot -= speed * delta_time;
-  if(keys.e) rot += speed * delta_time;
+  if(keys.q) rot_y -= speed * delta_time;
+  if(keys.e) rot_y += speed * delta_time;
 }
 
 void viewer::keydown(const char k)
