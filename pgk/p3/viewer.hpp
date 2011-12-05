@@ -21,15 +21,24 @@ class viewer
   std::array<float, 16> rotation_y_matrix() const;
   std::array<float, 16> rotation_z_matrix() const;
 
-  GLuint theProgram;
+  enum ShaderSet
+    {
+      all_white = 0,
+      normals = 1,
+      height_map = 2
+    };
+
+  ShaderSet active_shader_set;
+  GLuint shader_programs[3];
+
   GLuint vertexBufferObject;
   GLuint vao;
   
-  GLuint perspectiveMatrixUnif;
-  GLuint translationMatrixUnif;
-  GLuint rotationXMatrixUnif;
-  GLuint rotationYMatrixUnif;
-  GLuint rotationZMatrixUnif;
+  GLuint perspectiveMatrixUnif[3];
+  GLuint translationMatrixUnif[3];
+  GLuint rotationXMatrixUnif[3];
+  GLuint rotationYMatrixUnif[3];
+  GLuint rotationZMatrixUnif[3];
 
   void init_vbo();
   void init_program();

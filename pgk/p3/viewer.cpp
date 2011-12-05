@@ -121,22 +121,58 @@ void viewer::init_program()
   last_mouse_y = 0;
   mouse_click = false;
 
-  std::vector<GLuint> shaderList;
+  active_shader_set = ShaderSet::all_white;
 
-  shaderList.push_back(LoadShader(GL_VERTEX_SHADER, "shaders/sh.vert"));
-  shaderList.push_back(LoadShader(GL_FRAGMENT_SHADER, "shaders/sh.frag"));
+  {
+    std::vector<GLuint> shaderList;
+    shaderList.push_back(LoadShader(GL_VERTEX_SHADER, "shaders/all_white.vert"));
+    shaderList.push_back(LoadShader(GL_FRAGMENT_SHADER, "shaders/all_white.frag"));
+    shader_programs[ShaderSet::all_white] = CreateProgram(shaderList);
+    
+    perspectiveMatrixUnif[ShaderSet::all_white] = glGetUniformLocation(shader_programs[ShaderSet::all_white], "perspectiveMatrix");
+    translationMatrixUnif[ShaderSet::all_white] = glGetUniformLocation(shader_programs[ShaderSet::all_white], "translationMatrix");
+    rotationXMatrixUnif[ShaderSet::all_white] = glGetUniformLocation(shader_programs[ShaderSet::all_white], "rotationXMatrix");
+    rotationYMatrixUnif[ShaderSet::all_white] = glGetUniformLocation(shader_programs[ShaderSet::all_white], "rotationYMatrix");
+    rotationZMatrixUnif[ShaderSet::all_white] = glGetUniformLocation(shader_programs[ShaderSet::all_white], "rotationZMatrix");
 
-  theProgram = CreateProgram(shaderList);
+    glUseProgram(shader_programs[ShaderSet::all_white]);
+    glUniformMatrix4fv(perspectiveMatrixUnif[ShaderSet::all_white], 1, GL_FALSE, &perspective_matrix()[0]);
+    glUseProgram(0);
+  }
 
-  perspectiveMatrixUnif = glGetUniformLocation(theProgram, "perspectiveMatrix");
-  translationMatrixUnif = glGetUniformLocation(theProgram, "translationMatrix");
-  rotationXMatrixUnif = glGetUniformLocation(theProgram, "rotationXMatrix");
-  rotationYMatrixUnif = glGetUniformLocation(theProgram, "rotationYMatrix");
-  rotationZMatrixUnif = glGetUniformLocation(theProgram, "rotationZMatrix");
+  {
+    std::vector<GLuint> shaderList;
+    shaderList.push_back(LoadShader(GL_VERTEX_SHADER, "shaders/normals.vert"));
+    shaderList.push_back(LoadShader(GL_FRAGMENT_SHADER, "shaders/normals.frag"));
+    shader_programs[ShaderSet::normals] = CreateProgram(shaderList);
+    
+    perspectiveMatrixUnif[ShaderSet::normals] = glGetUniformLocation(shader_programs[ShaderSet::normals], "perspectiveMatrix");
+    translationMatrixUnif[ShaderSet::normals] = glGetUniformLocation(shader_programs[ShaderSet::normals], "translationMatrix");
+    rotationXMatrixUnif[ShaderSet::normals] = glGetUniformLocation(shader_programs[ShaderSet::normals], "rotationXMatrix");
+    rotationYMatrixUnif[ShaderSet::normals] = glGetUniformLocation(shader_programs[ShaderSet::normals], "rotationYMatrix");
+    rotationZMatrixUnif[ShaderSet::normals] = glGetUniformLocation(shader_programs[ShaderSet::normals], "rotationZMatrix");
 
-  glUseProgram(theProgram);
-  glUniformMatrix4fv(perspectiveMatrixUnif, 1, GL_FALSE, &perspective_matrix()[0]);
-  glUseProgram(0);
+    glUseProgram(shader_programs[ShaderSet::normals]);
+    glUniformMatrix4fv(perspectiveMatrixUnif[ShaderSet::normals], 1, GL_FALSE, &perspective_matrix()[0]);
+    glUseProgram(0);
+  }
+
+  {
+    std::vector<GLuint> shaderList;
+    shaderList.push_back(LoadShader(GL_VERTEX_SHADER, "shaders/height_map.vert"));
+    shaderList.push_back(LoadShader(GL_FRAGMENT_SHADER, "shaders/height_map.frag"));
+    shader_programs[ShaderSet::height_map] = CreateProgram(shaderList);
+
+    perspectiveMatrixUnif[ShaderSet::height_map] = glGetUniformLocation(shader_programs[ShaderSet::height_map], "perspectiveMatrix");
+    translationMatrixUnif[ShaderSet::height_map] = glGetUniformLocation(shader_programs[ShaderSet::height_map], "translationMatrix");
+    rotationXMatrixUnif[ShaderSet::height_map] = glGetUniformLocation(shader_programs[ShaderSet::height_map], "rotationXMatrix");
+    rotationYMatrixUnif[ShaderSet::height_map] = glGetUniformLocation(shader_programs[ShaderSet::height_map], "rotationYMatrix");
+    rotationZMatrixUnif[ShaderSet::height_map] = glGetUniformLocation(shader_programs[ShaderSet::height_map], "rotationZMatrix");
+
+    glUseProgram(shader_programs[ShaderSet::height_map]);
+    glUniformMatrix4fv(perspectiveMatrixUnif[ShaderSet::height_map], 1, GL_FALSE, &perspective_matrix()[0]);
+    glUseProgram(0);
+  }
 }
 
 void viewer::init_vbo()
@@ -168,11 +204,11 @@ void viewer::draw() const
   glClearDepth(1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  glUseProgram(theProgram);
-  glUniformMatrix4fv(translationMatrixUnif, 1, GL_FALSE, &translation_matrix()[0]);
-  glUniformMatrix4fv(rotationXMatrixUnif, 1, GL_FALSE, &rotation_x_matrix()[0]);
-  glUniformMatrix4fv(rotationYMatrixUnif, 1, GL_FALSE, &rotation_y_matrix()[0]);
-  glUniformMatrix4fv(rotationZMatrixUnif, 1, GL_FALSE, &rotation_z_matrix()[0]);
+  glUseProgram(shader_programs[active_shader_set]);
+  glUniformMatrix4fv(translationMatrixUnif[active_shader_set], 1, GL_FALSE, &translation_matrix()[0]);
+  glUniformMatrix4fv(rotationXMatrixUnif[active_shader_set], 1, GL_FALSE, &rotation_x_matrix()[0]);
+  glUniformMatrix4fv(rotationYMatrixUnif[active_shader_set], 1, GL_FALSE, &rotation_y_matrix()[0]);
+  glUniformMatrix4fv(rotationZMatrixUnif[active_shader_set], 1, GL_FALSE, &rotation_z_matrix()[0]);
 
   size_t colorData = sizeof(vertexData) / 2;
   glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
@@ -229,6 +265,11 @@ void viewer::update(const float delta_time)
     rot_y += mouse_move_x * mouse_rot_speed * delta_time;
     rot_x += mouse_move_y * mouse_rot_speed * delta_time;
   }
+
+  
+  if(keydown('1')) active_shader_set = ShaderSet::all_white;
+  if(keydown('2')) active_shader_set = ShaderSet::normals;
+  if(keydown('3')) active_shader_set = ShaderSet::height_map;
 }
 
 void viewer::mousemotion(const float x, const float y)
