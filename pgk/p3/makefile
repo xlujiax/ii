@@ -7,15 +7,25 @@ std_flag = -std=c++0x
 libs = $(opengl_libs) $(sdl_libs)
 modules = timer.o sdl_window.o shader.o viewer.o loader.o
 
-output = viewer.e
-
 all: viewer.e
 
-%.o: %.cpp %.hpp
+timer.o: timer.cpp timer.hpp
 	$(compiler) $(error_flags) $(std_flag) -c $< $(libs)
 
-$(output): main.cpp $(modules)
-	$(compiler) $(error_flags) $(std_flag) $< $(modules) $(libs) -o $(output)
+sdl_window.o: sdl_window.cpp sdl_window.hpp
+	$(compiler) $(error_flags) $(std_flag) -c $< $(libs)
+
+shader.o: shader.cpp shader.hpp
+	$(compiler) $(error_flags) $(std_flag) -c $< $(libs)
+
+viewer.o: viewer.cpp viewer.hpp
+	$(compiler) $(error_flags) $(std_flag) -c $< $(libs)
+
+loader.o: loader.cpp loader.hpp
+	$(compiler) $(error_flags) $(std_flag) -c $< $(libs)
+
+viewer.e: main.cpp $(modules)
+	$(compiler) $(error_flags) $(std_flag) $< $(modules) $(libs) -o viewer.e
 
 clear:
-	rm $(modules) $(output)
+	rm -f $(modules) viewer.e
