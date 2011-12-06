@@ -178,7 +178,7 @@ void viewer::init_vbo()
   glGenBuffers(1, &vertexBufferObject);
 
   glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(float) * map.triangles, map.vertexData, GL_STATIC_DRAW);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
   glEnable(GL_CULL_FACE);
@@ -189,6 +189,8 @@ void viewer::init_vbo()
 
 void viewer::init()
 {
+  map.load();
+
   init_program();
   init_vbo();
 
@@ -212,7 +214,7 @@ void viewer::draw() const
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
-  glDrawArrays(GL_TRIANGLES, 0, 36);
+  glDrawArrays(GL_TRIANGLES, 0, map.triangles);
 
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);

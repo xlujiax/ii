@@ -52,6 +52,7 @@ class viewer
   bool mouse_click;
   float offx, offy, offz, rot_x, rot_y, rot_z;
   Uint8 *keystate;
+  loader map;
 public:
   void init();
   void draw() const;

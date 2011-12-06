@@ -1,6 +1,6 @@
 #pragma once
 
-const float vertexData[] = {
+const float vertexData2[] = {
   0.25f,  0.25f, 0.75f, 1.0f,
   0.25f, -0.25f, 0.75f, 1.0f,
   -0.25f,  0.25f, 0.75f, 1.0f,
@@ -49,3 +49,16 @@ const float vertexData[] = {
   -0.25f, -0.25f, -0.75f, 1.0f,
   -0.25f, -0.25f,  0.75f, 1.0f,
 };
+
+class loader
+{
+public:
+  const float* vertexData;
+  int triangles;
+  void load()
+  {
+    vertexData = vertexData2;
+    triangles = sizeof(vertexData2) / 3;
+  }
+};
+
