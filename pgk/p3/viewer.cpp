@@ -208,12 +208,9 @@ void viewer::draw() const
   glUniformMatrix4fv(rotationYMatrixUnif[active_shader_set], 1, GL_FALSE, &rotation_y_matrix()[0]);
   glUniformMatrix4fv(rotationZMatrixUnif[active_shader_set], 1, GL_FALSE, &rotation_z_matrix()[0]);
 
-  size_t colorData = sizeof(vertexData) / 2;
   glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
   glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
   glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
-  glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)colorData);
 
   glDrawArrays(GL_TRIANGLES, 0, 36);
 
