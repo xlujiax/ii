@@ -8,8 +8,8 @@
 class loader
 {
   std::vector<float> v;
-  static const int width = 3;
-  static const int height = 3;
+  static const int width = 1;
+  static const int height = 1;
 
   float m[width][height];
 
