@@ -15,10 +15,22 @@
 \author{Maciej Pacut}
 \date{Luty 2012}
 
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Layout}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
 \begin{document}
 
 \begin{frame}
   \titlepage
+\end{frame}
+
+\begin{frame}
+\tableofcontents
 \end{frame}
 
 \section{Wstęp}
@@ -31,11 +43,11 @@
 \section{Rozdział 1}
 \subsection{Zalety obliczeń równoległych}
 \begin{frame}{Zalety obliczeń równoległych}
-  \begin{enumerate}
+  \begin{enumerate}[<+->]
     \item przyspieszenie czasu przeprowadzania obliczeń
-    \pause \item zwiększenie niezawodności obliczeń
-    \pause \item stworzenie możliwości rozwiązania zadań zbyt dużych dla maszyny sekwencyjnej
-    \pause \item umożliwienie wykorzystania pełnej mocy obliczeniowej procesorów wielordzeniowych
+    \item zwiększenie niezawodności obliczeń
+    \item stworzenie możliwości rozwiązania zadań zbyt dużych dla maszyny sekwencyjnej
+    \item umożliwienie wykorzystania pełnej mocy obliczeniowej procesorów wielordzeniowych
   \end{enumerate}
 \end{frame}
 
