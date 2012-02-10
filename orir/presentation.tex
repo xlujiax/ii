@@ -1,5 +1,8 @@
 \documentclass{beamer}
-\usetheme{Copenhagen}
+\usetheme{Antibes}
+\usecolortheme{seagull}
+\setbeamertemplate{footline}{\hfill\insertframenumber/\inserttotalframenumber\hspace*{.5cm}}
+\setbeamertemplate{navigation symbols}{}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -14,17 +17,29 @@
 
 \begin{document}
 
-\maketitle
+\begin{frame}
+  \titlepage
+\end{frame}
 
+\section{Wstęp}
+\begin{frame}{Temat prezentacji}
+  A. Karbowski, Programowanie równoległe i rozproszone
+
+  Rozdziały 1,2,3
+\end{frame}
+
+\section{Rozdział 1}
+\subsection{Zalety obliczeń równoległych}
 \begin{frame}{Zalety obliczeń równoległych}
   \begin{enumerate}
     \item przyspieszenie czasu przeprowadzania obliczeń
-    \item \pause zwiększenie niezawodności obliczeń
-    \item \pause stworzenie możliwości rozwiązania zadań zbyt dużych dla maszyny sekwencyjnej
-    \item \pause umożliwienie wykorzystania pełnej mocy obliczeniowej procesorów wielordzeniowych
+    \pause \item zwiększenie niezawodności obliczeń
+    \pause \item stworzenie możliwości rozwiązania zadań zbyt dużych dla maszyny sekwencyjnej
+    \pause \item umożliwienie wykorzystania pełnej mocy obliczeniowej procesorów wielordzeniowych
   \end{enumerate}
 \end{frame}
 
+\subsection{Podstawowe pojęcia}
 \begin{frame}{Podstawowe pojęcia}
   \begin{enumerate}
     \item Obliczenia współbieżne - następne zadanie rozpoczyna się zanim skończy się poprzednie (mogą być przeprowadzane na jednym procesorze z podziałem czasu)
@@ -33,9 +48,13 @@
   \end{enumerate}
 \end{frame}
 
+\subsection{Przykłady problemów}
 \begin{frame}{Przykłady problemów, których rozwiązanie jest możliwe tylko za pomocą algorytmów rozproszonych}
   \begin{enumerate}
     \item Prognoza pogody - dwa dni po
   \end{enumerate}
 \end{frame}
+
+\section{Rozdział 2}
+
 \end{document}
