@@ -36,7 +36,7 @@
   \begin{enumerate}
   \item Motywacje do obliczeń równoległych
   \item Podstawowe pojęcia
-  \item Skalowalność
+  \item Efektywność zrównoleglenia
   \item Typy równoległości
   \item Klastry i gridy
   \end{enumerate}
@@ -90,11 +90,42 @@
 
 \section{Rozdział 2}
 
-\begin{frame}{Prawo Amdahla}
+\begin{frame}{Miary efektywności zrównoleglenia}
   \begin{enumerate}
-  \item Mówi o ograniczeniu górnym przyspieszenia wykonywania zadania przy przenoszeniu z procesora sekwencyjnego na wieloprocesory
-  \item Wzorek, opis zmiennych i funkcji
+  \item Górne ograniczenie przyspieszenia przy przenoszeniu z procesora sekwencyjnego na wieloprocesory
+  \item Sprawność oraz skalowalność
   \end{enumerate}
+\end{frame}
+
+\begin{frame}{Oznaczenia}
+  \begin{enumerate}
+  \item $n$ - wielkość zadania
+  \item $p$ - liczba procesorów
+  \item $T(n,p)$ - optymalny czas wykonania algorytmu na $p$ procesorach
+  \item $T\beta(n,p)$ - wielkość sekwencyjnej części algorytmu; nie musi być spójna
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Współczynnik przyspieszenia}
+  $$ S(n,p) = \frac{T(n,1)}{T(n,p)} $$
+  $$ S(n,p) \leq p$$
+\end{frame}
+
+\begin{frame}{Czas wykonania części sekwencyjnej jest niezależny od p}
+  $$ \beta(n,p) T(n, p) = const \hspace{1cm}\mbox{p = 1,2,..} $$
+\end{frame}
+
+\begin{frame}{Szacowanie czasu wykonania zadania na wielorpocesorze}
+  $$ T(n,p) = \beta(n,p) T(n,p) + \frac{(1-\beta(n,1) T(n,1))}{p} $$
+\end{frame}
+
+
+\begin{frame}{Prawo Amdahla}
+  $$ S(n,p) = \frac{T(n,1)}{T(n,p)} = \frac{1}{\beta(n,1) + \frac{1 - \beta(n,1)}{p}} $$
+\end{frame}
+
+\begin{frame}{Konsekwencja prawa Amdahla}
+  $$ \lim_{p \rightarrow \infty}S(n,p) \rightarrow \frac{1}{\beta(n,1)} $$
 \end{frame}
 \section{Rozdział 3}
 
