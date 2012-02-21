@@ -29,24 +29,44 @@
   \titlepage
 \end{frame}
 
-\begin{frame}
-  \tableofcontents[allowframebreaks]
-\end{frame}
-
 \section{Wstęp}
 \begin{frame}{Temat prezentacji}
-  A. Karbowski, Programowanie równoległe i rozproszone
-
-  Rozdziały 1,2,3
+  A. Karbowski, Programowanie równoległe i rozproszone - rozdziały 1,2,3
+  \begin{enumerate}
+  \item Motywacje do obliczeń równoległych
+  \item Podstawowe pojęcia
+  \item Skalowalność
+  \item Typy równoległości
+  \item Klastry i gridy
+  \end{enumerate}
 \end{frame}
 \section{Rozdział 1}
 
+\begin{frame}{Przykłady przetwarzania równoległego}
+  \begin{enumerate}
+  \item Wiele kas na poczcie
+  \item Kolejne stanowiska na taśmie produkcyjnej
+  \item Hierarchia w firmie - zarządzanie zespołami
+  \item Musztra, układy taneczne
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Przykłady przetwarzania równoległego (odpowiedniki w informatyce)}
+  \begin{enumerate}
+  \item Wiele kas na poczcie (przetwarzanie niezależnych zadań)
+  \item Kolejne stanowiska na taśmie produkcyjnej (pipelining)
+  \item Hierarchia w firmie - zarządzanie zespołami (koordynator - jednostki lokalne)
+  \item Musztra, układy taneczne (array parallelism)
+  \end{enumerate}
+\end{frame}
+
 \begin{frame}{Zalety obliczeń równoległych}
-  \begin{enumerate}[<+->]
-  \item przyspieszenie czasu przeprowadzania obliczeń
-  \item zwiększenie niezawodności obliczeń
-  \item stworzenie możliwości rozwiązania zadań zbyt dużych dla maszyny sekwencyjnej
-  \item umożliwienie wykorzystania pełnej mocy obliczeniowej procesorów wielordzeniowych
+  \begin{enumerate}
+  \item Przyspieszenie czasu przeprowadzania obliczeń
+  \item Zwiększenie precyzji wykonywanych obliczen
+  \item Zwiększenie niezawodności obliczeń
+  \item Stworzenie możliwości rozwiązania zadań zbyt dużych dla jednej maszyny sekwencyjnej
+  \item Umożliwienie wykorzystania pełnej mocy obliczeniowej procesorów wielordzeniowych
   \end{enumerate}
 \end{frame}
 
@@ -279,4 +299,13 @@
   \item problem podszywania się pod element grida
   \end{enumerate}
 \end{frame}
+
+\begin{frame}{Zastosowania gridów i klastrów}
+  \begin{enumerate}
+  \item klastry nadają się do obliczeń numerycznych, optymalizacji
+  \item gridy nadają się do ...
+  \item seti at home, fightAISD at home
+  \end{enumerate}
+\end{frame}
+
 \end{document}
