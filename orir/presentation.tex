@@ -11,13 +11,32 @@
 \usepackage{rotating}
 \usepackage{listings}
 
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+\AtBeginSubsubsection[]
+{
+  \begin{frame}<beamer>
+    \tableofcontents[currentsection,currentsubsection,currentsubsubsection]
+  \end{frame}
+}
+
 \title{Obliczenia równoległe i rozproszone}
 \author{Maciej Pacut}
 \date{Luty 2012}
 
 \begin{document}
-
-\section{O prezentacji}
 
 \begin{frame}
   \titlepage
@@ -43,19 +62,6 @@
 \end{frame}
 
 \section{Rodział 1. Wprowadzenie}
-
-\begin{frame}{Wprowadzenie}
-  \huge
-  \begin{center}
-    Rodział 1
-
-    Wprowadzenie
-
-    \large
-    [do programowania równoległego i rozproszonego]
-  \end{center}
-\end{frame}
-
 
 \begin{frame}{Przykłady przetwarzania równoległego}
   \begin{enumerate}
@@ -102,15 +108,6 @@
 \end{frame}
 
 \section{Rozdział 2. Miary efektywności zrównoleglenia}
-
-\begin{frame}{Miary efektywności zrównoleglenia}
-  \huge
-  \begin{center}
-    Rodział 2
-
-    Miary efektywności zrównoleglenia
-  \end{center}
-\end{frame}
 
 \begin{frame}{Miary efektywności zrównoleglenia}
   \begin{enumerate}
@@ -193,19 +190,6 @@
 
 \section{Rozdział 3. Architektury maszyn równoległych}
 
-\begin{frame}{Architektury maszyn równoległych}
-  \huge
-  \begin{center}
-    Rodział 3
-
-    Architektury maszyn równoległych
-
-    \large
-
-    Najważniejsze trendy na rynku procesorów
-  \end{center}
-\end{frame}
-
 \subsection{Najważniejsze trendy na rynku procesorów}
 
 \begin{frame}{Prawo Moore'a}
@@ -279,7 +263,7 @@
   \end{center}
 \end{frame}
 
-\section{Klasyfikacja maszyn równoległych}
+\subsection{Klasyfikacja maszyn równoległych}
 
 \begin{frame}{Klasyfikacja maszyn równoległych}
   Podział wg Flynna:
@@ -293,7 +277,7 @@
     \hline
   \end{tabular}
 
-\vspace{2cm}
+  \vspace{2cm}
 
   Podział ze względu na rodzaj pamięci:
   \begin{enumerate}
@@ -319,12 +303,7 @@
   \end{enumerate}
 \end{frame}
 
-\begin{frame}{Równoległość w maszynach typu SIMD}
-  \begin{enumerate}
-  \item SM-SIMD (Shared Memory)
-  \item DM-SIMD (Distributed Memory)
-  \end{enumerate}
-\end{frame}
+\subsubsection{SM-SIMD}
 
 \begin{frame}{Równoległość w maszynach typu SM-SIMD}
   \begin{enumerate}
@@ -334,6 +313,8 @@
   \item Zaleta: łatwe programowanie takich maszyn
   \end{enumerate}
 \end{frame}
+
+\subsubsection{DM-SIMD}
 
 \begin{frame}{Równoległość w maszynach typu DM-SIMD}
   \begin{enumerate}
@@ -346,12 +327,7 @@
   \end{enumerate}
 \end{frame}
 
-\begin{frame}{Równoległość w maszynach typu MIMD}
-  \begin{enumerate}
-  \item SM-MIMD (Shared Memory)
-  \item DM-MIMD (Distributed Memory)
-  \end{enumerate}
-\end{frame}
+\subsubsection{SM-MIMD}
 
 \begin{frame}{Równoległość w maszynach typu SM-MIMD}
   \begin{enumerate}
@@ -362,6 +338,8 @@
   \item Łatwość programowania z powodu istnienia wspólnej przestrzeni adresowej
   \end{enumerate}
 \end{frame}
+
+\subsubsection{DM-MIMD}
 
 \begin{frame}{Równoległość w maszynach typu DM-MIMD}
   \begin{enumerate}
@@ -393,40 +371,28 @@
 
 \begin{frame}{Przykładowe topologie maszyn typu DM-MIMD}
   \begin{enumerate}
-  \item cut-throught switching (siatka, podział pakietów)
-  \item konstelacje - rozwiązanie hybyrdowe: węzły SM-MIMD połączone wolniejszą siecią (wolniejszą niż procesory wewnątrz węzła)
+  \item Cut-throught switching (siatka, podział pakietów)
+  \item Konstelacje - rozwiązanie hybyrdowe: węzły SM-MIMD połączone wolniejszą siecią (wolniejszą niż procesory wewnątrz węzła)
   \end{enumerate}
 \end{frame}
 
 \subsection{Klastry i gridy}
-\begin{frame}{Architektury maszyn równoległych}
-  \huge
-  \begin{center}
-    Rodział 3
-
-    Architektury maszyn równoległych
-
-    \large
-
-    Klastry i gridy
-  \end{center}
-\end{frame}
 
 \begin{frame}{Klastry}
   \begin{enumerate}
-  \item df.: zespół maszyn połączonych szybką siecią, które są jednolicie zarządzane
-  \item najczęściej oparte na tej samej architekturze (homogeniczne)
-  \item najczęściej pracujące pod kontrolą jednego systemu operacyjnego
-  \item najczęściej znajdujące się blisko (np. regał lub pomieszcznie)
-  \item najczęściej zarządzane z jednej stacji roboczej
+  \item Klaster to zespół maszyn połączonych szybką siecią, które są jednolicie zarządzane
+  \item Najczęściej oparte na tej samej architekturze (homogeniczne)
+  \item Najczęściej pracujące pod kontrolą jednego systemu operacyjnego
+  \item Najczęściej znajdujące się blisko (np. regał lub pomieszcznie)
+  \item Najczęściej zarządzane z jednej stacji roboczej
   \end{enumerate}
 \end{frame}
 
 \begin{frame}{Klastry realizują wiele zadań jednocześnie}
   \begin{enumerate}
-  \item job scheduler (priorytet zadania, kierowanie do mniej obciążonych maszyn)
-  \item konieczność mierzenia obciążenia (tzw. load balancing clusters)
-  \item dążenie do wrażenia, że klaster to jedna maszyna (system plików, scheduler); tzw. Single System Image
+  \item Job scheduler (priorytet zadania, kierowanie do mniej obciążonych maszyn)
+  \item Konieczność mierzenia obciążenia (tzw. load balancing clusters)
+  \item Dążenie do wrażenia, że klaster to jedna maszyna (system plików, scheduler); tzw. Single System Image
   \end{enumerate}
 \end{frame}
 
@@ -444,20 +410,16 @@
 
 \begin{frame}{Gridy}
   \begin{enumerate}
-  \item df.: zbiór luźno powiązanych, rozproszonych geograficznie, heterogenicznych zasobów komunikujących się z użyciem ustalonego protokołu
-  \item zasoby to: superkomputery, klastry, pc z GPU, bazy danych, aparatura naukowa, urządzenia wyjścia
-  \item uogólnienie klastra
-  \item większe opóźnienia - nie nadają się do obliczeń równoległych tylko rozproszonych
-  \item problem podszywania się pod element grida
+  \item Grid to zbiór luźno powiązanych, rozproszonych geograficznie, heterogenicznych zasobów komunikujących się z użyciem ustalonego protokołu
+  \item Zasoby to: superkomputery, klastry, pc z GPU, bazy danych, aparatura naukowa, urządzenia wyjścia
+  \item Uogólnienie klastra
+  \item Większe opóźnienia - nie nadają się do obliczeń równoległych tylko rozproszonych
+  \item Problem podszywania się pod zasób grida
   \end{enumerate}
 \end{frame}
 
-\begin{frame}{Zastosowania gridów i klastrów}
-  \begin{enumerate}
-  \item klastry nadają się do obliczeń numerycznych, optymalizacji
-  \item gridy nadają się do ...
-  \item seti at home, fightAISD at home
-  \end{enumerate}
+\begin{frame}{Koniec}
+Dziękuję za uwagę.
 \end{frame}
 
 \end{document}
