@@ -78,7 +78,7 @@
 
 \begin{frame}{Procesory wielordzeniowe}
   \begin{enumerate}
-  \item wiele jednostek oblcizeniowych dzielących magistralę
+  \item wiele jednostek obliczeniowych dzielących magistralę
   \item czasami też L2 cache
   \end{enumerate}
 \end{frame}
@@ -102,7 +102,76 @@
   \begin{enumerate}
   \item kary graficzne maja wiele jednostek przetwarzajacych dane (nawet kilkaset)
   \item jest to konsekwencją [w dużej mierze] równoległej natury procesu wyświetlania grafiki
-  \item kiedyś potok graficzny był nieprogramowalny
+  \item kiedyś potok graficzny był nieprogramowalny - algorytmy do przetwarzania wierzchołków/pikseli były zapisane w sprzęcie
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Obliczenia na kartach graficznych 2}
+  \begin{enumerate}
+  \item jednostki przetwarzania ogólnego zastosowania
+  \item pojawienie się shaderów
+  \item koniec stałego potoku graficznego
+  \item GPGPU - General Purpose Computing on Graphics Procesing Units
+  \item Tesla - nVidia, FireStream - AMD
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Hybrydyzacja obliczeń}
+  \begin{enumerate}
+  \item czyli korzystanie z różnorodnych jednostek wykonawczych
+  \item różne reprezentacje typów danych (endianness: PowerPC - big, x86 - little)
+  \item różne precyzje typów danych (halves/partials na GPU to liczby zmiennoprzecinkowe 16-bitowe, są też 32-bitowe)
+  \item IBM Roadrunner - kilkanaście tysięcy procesorów AMD (2 rdzenie, x86) i tyle samo procesorów z Playstation 3 (1 rdzeń PowerPC, 8 rdzeni do obliczeń wektorowych)
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Krótko o superkomputerach}
+  \begin{enumerate}
+  \item Najczęściej są to połączone procesory spotykane w komputerach osobistych
+  \item Klastry wieloprocesorów (wspólna pamięć) połączone szybkimi sieciami wewnętrznymi
+  \item Coraz rzadziej wykorzystuje się procesory dedykowane do obliczeń wektorowych
+  \end{enumerate}
+\end{frame}
+
+\section{Klasyfikacja maszyn równoległych}
+
+\begin{frame}{Klasyfikacja maszyn równoległych wg Flynna}
+  \begin{enumerate}
+  \item SISD - klasyczna maszyna sekwencyjna
+  \item SIMD - procesory wektorowe, procesory z jednostkami wktorowymi
+  \item MISD - tylko specyficzne zastosowania
+  \item MIMD - równoległa praca na wielu różnych danych
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Klasyfikacja maszyn równoległych ze względu na rodzaj pamięci}
+  \begin{enumerate}
+  \item Pamięć dzielona - wspólna przestrzeń adresowa
+  \item Pamięć lokalna - należy samemu podzielić dane
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Równoległość w maszynach typu SISD}
+  \begin{enumerate}
+  \item Przetwarzanie potokowe - kilka taktów na instrukcję (pobranie rozkazu, jego argumentów, operacje arytmetyczne, zapis, ...); w momencie zwolnienia fragmentu procesora rozpoczynane jest wykonywanie następnej instrukcji
+  \item Rozszerzenia strumieniowe - nowe rozkazy procesora wykonujące obliczenia równoległe na danych mniejszej precyzji (przykłady: MMX, SSE$\{\epsilon,2,3\}$, AltiVec, 3DNow!)
+  \item Hyper Threading - dwa wątki na procesor przełączane przy oczekiwaniu na IO
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Równoległość w maszynach typu SIMD}
+  \begin{enumerate}
+  \item SM-SIMD
+  \item DM-SIMD
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Równoległość w maszynach typu SM-SIMD}
+  \begin{enumerate}
+  \item Inaczej komputer wektorowy - składa się z jednego procesora wektorowego
+  \item Dane zawsze są w paczkach o stałej liczności zależnej od procesora wektorowego
+  \item Wykonywanie ciągów tych samych operacji
+  \item Zaleta: łatwe programowanie takich maszyn
   \end{enumerate}
 \end{frame}
 \end{document}
