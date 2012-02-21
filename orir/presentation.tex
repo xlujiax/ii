@@ -30,7 +30,7 @@
 \end{frame}
 
 \begin{frame}
-\tableofcontents[allowframebreaks]
+  \tableofcontents[allowframebreaks]
 \end{frame}
 
 \section{Wstęp}
@@ -43,25 +43,25 @@
 
 \begin{frame}{Zalety obliczeń równoległych}
   \begin{enumerate}[<+->]
-    \item przyspieszenie czasu przeprowadzania obliczeń
-    \item zwiększenie niezawodności obliczeń
-    \item stworzenie możliwości rozwiązania zadań zbyt dużych dla maszyny sekwencyjnej
-    \item umożliwienie wykorzystania pełnej mocy obliczeniowej procesorów wielordzeniowych
+  \item przyspieszenie czasu przeprowadzania obliczeń
+  \item zwiększenie niezawodności obliczeń
+  \item stworzenie możliwości rozwiązania zadań zbyt dużych dla maszyny sekwencyjnej
+  \item umożliwienie wykorzystania pełnej mocy obliczeniowej procesorów wielordzeniowych
   \end{enumerate}
 \end{frame}
 
 \begin{frame}{Podstawowe pojęcia}
   \begin{enumerate}
-    \item Obliczenia współbieżne - następne zadanie rozpoczyna się zanim skończy się poprzednie (mogą być przeprowadzane na jednym procesorze z podziałem czasu)
-    \item Obliczenia równoległe - obliczenia współbieżne na wielu procesorach
-    \item Obliczenia rozproszone - obliczenia bez dzielonej pamięci (przekazywanie komunikatów)
+  \item Obliczenia współbieżne - następne zadanie rozpoczyna się zanim skończy się poprzednie (mogą być przeprowadzane na jednym procesorze z podziałem czasu)
+  \item Obliczenia równoległe - obliczenia współbieżne na wielu procesorach
+  \item Obliczenia rozproszone - obliczenia bez dzielonej pamięci (przekazywanie komunikatów)
   \end{enumerate}
 \end{frame}
 
 \begin{frame}{Przykłady problemów, których rozwiązanie jest możliwe tylko za pomocą algorytmów rozproszonych}
   \begin{enumerate}
-    \item Prognoza pogody - dwa dni po
-    \item Dane z teleskopów
+  \item Prognoza pogody - dwa dni po
+  \item Dane z teleskopów
   \end{enumerate}
 \end{frame}
 
@@ -69,9 +69,40 @@
 
 \begin{frame}{Prawo Amdahla}
   \begin{enumerate}
-    \item Mówi o ograniczeniu górnym przyspieszenia wykonywania zadania przy przenoszeniu z procesora sekwencyjnego na wieloprocesory
-    \item Wzorek, opis zmiennych i funkcji
+  \item Mówi o ograniczeniu górnym przyspieszenia wykonywania zadania przy przenoszeniu z procesora sekwencyjnego na wieloprocesory
+  \item Wzorek, opis zmiennych i funkcji
   \end{enumerate}
 \end{frame}
 \section{Rozdział 3}
+
+
+\begin{frame}{Procesory wielordzeniowe}
+  \begin{enumerate}
+  \item wiele jednostek oblcizeniowych dzielących magistralę
+  \item czasami też L2 cache
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Hyper Threading}
+  \begin{enumerate}
+  \item wolne cykle (czekanie na IO)
+  \item dwa wątki na procesorze jednordzeniowym z powodu dużej liczby wolnych cykli
+  \item wątki są przełączane
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Rozszerzenia strumieniowe}
+  \begin{enumerate}
+  \item realizacja podstawowych operacji arytmetycznych na wektorze w sposób równoległy
+  \item dodatkowe jendostki przeznaczone tylko do tej pracy
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Obliczenia na kartach graficznych}
+  \begin{enumerate}
+  \item kary graficzne maja wiele jednostek przetwarzajacych dane (nawet kilkaset)
+  \item jest to konsekwencją [w dużej mierze] równoległej natury procesu wyświetlania grafiki
+  \item kiedyś potok graficzny był nieprogramowalny
+  \end{enumerate}
+\end{frame}
 \end{document}
