@@ -281,7 +281,8 @@
 
 \section{Klasyfikacja maszyn równoległych}
 
-\begin{frame}{Klasyfikacja maszyn równoległych wg Flynna}
+\begin{frame}{Klasyfikacja maszyn równoległych}
+  Podział wg Flynna:
   \begin{tabular}{ | c | c | c | }
     \hline
     & Single instruction & Multiple instruction \\
@@ -291,6 +292,14 @@
     Multiple data & SIMD               & MIMD                 \\
     \hline
   \end{tabular}
+
+\vspace{2cm}
+
+  Podział ze względu na rodzaj pamięci:
+  \begin{enumerate}
+  \item Pamięć dzielona - wspólna przestrzeń adresowa
+  \item Pamięć lokalna - należy samemu podzielić dane
+  \end{enumerate}
 \end{frame}
 
 \begin{frame}{Zastosowania typów maszyn równoległych}
@@ -298,14 +307,7 @@
   \item SISD - klasyczna maszyna sekwencyjna
   \item SIMD - procesory wektorowe, procesory z jednostkami wktorowymi
   \item MISD - tylko specyficzne zastosowania
-  \item MIMD - równoległa praca na wielu różnych danych
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Klasyfikacja maszyn równoległych ze względu na rodzaj pamięci}
-  \begin{enumerate}
-  \item Pamięć dzielona - wspólna przestrzeń adresowa
-  \item Pamięć lokalna - należy samemu podzielić dane
+  \item MIMD - równoległa praca na wielu różnych częściach tego samego procesu obliczeniowego
   \end{enumerate}
 \end{frame}
 
@@ -319,8 +321,8 @@
 
 \begin{frame}{Równoległość w maszynach typu SIMD}
   \begin{enumerate}
-  \item SM-SIMD
-  \item DM-SIMD
+  \item SM-SIMD (Shared Memory)
+  \item DM-SIMD (Distributed Memory)
   \end{enumerate}
 \end{frame}
 
@@ -346,8 +348,8 @@
 
 \begin{frame}{Równoległość w maszynach typu MIMD}
   \begin{enumerate}
-  \item SM-MIMD
-  \item DM-MIMD
+  \item SM-MIMD (Shared Memory)
+  \item DM-MIMD (Distributed Memory)
   \end{enumerate}
 \end{frame}
 
@@ -379,13 +381,13 @@
 
 \begin{frame}{Przykładowe topologie maszyn typu DM-MIMD}
   \begin{enumerate}
-  \item siatka dwuwymiarowa
-  \item torus dwuwymiarowy
-  \item pierścień (również torus jednowymiarowy)
-  \item drzewa statyczne (wierzchołki = procesory)
-  \item drzewa statyczne (liście = procesy, pozostałe to przełączniki)
-  \item fat tree (o zwiększaniu przepustowości przy korzeniu)
-  \item hipersześcian (można otrzymać inne topologie przez usuwanie krawędzi np. software'owo)
+  \item Siatka dwuwymiarowa
+  \item Torus dwuwymiarowy
+  \item Pierścień (również torus jednowymiarowy)
+  \item Drzewa statyczne (wierzchołki = procesory)
+  \item Drzewa dynamiczne (liście = procesy, pozostałe to przełączniki)
+  \item Fat tree (o zwiększaniu przepustowości przy korzeniu)
+  \item Hipersześcian (można otrzymać inne topologie przez usuwanie krawędzi np. software'owo)
   \end{enumerate}
 \end{frame}
 
