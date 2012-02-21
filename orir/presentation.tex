@@ -126,6 +126,47 @@
 
 \begin{frame}{Konsekwencja prawa Amdahla}
   $$ \lim_{p \rightarrow \infty}S(n,p) \rightarrow \frac{1}{\beta(n,1)} $$
+
+  Nie da się programu przyspieszyć bardziej niż odwrotność udziału części sekwencyjnej w programie wykonywanym na jednym procesorze.
+\end{frame}
+
+\begin{frame}{Konsekwencja prawa Amdahla}
+  Już gdy część sekwencyjna jest $n$ razy tańsza od części równoległej mamy:
+
+  $$ \lim_{n \rightarrow 0} \beta(n,1) \rightarrow 0 $$
+  $$ \lim_{n \rightarrow 0} S(n,p) \rightarrow p $$
+
+  Czyli powodem stosowania obliczeń równoległych jest chęć rozwiązania problemów od dużym rozmiarze a nie chęć szybkiego otrzymania wyniku dla małego problemu.
+\end{frame}
+
+\begin{frame}{Skalowalność}
+  Skalowalność to elastyczne dostosowywanie się do wzrostu liczby procesorów.
+
+  $$ w(n) \mbox{ - liczba operacji}$$
+  $$ h(n, p) \mbox{ - narzut na komunikację}$$
+  $$ \eta(n,p) \mbox{ - skalowalność} $$
+
+
+  $$ \eta(n,p) = \frac{w(n)}{w(n) + h(n,p)} = \frac{1}{1 + \frac{h(n,p)}{w(n)}} $$
+\end{frame}
+
+\begin{frame}{Obserwacje dotyczące skalowalności}
+  $$ \eta(n,p) = \frac{w(n)}{w(n) + h(n,p)} = \frac{1}{1 + \frac{h(n,p)}{w(n)}} $$
+
+  \begin{enumerate}
+  \item Narzuty na komunikację rosną wraz z liczbą procesorów
+  \item Sprawność maleje, gdy nie zmieniając rozmiaru zadania, zwiększymy liczbę procesorów
+  \item Chcąc utrzymać sprawność po zwiększeniu liczby procesorów zwiększamy rozmiary rozwiązywanych zadań
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Funkcja stałej sprawności}
+  \begin{enumerate}
+  \item Dla danej liczby procesorów wynikiem jest rozmiar zadania przy którym zachowywana jest sprawność
+  \item Ang. isoefficiency function
+  \item Jest to funkcja rosnąca
+  \item Mówimy, że architektura jest bardziej skalowalna, gdy ta funkcja rośnie wolniej
+  \end{enumerate}
 \end{frame}
 \section{Rozdział 3}
 
