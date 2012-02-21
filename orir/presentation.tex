@@ -15,14 +15,6 @@
 \author{Maciej Pacut}
 \date{Luty 2012}
 
-\AtBeginSubsection[]
-{
-  \begin{frame}<beamer>
-    \frametitle{Layout}
-    \tableofcontents[currentsection,currentsubsection]
-  \end{frame}
-}
-
 \begin{document}
 
 \section{O prezentacji}
@@ -207,44 +199,59 @@
     Rodział 3
 
     Architektury maszyn równoległych
+
+    \large
+
+    Najważniejsze trendy na rynku procesorów
   \end{center}
+\end{frame}
+
+\subsection{Najważniejsze trendy na rynku procesorów}
+
+\begin{frame}{Prawo Moore'a}
+  \begin{enumerate}
+  \item Prawo mówi o wykładniczym wzroście mocy obliczeniowej wraz z upływem lat
+  \item Powyżej 4 GHz zaobserwowano wykładniczy wzrost poboru energii i wydzielanego ciepła wraz ze wzrosem mocy obliczeniowej
+  \item Rozwiązanie: duplikacja jednostek obliczeniowych
+  \end{enumerate}
 \end{frame}
 
 \begin{frame}{Procesory wielordzeniowe}
   \begin{enumerate}
-  \item wiele jednostek obliczeniowych dzielących magistralę
-  \item czasami też L2 cache
+  \item Wiele jednostek obliczeniowych (rdzeni) w ramach tego samego układu scalonego
+  \item Dzielona jest magistrala, czasami też dzielona jest pamięć cache L2
+  \item Pierwsze popularne: Athlon 64 X2, Core Duo, Core 2 Duo, Core 2 Quad
   \end{enumerate}
 \end{frame}
 
 \begin{frame}{Hyper Threading}
   \begin{enumerate}
-  \item wolne cykle (czekanie na IO)
-  \item dwa wątki na procesorze jednordzeniowym z powodu dużej liczby wolnych cykli
-  \item wątki są przełączane
+  \item Wolne cykle w procesorze (czekanie na I/O)
+  \item Dwa wątki na procesorze jednordzeniowym z powodu dużej liczby wolnych cykli
+  \item Narzut związany z przełączaniem wątków przy braku I/O
   \end{enumerate}
 \end{frame}
 
 \begin{frame}{Rozszerzenia strumieniowe}
   \begin{enumerate}
-  \item realizacja podstawowych operacji arytmetycznych na wektorze w sposób równoległy
-  \item dodatkowe jendostki przeznaczone tylko do tej pracy
+  \item Realizacja podstawowych operacji arytmetycznych na wektorze w sposób równoległy
+  \item Dodatkowe jendostki dedykowane do przetwarzania strumieniowego
   \end{enumerate}
 \end{frame}
 
 \begin{frame}{Obliczenia na kartach graficznych}
   \begin{enumerate}
-  \item kary graficzne maja wiele jednostek przetwarzajacych dane (nawet kilkaset)
-  \item jest to konsekwencją [w dużej mierze] równoległej natury procesu wyświetlania grafiki
-  \item kiedyś potok graficzny był nieprogramowalny - algorytmy do przetwarzania wierzchołków/pikseli były zapisane w sprzęcie
+  \item Kary graficzne maja wiele jednostek przetwarzajacych dane (nawet kilkaset)
+  \item Jest to konsekwencją [w dużej mierze] równoległej natury procesu wyświetlania grafiki
+  \item Kiedyś potok graficzny był nieprogramowalny - algorytmy do przetwarzania wierzchołków/pikseli były zapisane w sprzęcie
   \end{enumerate}
 \end{frame}
 
 \begin{frame}{Obliczenia na kartach graficznych 2}
   \begin{enumerate}
-  \item jednostki przetwarzania ogólnego zastosowania
-  \item pojawienie się shaderów
-  \item koniec stałego potoku graficznego
+  \item Jednostki przetwarzania ogólnego zastosowania
+  \item Pojawienie się shaderów
+  \item Koniec stałego potoku graficznego
   \item GPGPU - General Purpose Computing on Graphics Procesing Units
   \item Tesla - nVidia, FireStream - AMD
   \end{enumerate}
@@ -252,24 +259,41 @@
 
 \begin{frame}{Hybrydyzacja obliczeń}
   \begin{enumerate}
-  \item czyli korzystanie z różnorodnych jednostek wykonawczych
-  \item różne reprezentacje typów danych (endianness: PowerPC - big, x86 - little)
-  \item różne precyzje typów danych (halves/partials na GPU to liczby zmiennoprzecinkowe 16-bitowe, są też 32-bitowe)
+  \item Hybrydyzacja to korzystanie z różnorodnych jednostek wykonawczych
+  \item Różne reprezentacje typów danych (endianness: PowerPC - big, x86 - little)
+  \item Różne precyzje typów danych (halves/partials na GPU to liczby zmiennoprzecinkowe 16-bitowe, są też 32-bitowe)
   \item IBM Roadrunner - kilkanaście tysięcy procesorów AMD (2 rdzenie, x86) i tyle samo procesorów z Playstation 3 (1 rdzeń PowerPC, 8 rdzeni do obliczeń wektorowych)
   \end{enumerate}
 \end{frame}
 
-\begin{frame}{Krótko o superkomputerach}
-  \begin{enumerate}
-  \item Najczęściej są to połączone procesory spotykane w komputerach osobistych
-  \item Klastry wieloprocesorów (wspólna pamięć) połączone szybkimi sieciami wewnętrznymi
-  \item Coraz rzadziej wykorzystuje się procesory dedykowane do obliczeń wektorowych
-  \end{enumerate}
+\begin{frame}{Architektury maszyn równoległych}
+  \huge
+  \begin{center}
+    Rodział 3
+
+    Architektury maszyn równoległych
+
+    \large
+
+    Klasyfikacja maszyn równoległych
+  \end{center}
 \end{frame}
 
 \section{Klasyfikacja maszyn równoległych}
 
 \begin{frame}{Klasyfikacja maszyn równoległych wg Flynna}
+  \begin{tabular}{ | c | c | c | }
+    \hline
+    & Single instruction & Multiple instruction \\
+    \hline
+    Single data   & SISD               & MISD                 \\
+    \hline
+    Multiple data & SIMD               & MIMD                 \\
+    \hline
+  \end{tabular}
+\end{frame}
+
+\begin{frame}{Zastosowania typów maszyn równoległych}
   \begin{enumerate}
   \item SISD - klasyczna maszyna sekwencyjna
   \item SIMD - procesory wektorowe, procesory z jednostkami wktorowymi
@@ -372,7 +396,19 @@
   \end{enumerate}
 \end{frame}
 
-\section{Klastry i gridy}
+\subsection{Klastry i gridy}
+\begin{frame}{Architektury maszyn równoległych}
+  \huge
+  \begin{center}
+    Rodział 3
+
+    Architektury maszyn równoległych
+
+    \large
+
+    Klastry i gridy
+  \end{center}
+\end{frame}
 
 \begin{frame}{Klastry}
   \begin{enumerate}
