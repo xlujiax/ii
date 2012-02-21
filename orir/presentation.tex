@@ -182,6 +182,101 @@
   \item Szybka wymiana informacji między sąsiednimi prostymi procesorami
   \item Powolny routing między dalszymi procesorami
   \item Ten model realizują karty graficzne
+  \item Programista odpowiada za podział pamięci
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Równoległość w maszynach typu MIMD}
+  \begin{enumerate}
+  \item SM-MIMD
+  \item DM-MIMD
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Równoległość w maszynach typu SM-MIMD}
+  \begin{enumerate}
+  \item Niewielka liczba procesorów z lokalną pamięcią
+  \item Dostęp do globalnej pamięci
+  \item Magistrala (tania - liniowo połączeń do niej, wolniejsza) lub przełączniki krzyżowe (drogie - $p^2$ przełączników, szybsze)
+  \item Cache'ing z powodu drogiego dostępu do globalnej pamięci; utrzymywanie spójności
+  \item Łatwość programowania z powodu istnienia wspólnej przestrzeni adresowej
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Równoległość w maszynach typu DM-MIMD}
+  \begin{enumerate}
+  \item Najpopularniejsza i najdynamiczniej rozwijana
+  \item Lokalna pamięć każdego procesora
+  \item Trudniejsze programowanie ze względu na konieczność przesyłania komunikatów
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Topologia maszyn typu DM-MIMD}
+  \begin{enumerate}
+  \item Topologia to sposów połączeń procesorów
+  \item Średnica (mniejsza wartość lepsza)
+  \item Podział połówkowy - najmniejsza liczba kanałów, po usunięciu których system będzie podzielony na dwie równe części (większa wartość lepsza)
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Przykładowe topologie maszyn typu DM-MIMD}
+  \begin{enumerate}
+  \item siatka dwuwymiarowa
+  \item torus dwuwymiarowy
+  \item pierścień (również torus jednowymiarowy)
+  \item drzewa statyczne (wierzchołki = procesory)
+  \item drzewa statyczne (liście = procesy, pozostałe to przełączniki)
+  \item fat tree (o zwiększaniu przepustowości przy korzeniu)
+  \item hipersześcian (można otrzymać inne topologie przez usuwanie krawędzi np. software'owo)
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Przykładowe topologie maszyn typu DM-MIMD}
+  \begin{enumerate}
+  \item cut-throught switching (siatka, podział pakietów)
+  \item konstelacje - rozwiązanie hybyrdowe: węzły SM-MIMD połączone wolniejszą siecią (wolniejszą niż procesory wewnątrz węzła)
+  \end{enumerate}
+\end{frame}
+
+\section{Klastry i gridy}
+
+\begin{frame}{Klastry}
+  \begin{enumerate}
+  \item df.: zespół maszyn połączonych szybką siecią, które są jednolicie zarządzane
+  \item najczęściej oparte na tej samej architekturze (homogeniczne)
+  \item najczęściej pracujące pod kontrolą jednego systemu operacyjnego
+  \item najczęściej znajdujące się blisko (np. regał lub pomieszcznie)
+  \item najczęściej zarządzane z jednej stacji roboczej
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Klastry realizują wiele zadań jednocześnie}
+  \begin{enumerate}
+  \item job scheduler (priorytet zadania, kierowanie do mniej obciążonych maszyn)
+  \item konieczność mierzenia obciążenia (tzw. load balancing clusters)
+  \item dążenie do wrażenia, że klaster to jedna maszyna (system plików, scheduler); tzw. Single System Image
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Przykłady oprogramowania dla klastrów}
+  \begin{enumerate}
+  \item Portable Batch System - najstarszy
+  \item Condor - możliwość przenosznia zadań w trakcie realizacji
+  \item Oracle Grid Engine - opensource (wcześniej Sun Grid Engine)
+  \item Windows Compute Cluster Server - tylko x86
+  \item OpenSSI - firmy HP, darmowy
+  \item Kerrighed - powstał w INRIA, migracje zadań
+  \item Linux Virtual Server - modyfikacje jądra w celu uzyskania SSI, migracje zadań
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Gridy}
+  \begin{enumerate}
+  \item df.: zbiór luźno powiązanych, rozproszonych geograficznie, heterogenicznych zasobów komunikujących się z użyciem ustalonego protokołu
+  \item zasoby to: superkomputery, klastry, pc z GPU, bazy danych, aparatura naukowa, urządzenia wyjścia
+  \item uogólnienie klastra
+  \item większe opóźnienia - nie nadają się do obliczeń równoległych tylko rozproszonych
+  \item problem podszywania się pod element grida
   \end{enumerate}
 \end{frame}
 \end{document}
