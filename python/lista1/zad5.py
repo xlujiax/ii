@@ -1,3 +1,5 @@
+# http://stackoverflow.com/questions/4499073/printing-without-newline-print-a-prints-a-space-how-to-remove
+from __future__ import print_function
 import os,random
 
 def get_phrase():
@@ -19,4 +21,27 @@ def get_phrase():
     # here is your random line in the file
     return line
 
-print get_phrase()
+phrase = get_phrase()
+print(phrase)
+
+def print_phrase(phrase, history):
+    for c in phrase:
+        if c in history:
+            print(c, end='')
+        else:
+            print('_', end='')
+    print('')
+
+history = set([])
+
+while True:
+    from_user = raw_input()
+    if len(from_user) == 1:
+        guess = from_user[0]
+        history.add(guess)
+        print_phrase(phrase, history)
+    else:
+        phrase_guess = from_user
+        print("phrase")
+        print(phrase_guess)
+    
