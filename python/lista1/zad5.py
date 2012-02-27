@@ -103,7 +103,7 @@ def draw_hangman(wrong):
         print("|   GAME     ")
         print("|   OVER!    ")
         
-phrase = get_phrase()
+phrase = get_phrase()[:-1]
 print(phrase)
 
 def print_phrase(phrase, history):
@@ -114,7 +114,7 @@ def print_phrase(phrase, history):
             print('_', end='')
     print('')
 
-history = set([])
+history = set([' '])
 letters = set(phrase)
 wrong = 0
 
