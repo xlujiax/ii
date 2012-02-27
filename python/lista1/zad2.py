@@ -29,7 +29,9 @@ def draw_background(screen):
 def draw_gradient(screen):
     for x in range(0, screen.get_width() - 1):
         for y in range(0, screen.get_height() - 1):
-            color = (10, 0, 0)
+            center = (100, 100)
+            brightness = float(x + y) / float(screen.get_width() + screen.get_height())
+            color = (100 * brightness, 200 * brightness, 20 * brightness)
             screen.set_at((x, y), color)
 
 def draw():
