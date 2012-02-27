@@ -18,7 +18,7 @@ def line_length(pts):
    for i in range(0, len(pts) - 1):
       sum += dist(pts[i], pts[i+1])
    return sum
-   
+
 def shorten_path(pts):
    max_length = 400
    pts_shorten = pts
@@ -71,19 +71,19 @@ while True:
       if zdarzenie.type == MOUSEBUTTONDOWN:
          tryb += 1
          if tryb > 2: tryb = 0
-               
+         
    ekran.fill( (255,255,255) )
    
    if len(punkty) > 2:
-     if tryb == 0:
-        pygame.draw.lines(ekran, (70,255,10), False, punkty, 2)
-     elif tryb == 1:
-        pygame.draw.lines(ekran, (70,255,10), True, punkty, 4)
-     else:
-        pygame.draw.polygon(ekran,(70,255,10), punkty)
+      if tryb == 0:
+         pygame.draw.lines(ekran, (70,255,10), False, punkty, 2)
+      elif tryb == 1:
+         pygame.draw.lines(ekran, (70,255,10), True, punkty, 4)
+      else:
+         pygame.draw.polygon(ekran,(70,255,10), punkty)
    
    punkty = shorten_path(punkty)     
    print line_length(punkty)
    
-      
+   
    pygame.display.update()   
