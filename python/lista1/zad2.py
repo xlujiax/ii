@@ -15,7 +15,11 @@ def onmousemove(pos):
     player_pos = pos
 
 def draw_circle(pos):
-    pygame.draw.circle(screen, (255, 0, 0), pos, 10)
+    size = 5 + 20 * pos[0] / screen_size[0]
+
+    brightness = float(pos[0] + pos[1]) / float(screen.get_width() + screen.get_height())
+    color = (0, 200 * (1 - brightness), 200 * (1 - brightness))
+    pygame.draw.circle(screen, color, pos, int(size))
 
 def prepare_background():
     global background
@@ -29,7 +33,6 @@ def draw_background(screen):
 def draw_gradient(screen):
     for x in range(0, screen.get_width() - 1):
         for y in range(0, screen.get_height() - 1):
-            center = (100, 100)
             brightness = float(x + y) / float(screen.get_width() + screen.get_height())
             color = (100 * brightness, 200 * brightness, 20 * brightness)
             screen.set_at((x, y), color)
