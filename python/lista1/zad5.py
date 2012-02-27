@@ -104,7 +104,6 @@ def draw_hangman(wrong):
         print("|   OVER!    ")
         
 phrase = get_phrase()[:-1]
-print(phrase)
 
 def print_phrase(phrase, history):
     for c in phrase:
@@ -139,5 +138,7 @@ while True:
 
     draw_hangman(wrong)
     if wrong == 9:
+        print("password was:")
+        print(phrase)
         exit(1)
             
