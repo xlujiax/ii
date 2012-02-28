@@ -1,7 +1,7 @@
 import pygame
 import math
-from pygame.locals import *
-from sys import exit
+import pygame.locals
+import sys
 
 screen_size = (640, 480)
 
