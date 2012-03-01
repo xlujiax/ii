@@ -1,6 +1,20 @@
 "Maciej Pacut, Z1, L2"
 import pygame
 import pygame.locals
+import os.path
+
+def read_line(filename):
+    "Read list of line points stored in file"
+    if os.path.isfile(filename):
+        line_file = open(filename, 'r')
+        return eval(line_file.read()) # sploit alert
+    else:
+        return []
+
+def store_line(filename, pts):
+    "Writes list of line points to file"
+    line_file = open(filename, 'w')
+    line_file.write(str(pts))
 
 class Editor:
     "Edytor Jednej Kreski"
@@ -9,10 +23,10 @@ class Editor:
         pygame.init()
         self.circle_size = 10
         self.background = pygame.image.load("bg.jpg")
-        self.pts = []
         self.screen_size = (640, 480)
         self.screen = pygame.display.set_mode(self.screen_size)
         self.active_circle = None
+        self.pts = read_line('serialized.bin')
 
     def frame(self):
         "Frame of animation"
@@ -59,11 +73,16 @@ class Editor:
             if self.active_circle == None:
                 self.pts.append(pos)
 
+    def onexit(self):
+        "QUIT event"
+        store_line('serialized.bin', self.pts)
+
     def loop(self):
         "Main loop"
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    self.onexit()
                     pygame.quit()
                     exit(0)
                 elif event.type == pygame.MOUSEMOTION:
