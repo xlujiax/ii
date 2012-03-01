@@ -36,7 +36,7 @@ class Editor:
         deltax = pos[0] - circle[0]
         deltay = pos[1] - circle[1]
         dist = deltax**2 + deltay**2
-        return dist < self.circle_size
+        return dist < self.circle_size**2
 
     def find_circle(self, pos):
         "Find circle that contains pos"
