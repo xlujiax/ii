@@ -40,20 +40,24 @@ class Editor:
 
     def find_circle(self, pos):
         "Find circle that contains pos"
-        for i in range(0, len(self.pts)-1):
+        for i in range(0, len(self.pts)):
             if self.in_circle(self.pts[i], pos):
                 return i
         return None
 
     def onmousemove(self, pos):
         "MOUSEMOTION event"
-        self.active_circle = pos
+        if self.active_circle != None:
+            self.pts[self.active_circle] = pos
 
     def onmouseclick(self, pos):
         "MOUSEBUTTONDOWN event"
-        self.active_circle = self.find_circle(pos)
-        if self.active_circle == None:
-            self.pts.append(pos)
+        if self.active_circle != None:
+            self.active_circle = None
+        else:
+            self.active_circle = self.find_circle(pos)
+            if self.active_circle == None:
+                self.pts.append(pos)
 
     def loop(self):
         "Main loop"
