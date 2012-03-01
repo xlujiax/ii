@@ -1,46 +1,71 @@
 "Maciej Pacut, Z1, L2"
 import pygame
-import math
 import pygame.locals
-import sys
 
-screen_size = (640, 480)
+class Editor:
+    "Edytor Jednej Kreski"
 
-bg = pygame.image.load("bg.jpg")
-pts = []
+    def __init__(self):
+        pygame.init()
+        self.circle_size = 10
+        self.background = pygame.image.load("bg.jpg")
+        self.pts = []
+        self.screen_size = (640, 480)
+        self.screen = pygame.display.set_mode(self.screen_size)
+        self.active_circle = None
 
-def init_pygame():
-    pygame.init()
-    global screen
-    screen = pygame.display.set_mode(screen_size)
+    def frame(self):
+        "Frame of animation"
+        self.screen.blit(self.background, (0, 0))
 
-def frame():
-    screen.blit(bg, (0, 0))
+        self.draw_line()
+        
+        pygame.display.update()
 
-    if len(pts) >= 2:
-        pygame.draw.lines(screen, (70,255,10), False, pts, 2)
-    
-    pygame.display.update()
+    def draw_line(self):
+        "Draw polyline with circles"
+        if len(self.pts) >= 2:
+            pygame.draw.lines(self.screen, (0, 0, 0), False, self.pts, 3)
+            
+        for i in self.pts:
+            pygame.draw.circle(self.screen, (0, 0, 0), i, self.circle_size)
+        
 
-def onmousemove(pos):
-    if False:
-        print pos
+    def in_circle(self, circle, pos):
+        "Checks if point is inside of the circle"
+        deltax = pos[0] - circle[0]
+        deltay = pos[1] - circle[1]
+        dist = deltax**2 + deltay**2
+        return dist < self.circle_size
 
-def onmouseclick(pos):
-    pts.append(pos)
+    def find_circle(self, pos):
+        "Find circle that contains pos"
+        for i in range(0, len(self.pts)-1):
+            if self.in_circle(self.pts[i], pos):
+                return i
+        return None
 
-def loop():
-    global screen
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit(0)
-            elif event.type == pygame.MOUSEMOTION:
-                onmousemove(event.pos)
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                onmouseclick(event.pos)
-        frame()
+    def onmousemove(self, pos):
+        "MOUSEMOTION event"
+        self.active_circle = pos
 
-init_pygame()
-loop()
+    def onmouseclick(self, pos):
+        "MOUSEBUTTONDOWN event"
+        self.active_circle = self.find_circle(pos)
+        if self.active_circle == None:
+            self.pts.append(pos)
+
+    def loop(self):
+        "Main loop"
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit(0)
+                elif event.type == pygame.MOUSEMOTION:
+                    self.onmousemove(event.pos)
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    self.onmouseclick(event.pos)
+            self.frame()
+
+Editor().loop()
