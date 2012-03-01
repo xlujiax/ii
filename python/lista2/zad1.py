@@ -7,6 +7,7 @@ import sys
 screen_size = (640, 480)
 
 bg = pygame.image.load("bg.jpg")
+pts = []
 
 def init_pygame():
     pygame.init()
@@ -15,10 +16,18 @@ def init_pygame():
 
 def frame():
     screen.blit(bg, (0, 0))
+
+    if len(pts) >= 2:
+        pygame.draw.lines(screen, (70,255,10), False, pts, 2)
+    
     pygame.display.update()
 
 def onmousemove(pos):
-    print pos
+    if False:
+        print pos
+
+def onmouseclick(pos):
+    pts.append(pos)
 
 def loop():
     global screen
@@ -29,7 +38,9 @@ def loop():
                 exit(0)
             elif event.type == pygame.MOUSEMOTION:
                 onmousemove(event.pos)
-            frame()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                onmouseclick(event.pos)
+        frame()
 
 init_pygame()
 loop()
