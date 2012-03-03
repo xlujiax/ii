@@ -12,8 +12,11 @@ class Brick:
         # draw small rect
 
 class Playground:
-    def __init__(self, rect):
-        self.rect = rect
+    def __init__(self, pos, grid_size, rows, cols):
+        self.pos = pos
+        self.grid_size = grid_size
+        self.rect = (pos[0], pos[1], pos[0] + grid_size * cols,
+                     pos[1] + grid_size * rows)
     def draw(self, surface):
         pygame.draw.rect(surface, (0, 0, 0), self.rect, 3)
 
@@ -81,6 +84,9 @@ class Editor:
     def __init__(self):
         pygame.init()
         self.palette = Palette((10, 10), 2)
+
+        self.playground = Playground((100, 10), 40, 10, 10)
+
         self.screen_size = (640, 480)
         self.screen = pygame.display.set_mode(self.screen_size)
         self.grab = None
@@ -91,6 +97,7 @@ class Editor:
         self.screen.fill((255, 255, 255))
 
         self.palette.draw(self.screen)
+        self.playground.draw(self.screen)
 
         if self.grab != None:
             self.grab.draw(self.screen, self.mouse_pos)
@@ -109,6 +116,7 @@ class Editor:
 
     def onmouseup(self, pos):
         "MOUSEBUTTONUP event"
+        self.grab = None
 
     def loop(self):
         "Main loop"
