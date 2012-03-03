@@ -8,17 +8,19 @@ class Brick:
 
     def draw(self, surface):
         surface.blit(self.img, self.pos)
-        # if any corner inside active_rect
-        # draw small rect
 
 class Playground:
     def __init__(self, pos, grid_size, rows, cols):
         self.pos = pos
         self.grid_size = grid_size
-        self.rect = (pos[0], pos[1], pos[0] + grid_size * cols,
-                     pos[1] + grid_size * rows)
+        self.rect = (pos[0], pos[1], grid_size * cols,
+                     grid_size * rows)
+        
     def draw(self, surface):
         pygame.draw.rect(surface, (0, 0, 0), self.rect, 3)
+        
+    def above(self, mouse_pos):
+        return pygame.Rect(self.rect).collidepoint(mouse_pos)
 
 class Grab:
     def __init__(self, mouse_pos, brick):
@@ -26,11 +28,23 @@ class Grab:
         self.delta = (brick.pos[0] - mouse_pos[0],
                       brick.pos[1] - mouse_pos[1])
 
-    def draw(self, surface, mouse_pos):
+    def draw(self, surface, mouse_pos, playground):
         "Takes actual mouse_pos"
         self.brick.pos = (self.delta[0] + mouse_pos[0],
                           self.delta[1] + mouse_pos[1])
+        if playground.above(mouse_pos):
+            self.draw_shadow(surface, mouse_pos, playground)
         self.brick.draw(surface)
+
+    def draw_shadow(self, surface, mouse_pos, playground):
+        "Sticky"
+        xindex = (mouse_pos[0] - playground.pos[0]) / playground.grid_size
+        yindex = (mouse_pos[1] - playground.pos[1]) / playground.grid_size
+        shadow = (playground.pos[0] + xindex * playground.grid_size,
+                  playground.pos[1] + yindex * playground.grid_size,
+                  playground.grid_size,
+                  playground.grid_size)
+        pygame.draw.rect(surface, (0, 0, 0), shadow, 1)
 
 class Palette:
     def __init__(self, pos, rows):
@@ -100,7 +114,7 @@ class Editor:
         self.playground.draw(self.screen)
 
         if self.grab != None:
-            self.grab.draw(self.screen, self.mouse_pos)
+            self.grab.draw(self.screen, self.mouse_pos, self.playground)
             
         pygame.display.update()
 
