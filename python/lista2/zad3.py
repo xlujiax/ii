@@ -15,35 +15,50 @@ class Playground:
         self.grid_size = grid_size
         self.rect = (pos[0], pos[1], grid_size * cols,
                      grid_size * rows)
+        self.bricks = []
         
     def draw(self, surface):
         pygame.draw.rect(surface, (0, 0, 0), self.rect, 3)
+        for brick in self.bricks:
+            brick.draw(surface)
         
     def above(self, mouse_pos):
         return pygame.Rect(self.rect).collidepoint(mouse_pos)
 
+    def add_brick(self, brick):
+        "With replacement"
+        self.bricks.append(brick)
+
 class Grab:
-    def __init__(self, mouse_pos, brick):
+    def __init__(self, mouse_pos, brick, playground):
         self.brick = brick
         self.delta = (brick.pos[0] - mouse_pos[0],
                       brick.pos[1] - mouse_pos[1])
+        self.playground = playground
 
     def draw(self, surface, mouse_pos, playground):
         "Takes actual mouse_pos"
         self.brick.pos = (self.delta[0] + mouse_pos[0],
                           self.delta[1] + mouse_pos[1])
         if playground.above(mouse_pos):
-            self.draw_shadow(surface, mouse_pos, playground)
+            self.draw_shadow(surface, mouse_pos)
         self.brick.draw(surface)
 
-    def draw_shadow(self, surface, mouse_pos, playground):
-        "Sticky"
-        xindex = (mouse_pos[0] - playground.pos[0]) / playground.grid_size
-        yindex = (mouse_pos[1] - playground.pos[1]) / playground.grid_size
-        shadow = (playground.pos[0] + xindex * playground.grid_size,
-                  playground.pos[1] + yindex * playground.grid_size,
-                  playground.grid_size,
-                  playground.grid_size)
+    def sticky_brick(self):
+        xindex = (self.brick.pos[0] - self.delta[0] - self.playground.pos[0]) / self.playground.grid_size
+        yindex = (self.brick.pos[1] - self.delta[1] - self.playground.pos[1]) / self.playground.grid_size
+        return Brick(self.brick.img,
+                     (self.playground.pos[0] + xindex * self.playground.grid_size,
+                      self.playground.pos[1] + yindex * self.playground.grid_size))
+
+    def draw_shadow(self, surface, mouse_pos):
+        "Sticky shadow" 
+        xindex = (mouse_pos[0] - self.playground.pos[0]) / self.playground.grid_size
+        yindex = (mouse_pos[1] - self.playground.pos[1]) / self.playground.grid_size
+        shadow = (self.playground.pos[0] + xindex * self.playground.grid_size,
+                  self.playground.pos[1] + yindex * self.playground.grid_size,
+                  self.playground.grid_size,
+                  self.playground.grid_size)
         pygame.draw.rect(surface, (0, 0, 0), shadow, 1)
 
 class Palette:
@@ -126,11 +141,13 @@ class Editor:
         "MOUSEBUTTONDOWN event"
         brick = self.palette.grab_brick(pos)
         if brick != None:
-            self.grab = Grab(pos, brick)
+            self.grab = Grab(pos, brick, self.playground)
 
     def onmouseup(self, pos):
         "MOUSEBUTTONUP event"
-        self.grab = None
+        if self.grab != None:
+            self.playground.add_brick(self.grab.sticky_brick())
+            self.grab = None
 
     def loop(self):
         "Main loop"
