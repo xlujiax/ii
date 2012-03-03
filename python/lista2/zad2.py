@@ -105,7 +105,7 @@ while True:
         frame = 0
 
     print frame
-    
+
     img_before = img
 
     speed = 0.5

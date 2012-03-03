@@ -33,17 +33,17 @@ class Editor:
         self.screen.blit(self.background, (0, 0))
 
         self.draw_line()
-        
+
         pygame.display.update()
 
     def draw_line(self):
         "Draw polyline with circles"
         if len(self.pts) >= 2:
             pygame.draw.lines(self.screen, (0, 0, 0), False, self.pts, 3)
-            
+
         for i in self.pts:
             pygame.draw.circle(self.screen, (0, 0, 0), i, self.circle_size)
-        
+
 
     def in_circle(self, circle, pos):
         "Checks if point is inside of the circle"
