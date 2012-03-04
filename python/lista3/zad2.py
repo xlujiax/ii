@@ -1,6 +1,7 @@
 "Maciej Pacut, Z2, L3"
 import pygame
 import random
+import math
 
 # http://www.pygame.org/pcr/fpstimer/index.php
 class FpsClock:
@@ -76,13 +77,23 @@ class ParticleSystem:
         accel = (random.uniform(-200, 0), 0)
         self.particles.append(Particle(pos, random.uniform(2, 5), vel, accel, 1000))
 
-class Circle:
+class Wheel:
     def __init__(self, pos, r):
         self.pos = pos
         self.r = r
         self.angle = 0
+        self.screws = 6
+        self.time = 0
+        self.speed = 1
     def draw(self, surface):
         pygame.draw.circle(surface, (128, 128, 128), self.pos, self.r)
+        for s in range(1, self.screws + 1):
+            spos = (math.cos(self.time + float(s) / float(self.screws) * 6.28) * self.r * 0.8 + self.pos[0],
+                    math.sin(self.time + float(s) / float(self.screws) * 6.28) * self.r * 0.8 + self.pos[1])
+            pygame.draw.circle(surface, (0, 0, 0), (int(spos[0]), int(spos[1])), 2)
+    def animate(self, deltatime):
+        self.time = self.time + deltatime * self.speed
+            
 
 class Animation:
     "Train"
@@ -94,10 +105,10 @@ class Animation:
         self.timer = FpsClock()
         self.timer.begin()
         self.particles = ParticleSystem((440, 170, 30, 10))
-        self.circles = [Circle((150, 320), 30),
-                        Circle((225, 320), 30),
-                        Circle((300, 320), 30),
-                        Circle((450, 320), 30)]
+        self.wheels = [Wheel((150, 320), 30),
+                       Wheel((225, 320), 30),
+                       Wheel((300, 320), 30),
+                       Wheel((450, 320), 30)]
 
     def draw_static(self):
         "Draw static part of train"
@@ -136,8 +147,9 @@ class Animation:
         deltatime = self.timer.get_frame_duration()
         self.particles.animate(deltatime)
 
-        for c in self.circles:
-            c.draw(self.screen)
+        for w in self.wheels:
+            w.draw(self.screen)
+            w.animate(deltatime)
 
         self.timer.tick()
 
