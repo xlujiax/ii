@@ -75,7 +75,7 @@ class ParticleSystem:
                random.uniform(self.rect[1], self.rect[1] + self.rect[3]))
         vel = (random.uniform(-50, 0), random.uniform(-100, -200))
         accel = (random.uniform(-200, 0), 0)
-        self.particles.append(Particle(pos, random.uniform(2, 5), vel, accel, 1000))
+        self.particles.append(Particle(pos, random.uniform(2, 5), vel, accel, 10))
 
 class Wheel:
     def __init__(self, pos, r):
@@ -84,7 +84,7 @@ class Wheel:
         self.angle = 0
         self.screws = 6
         self.time = 0
-        self.speed = 1
+        self.speed = 2.5
     def draw(self, surface):
         pygame.draw.circle(surface, (128, 128, 128), self.pos, self.r)
         for s in range(1, self.screws + 1):
