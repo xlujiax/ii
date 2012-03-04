@@ -75,7 +75,14 @@ class ParticleSystem:
         vel = (random.uniform(-50, 0), random.uniform(-100, -200))
         accel = (random.uniform(-200, 0), 0)
         self.particles.append(Particle(pos, random.uniform(2, 5), vel, accel, 1000))
-        
+
+class Circle:
+    def __init__(self, pos, r):
+        self.pos = pos
+        self.r = r
+        self.angle = 0
+    def draw(self, surface):
+        pygame.draw.circle(surface, (128, 128, 128), self.pos, self.r)
 
 class Animation:
     "Train"
@@ -87,6 +94,10 @@ class Animation:
         self.timer = FpsClock()
         self.timer.begin()
         self.particles = ParticleSystem((440, 170, 30, 10))
+        self.circles = [Circle((150, 320), 30),
+                        Circle((225, 320), 30),
+                        Circle((300, 320), 30),
+                        Circle((450, 320), 30)]
 
     def draw_static(self):
         "Draw static part of train"
@@ -124,6 +135,9 @@ class Animation:
         
         deltatime = self.timer.get_frame_duration()
         self.particles.animate(deltatime)
+
+        for c in self.circles:
+            c.draw(self.screen)
 
         self.timer.tick()
 
