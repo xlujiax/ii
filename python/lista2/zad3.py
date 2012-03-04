@@ -50,7 +50,8 @@ class Playground:
 
     def add_brick(self, brick):
         "With replacement"
-        self.bricks.append(brick)
+        if pygame.Rect(self.rect).collidepoint(brick.pos):
+            self.bricks.append(brick)
 
 class Grab:
     def __init__(self, mouse_pos, brick, playground, palette):
