@@ -31,14 +31,17 @@ class FpsClock:
         return
 
 class Particle:
-    def __init__(self, pos, r, vel, time_to_death):
+    def __init__(self, pos, r, vel, accel, time_to_death):
         self.pos = pos
         self.r = r
         self.vel = vel
         self.time_to_death = time_to_death
+        self.accel = accel
     def draw(self, surface):
         pygame.draw.circle(surface, (128, 128, 128), (int(self.pos[0]), int(self.pos[1])), int(self.r), 1)
     def animate(self, deltatime):
+        self.vel = (self.vel[0] + self.accel[0] * deltatime,
+                    self.vel[1] + self.accel[1] * deltatime)
         self.time_to_death = self.time_to_death - deltatime
         diff = 0.1
         self.pos = (self.pos[0] + random.uniform(-diff, diff) + deltatime * self.vel[0],
@@ -50,7 +53,7 @@ class ParticleSystem:
     def __init__(self, rect):
         self.rect = rect
         self.particles = []
-        self.emmit_every = 3
+        self.emmit_every = 0.003
         self.time_to_emmit = 0
         
     def draw(self, surface):
@@ -58,7 +61,7 @@ class ParticleSystem:
             p.draw(surface)
             
     def animate(self, deltatime):
-        self.time_to_emmit -= deltatime
+        self.time_to_emmit = self.time_to_emmit - deltatime
         if self.time_to_emmit < 0.0:
             self.emmit()
             self.time_to_emmit = self.emmit_every
@@ -67,10 +70,11 @@ class ParticleSystem:
         self.particles = [p for p in self.particles if not p.dead()]
 
     def emmit(self):
-        pos = (random.uniform(self.rect[0], self.rect[2]),
-               random.uniform(self.rect[1], self.rect[3]))
-        vel = (random.uniform(-100, 100), random.uniform(0, -100))
-        self.particles.append(Particle(pos, random.uniform(10, 20), vel, 1000))
+        pos = (random.uniform(self.rect[0], self.rect[0] + self.rect[2]),
+               random.uniform(self.rect[1], self.rect[1] + self.rect[3]))
+        vel = (random.uniform(-50, 0), random.uniform(-100, -200))
+        accel = (random.uniform(-200, 0), 0)
+        self.particles.append(Particle(pos, random.uniform(2, 5), vel, accel, 1000))
         
 
 class Animation:
@@ -82,7 +86,7 @@ class Animation:
         self.screen = pygame.display.set_mode(self.screen_size)
         self.timer = FpsClock()
         self.timer.begin()
-        self.particles = ParticleSystem((40, 40, 40, 40))
+        self.particles = ParticleSystem((440, 170, 30, 10))
 
     def draw_static(self):
         "Draw static part of train"
