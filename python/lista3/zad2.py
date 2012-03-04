@@ -1,5 +1,6 @@
 "Maciej Pacut, Z2, L3"
 import pygame
+import random
 
 # http://www.pygame.org/pcr/fpstimer/index.php
 class FpsClock:
@@ -29,19 +30,47 @@ class FpsClock:
         self.last_frame_time = self.get_current_time()
         return
 
+class Particle:
+    def __init__(self, pos, r, vel, time_to_death):
+        self.pos = pos
+        self.r = r
+        self.vel = vel
+        self.time_to_death = time_to_death
+    def draw(self, surface):
+        pygame.draw.circle(surface, (128, 128, 128), (int(self.pos[0]), int(self.pos[1])), int(self.r), 1)
+    def animate(self, deltatime):
+        self.time_to_death = self.time_to_death - deltatime
+        diff = 0.1
+        self.pos = (self.pos[0] + random.uniform(-diff, diff) + deltatime * self.vel[0],
+                    self.pos[1] + random.uniform(-diff, diff) + deltatime * self.vel[1])
+    def dead(self):
+        return self.time_to_death < 0
+
 class ParticleSystem:
     def __init__(self, rect):
         self.rect = rect
         self.particles = []
-        self.x = 0
+        self.emmit_every = 3
+        self.time_to_emmit = 0
         
     def draw(self, surface):
         for p in self.particles:
             p.draw(surface)
             
     def animate(self, deltatime):
-        self.x += deltatime
-        print self.x
+        self.time_to_emmit -= deltatime
+        if self.time_to_emmit < 0.0:
+            self.emmit()
+            self.time_to_emmit = self.emmit_every
+        for p in self.particles:
+            p.animate(deltatime)
+        self.particles = [p for p in self.particles if not p.dead()]
+
+    def emmit(self):
+        pos = (random.uniform(self.rect[0], self.rect[2]),
+               random.uniform(self.rect[1], self.rect[3]))
+        vel = (random.uniform(-100, 100), random.uniform(0, -100))
+        self.particles.append(Particle(pos, random.uniform(10, 20), vel, 1000))
         
 
 class Animation:
