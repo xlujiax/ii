@@ -5,49 +5,67 @@ from pygame.locals import *
 from sys import exit
 from random import randint
 
-
-   
-rysunek = []
-for i in range(48):
-  rysunek.append( 64 * [0])
-  
-def uaktualnijRysunek(pos,bit):
-    xm,ym = event.pos
-    x = xm/10
-    y = ym/10
-    if x >=0 and x<64 and y >= 0 and y < 48:
-      rysunek[y][x] = bit
+def draw(pos, color):
+  (xm, ym) = pos
+  x = xm / 10
+  y = ym / 10
+  if x >= 0 and x < 64 and y >= 0 and y < 48:
+    image.set_at((x, y), color)
 
 pygame.init()
 screen = pygame.display.set_mode((640, 480))
 
-points = []
+image = pygame.Surface((64, 48))
 
-myszkaSieRusza = False
+mouseButtonDown = False
+rightButton = False
+
+clearColor = (255, 255, 255)
+image.fill(clearColor)
+
+fillColor = [(0, 0, 0),
+             (255, 0, 0),
+             (255, 255, 0),
+             (0, 255, 0),
+             (255, 0, 255),
+             (0, 0, 255)]
+colorIndex = 0
 
 while True:
-        
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            exit()
-        if event.type == MOUSEBUTTONDOWN:
-            uaktualnijRysunek(event.pos,1)
-            myszkaSieRusza = True
-                
-        if event.type == MOUSEMOTION:
-           if myszkaSieRusza:
-              uaktualnijRysunek(event.pos,1)
+  for event in pygame.event.get():
+    if event.type == QUIT:
+      exit()
+    if event.type == MOUSEBUTTONDOWN:
+      if event.button == 3:
+        rightButton = True
+        draw(event.pos, clearColor)
+      else:
+        draw(event.pos, fillColor[colorIndex])
+        rightButton = False
+      mouseButtonDown = True
+
+    if event.type == MOUSEMOTION:
+      if mouseButtonDown:
+        if rightButton:
+          draw(event.pos, clearColor)
+        else:
+          draw(event.pos, fillColor[colorIndex])
            
-        if event.type == MOUSEBUTTONUP:
-           myszkaSieRusza = False
-                     
-                      
-    screen.fill((255,255,255))
-    
-    for i in range(48):
-       for j in range(64):
-          if rysunek[i][j]:
-             pygame.draw.rect(screen,(0,0,0), pygame.Rect(10*j,10*i,10,10) )
+    if event.type == MOUSEBUTTONUP:
+      mouseButtonDown = False
+      rightButton = False
+
+    key = pygame.key.get_pressed()
+    if key[pygame.K_1]: colorIndex = 0
+    if key[pygame.K_2]: colorIndex = 1
+    if key[pygame.K_3]: colorIndex = 2
+    if key[pygame.K_4]: colorIndex = 3
+    if key[pygame.K_5]: colorIndex = 4
+    if key[pygame.K_6]: colorIndex = 5
+
+    working = pygame.Surface((640, 480))
+    pygame.transform.scale(image, (640, 480), working)
+    screen.blit(working, (0, 0))
      
     pygame.display.update()
     
