@@ -48,6 +48,9 @@ small = False
 a3x3 = False
 mousePos = (0, 0)
 
+if os.path.isfile("rys.bmp"):
+  image = pygame.image.load("rys.bmp")
+
 while True:
   for event in pygame.event.get():
     if event.type == QUIT:
@@ -93,7 +96,7 @@ while True:
       screen.blit(image, (0, 0))
     else:
       working = pygame.Surface((640, 480))
-      working.convert(image)
+      working = working.convert(image)
       pygame.transform.scale(image, (640, 480), working)
       screen.blit(working, (0, 0))
 
