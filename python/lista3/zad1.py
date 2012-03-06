@@ -31,6 +31,8 @@ fillColor = [(0, 0, 0),
              (0, 0, 255)]
 colorIndex = 0
 
+small = False
+
 while True:
   for event in pygame.event.get():
     if event.type == QUIT:
@@ -63,9 +65,16 @@ while True:
     if key[pygame.K_5]: colorIndex = 4
     if key[pygame.K_6]: colorIndex = 5
 
-    working = pygame.Surface((640, 480))
-    pygame.transform.scale(image, (640, 480), working)
-    screen.blit(working, (0, 0))
+    if key[pygame.K_SPACE]: small = True
+    else: small = False
+    
+    if small:
+      screen.fill(clearColor)
+      screen.blit(image, (0, 0))
+    else:
+      working = pygame.Surface((640, 480))
+      pygame.transform.scale(image, (640, 480), working)
+      screen.blit(working, (0, 0))
      
     pygame.display.update()
     
