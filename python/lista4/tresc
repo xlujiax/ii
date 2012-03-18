@@ -1,0 +1,17 @@
+Lista 4
+
+Wszystkie zadania warte są 1 punkt, przy czym zadania drugie i trzecie mogą dać pewne premie (zależne od uznania prowadzącego). Zadania 1 ma termin na zajęciach 5-tych, pozostałe -- na szóstych. [EDIT]
+
+Na kolejnej liście pojawią się zadania z dłuższym terminem.
+
+
+Zadanie 1
+Dodaj dwie następujące funkcjonalności do programu o pastwisku:
+Użytkownik, za pomocą myszki, powinien mieć możliwość rysowania okrągłego, ciemnozielonego, "podpastwiska" z lepszą trawą (rysowanie kółka powinno przebiegać w sposób znany z edytorów graficznych: naciskając lewy klawisz myszki rozpoczynamy rysowanie koła, a przesuwając myszką przy naciśniętym klawiszu zmieniamy wielkość koła)
+Krowy powinny jakoś reagować na obecność lepszego pastwistka: będąc na jego obszarze powinny poruszać się (statystycznie) wolniej, natomiast będąc poza jego obszarem powinny (czasami) nie losować prędkości, ale rozpoczynać ruch w stronę pastwiska.
+Zadanie 2
+Dodaj do pastwiska pasterzy (animowane sprite'y sterowane klawiaturą, różniące się od krów), pasterzy powinno być kilku (trzech, czterech?), gracz powinien mieć możliwość przełączania się między nimi klawiszem TAB. Pasterz aktualnie wybrany powinien być jakoś zaznaczony. Krowa widzi pasterza, jeżeli odległość między nią i pasterzem jest mniejsza od ustalonej wartości. Krowa, podejmująca decyzję, w którą stronę iść powinna uwzględniać położenie pasterzy, których widzi -- starając się oddalać od nich (przy czym bardziej powinno jej zależeć na oddalaniu się od bliższych). Oczwiście, żeby nie było zbyt nudno, w poczynaniach krowy, rownież takiej, która widzi pasterzy powinien występować czynnik losowy. Na ekranie powinna znajdować się zagroda: prostokątny obszar o innym niż tło kolorze, losowym położeniu i rozmiarze.
+Celem gracza powinno być takie sterowanie pasterzami, żeby jak najwięcej krów znalazło się w zagrodzie. Liczba krów aktualnie w zagrodzie powinna być wypisana na ekranie. 
+
+Zadanie 3
+Pod tym adresem http://www.freewebs.com/teh_pro/charbenjamin3.PNG znajduje się zestaw 'militarnych' animowanych sprite'ów (umieszczonych na jednym obrazku). Napisz wygodną w obsłudze funkcję, która korzystają z metody subsurface klasy Surface wycina sekwencję obrazów do animacji. Zaprezentuj w akcji 3 wycięte w ten sposób sekwencje animacji.
