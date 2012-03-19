@@ -1,0 +1,40 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\usepackage{polski}
+\usepackage{ dsfont }
+\usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
+
+\begin{document}
+\textbf{Zadanie 16.} Czy dla każdego języka języka regularnego istnieje deterministyczne on-line wyrażenie regularne, które go definiuje?
+\vspace{1cm}
+
+Będę pisał, że wyrażenie regularne $\psi$ \textbf{opisuje} język $L_{\phi}$ jeśli $L_{\psi} = L_{\phi}$.
+
+Będę pisał, że język jest \textbf{zdegenerowany}, jeśli jest pusty lub składa się jedynie ze słowa pustego.
+\vspace{1cm}
+
+\textbf{Rozwiązanie.} Nie. Weźmy język opisywany przez wyrażenie $(000)^* + (00000)^*$. Wyrażenie regularne nad alfabetem $\Sigma = \{ 0 \}$ może być postaci:
+
+$$ \o,\hspace{5mm} \epsilon,\hspace{5mm} 0,\hspace{5mm} \phi^*,\hspace{5mm} \phi \circ \psi,\hspace{5mm} \phi + \psi$$
+
+dla $\phi, \psi$ będących wyrażeniami regularnymi. Dla każdej z powyższych postaci pokażemy, że takie wyrażenie regularne albo nie opisuje języka $L_{(000)^* + (00000)^*}$ albo nie jest deterministyczne on-line.
+
+\begin{enumerate}
+\item $\o$, $\epsilon$ i $0$. Języki tych wyrażeń są skończone a język $L_{(000)^* + (00000)^*}$ jest nieskończony.
+\item $\phi^*$. Żeby to wyrażenie opisywało $L_{(000)^* + (00000)^*}$, do języka $L_{\phi}$ musi należeć zarówno $000$ jak i $00000$. Wtedy $00000000$ ($3+5$ zer) należy do $L_{\phi^*}$ a nie należy do $L_{(000)^* + (00000)^*}$. To wyrażenie nie opisuje jezyka $L_{(000)^* + (00000)^*}$.
+\item $\phi + \psi$. Rozpatrzmy przypadki:
+  \begin{itemize}
+    \item $\phi$ lub $\psi$ jest zdegenerowany. Niech będzie to $\psi$, przypadek dla $\phi$ jest symetryczny. Skoro $\psi$ jest zdegenerowany to $\phi$ opisuje $L_{(000)^* + (00000)^*}$. Powtarzamy więc nasze rozumowanie dla wyrażenia regularnego $\phi$. Wyrażenia regularne są skończonymi drzewami oraz $\phi$ jest mniejsze niż $\psi + \phi$ (np. w porządku bycia poddrzewem, ale też w porządku, w którym porównujemy liczności wierzchołków), więc nasze rozumowanie nie będzie powtarzać się w nieskończoność.
+    \item $\phi$ i $\psi$ zawierają przynajmniej po jednym niepustym słowie. Weźmy $w_1 \in L_{\phi}, w_2 \in L_{\psi}$. Słowo składające się z jednego zera jest zarówno prefiksem $w_1$, jak i prefiksem $w_2$. W pierwszym przypadku to zero mapuje się na pewien symbol z $\phi$, a w drugim przypadku mapuje się na pewien symbol z $\psi$. Wyrażenie nie jest deterministyczne on-line.
+  \end{itemize}
+\item $\phi \circ \psi$. Rozpatrzmy przypadki:
+  \begin{itemize}
+  \item $\phi$ lub $\psi$ jest zdegenerowany. Jeśli degeneracja polega na tym, że język $\phi$ (symetrycznie $\psi$) jest pusty to konkatenacja języka pustego z dowolnym językiem daje język pusty. Jeśli degeneracja polega na tym, że język $\phi$ (symetrycznie $\psi$) składa się jedynie z $\epsilon$ to powtarzamy rozumowanie dla $\psi$.
+    \item $\phi$ opisuje język składający się z przynajmniej dwóch słów a $\psi$ opisuje język niezdegenerowany. Weźmy słowa $krotsze, dluzsze \in L_{\phi}$, gdzie $|krotsze| < |dluzsze|$. Słowo $krotsze \circ 0$ jest prefiksem zarówno słowa $dluzsze$ jak i słowa $krotsze \circ w_{\psi}$, gdzie $w_{\psi} \in L_{\psi}$. W pierwszym przypadku ostatnie zero prefiksu mapuje się na pewien symbol z $\phi$, a w drugim przypadku mapuje się na pewien symbol z $\psi$. Wyrażenie nie jest deterministyczne on-line.
+    \item $\phi$ opisuje język składający się z dokładnie jednego, niepustego słowa a $\phi$ opisuje język niezdegenerowany. Wtedy konkatenacja tych języków nigdy nie da słowa pustego, które należy do $L_{(000)^* + (00000)^*}$.
+  \end{itemize}
+\end{enumerate}
+
+\end{document}
