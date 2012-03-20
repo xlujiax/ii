@@ -37,35 +37,10 @@ dla $\phi, \psi$ będących wyrażeniami regularnymi. Dla każdej z powyższych 
   \item $\phi$ lub $\psi$ jest zdegenerowany. Jeśli degeneracja polega na tym, że język $\phi$ (symetrycznie $\psi$) jest pusty to konkatenacja języka pustego z dowolnym językiem daje język pusty a $L_{(000)^* + (00000)^*}$ jest niepusty. Jeśli degeneracja polega na tym, że język $\phi$ (symetrycznie $\psi$) składa się jedynie z $\epsilon$ to powtarzamy rozumowanie dla $\psi$.
     \item $\phi$ i $\psi$ opisują języki skończone. Wtedy ich konkatenacja nie daje języka nieskończonego, jakim jest $L_{(000)^* + (00000)^*}$.
     \item $\phi$ opisuje język o tylko jednym elemencie $\epsilon$, a $\psi$ opisuje język nieskończony. Wtedy powtarzamy rozumowanie dla $\psi$.
-    \item $\phi$ opisuje język o tylko jednym elemencie, różnym od $\epsilon$, a $\psi$ opisuje język nieskończony. Wtedy ich konkatenacja nigdy nie da słowa pustego, które należy do $L_{(000)^* + (00000)^*}$
-    \item $\phi$ opisuje język składający się z dwóch słów, $\epsilon$ i słowa niepustego $0^k$, a $\psi$ opisuje język nieskończony. Żeby ta konkatenacja opisywała wybrany język to $L_{\psi} \cup L_{0^k \circ \psi} = L_{(000)^* + (00000)^*}$.
+    \item $\phi$ opisuje język o tylko jednym elemencie, różnym od $\epsilon$, a $\psi$ opisuje język nieskończony. Wtedy ich konkatenacja nigdy nie da słowa pustego, które należy do $L_{(000)^* + (00000)^*}$.
+    \item $\phi$ opisuje język składający się z dwóch słów, $\epsilon$ i słowa niepustego $0^k$, a $\psi$ opisuje język nieskończony. Żeby ta konkatenacja opisywała wybrany język to $L_{\psi} \cup L_{0^k \circ \psi} = L_{(000)^* + (00000)^*}$. Wtedy słowo $0$ jest prefiksem zarówno pewnego słowa z $L_{\psi}$ jak i pewnego słowa z $L_{0^k \circ \psi}$. W pierwszym przypadku zero będące prefiksem mapuje się na pewien symbol z $\psi$, w drugim przypadku mapuje się na pewien symbol z $\phi$. Wyrażenie nie jest deterministyczne on-line.
 
-\textbf{Lemat.} W $L_{\psi}$ znajduje się zarówno słowo $000$ jak i słowo $00000$. 
-
-\textbf{Dowód.} Jeśli w $L_{\psi}$ nie ma słowa $000$ to zachodzą przypadki:
-\begin{itemize}
-\item $\epsilon \in L_{\psi}, k = 3$. Wtedy aby wyrazić $0^{10}$ to samo $0^{10}$ jest w $L_{\psi}$ lub $0^7$ jest w języku i wyrażamy $0^{10}$ przez dopisanie trzech zer do $0^7$. W pierwszym przypadku $0^{13}$ też musiałoby być w $L_{(000)^* + (00000)^*}$, a w drugim przypadku już $0^7$ musiałoby być w $L_{(000)^* + (00000)^*}$.
-\item $0 \in L_{\psi}, k = 2$. Analogicznie do przypadku powyżej, chcemy otrzymać $0^6$, a ani $0^4$ ani $0^8$ nie ma w $L_{(000)^* + (00000)^*}$.
-\item $00 \in L_{\psi}, k = 1$. Analogicznie do przypadku powyżej, chcemy otrzymać $0^{15}$, a ani $0^{14}$ ani $0^{16}$ nie ma w $L_{(000)^* + (00000)^*}$.
-\end{itemize}
-
-Jeśli w $L_{\psi}$ nie ma słowa $00000$ to zachodzą przypadki:
-\begin{itemize}
-\item $\epsilon \in L_{\psi}, k = 5$. Wtedy chcemy otrzymać $0^6$, a ani $0^1$ ani $0^{11}$ nie ma w $L_{(000)^* + (00000)^*}$.
-\item $0 \in L_{\psi}, k = 4$. Wtedy chcemy otrzymać $0^{12}$, a ani $0^8$ ani $0^{16}$ nie ma w $L_{(000)^* + (00000)^*}$.
-\item $00 \in L_{\psi}, k = 3$. Dowód jak dla braku $000$.
-\item $000 \in L_{\psi}, k = 2$. Dowód jak dla braku $000$.
-\item $0000 \in L_{\psi}, k = 1$. Dowód jak dla braku $000$.
-\end{itemize}
-\vspace{1cm}
-
-Weźmy $w_1 \in L_{\psi}, w_2 = 0^k \circ w_1$. Rozpatrzmy podprzypadki:
-      \begin{itemize}
-        \item $k$ nie jest podzielne przez $3$.
-        \item $k$ nie jest podzielne przez $5$.
-        \item $k$ jest podzielne przez $15$. Wtedy wyrażenie nie jest deterministyczne (więc w szczególności nie jest deterministyczne on-line), ponieważ wszystkie zera słowa $0^{15}$ mogą mapować się na symbole $\phi$ lub symbole z $\psi$.
-      \end{itemize}
-    \item $\phi$ opisuje język o co najmniej dwóch elementach różnych od $\epsilon$, a $\psi$ opisuje język niezdegenerowany. Weźmy dwa takie słowa $krotsze, dluzsze \in L_{\phi}$ takie, że $|krotsze| < |dluzsze|$. Weźmy dowolne niepuste słowo $w \in L_{psi}$. Rozpatrzmy słowo $prefiks = krotsze \circ 0$ i podkreślmy ostatnie jego zero. Słowo $prefiks$ jest prefiksem zarówno słowa $krotsze \circ w$ jak i słowa $dluzsze \circ w$. W pierwszym przypadku podkreślone zero mapuje się na pewien symbol z $\psi$ a w drugim przypadku mapuje się na pewien symbol z $\phi$.
+    \item $\phi$ opisuje język o co najmniej dwóch elementach różnych od $\epsilon$, a $\psi$ opisuje język niezdegenerowany. Weźmy dwa takie słowa $krotsze, dluzsze \in L_{\phi}$ takie, że $|krotsze| < |dluzsze|$. Weźmy dowolne niepuste słowo $w \in L_{psi}$. Rozpatrzmy słowo $prefiks = krotsze \circ 0$ i podkreślmy ostatnie jego zero. Słowo $prefiks$ jest prefiksem zarówno słowa $krotsze \circ w$ jak i słowa $dluzsze \circ w$. W pierwszym przypadku podkreślone zero mapuje się na pewien symbol z $\psi$ a w drugim przypadku mapuje się na pewien symbol z $\phi$. Wyrażenie nie jest deterministyczne on-line.
   \end{itemize}
 \end{enumerate}
 
