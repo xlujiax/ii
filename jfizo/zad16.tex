@@ -20,12 +20,12 @@ Język jest \textbf{zdegenerowany}, jeśli jest pusty lub składa się jedynie z
 
 \textbf{Rozwiązanie.} Nie. Weźmy język opisywany przez wyrażenie $(000)^* + (00000)^*$. Wyrażenie regularne nad alfabetem $\Sigma = \{ 0 \}$ może być postaci:
 
-$$ \o,\hspace{5mm} \epsilon,\hspace{5mm} 0,\hspace{5mm} \phi^*,\hspace{5mm} \phi \circ \psi,\hspace{5mm} \phi + \psi$$
+$$ \o,\hspace{5mm} \epsilon,\hspace{5mm} 0,\hspace{5mm} \phi^*,\hspace{5mm} \phi + \psi,\hspace{5mm} \phi \circ \psi$$
 
 dla $\phi, \psi$ będących wyrażeniami regularnymi. Dla każdej z powyższych postaci pokażemy, że takie wyrażenie regularne albo nie opisuje języka $L_{(000)^* + (00000)^*}$ albo nie jest deterministyczne on-line.
 
 \begin{enumerate}
-\item $\o$, $\epsilon$ i $0$. Języki tych wyrażeń są skończone a język $L_{(000)^* + (00000)^*}$ jest nieskończony.
+\item $\o$, $\epsilon$ i $0$. Języki opisywane przez te wyrażenia są skończone, a język $L_{(000)^* + (00000)^*}$ jest nieskończony.
 \item $\phi^*$. Żeby to wyrażenie opisywało $L_{(000)^* + (00000)^*}$, do języka $L_{\phi}$ musi należeć zarówno $000$ jak i $00000$. Wtedy $00000000$ ($3+5$ zer) należy do $L_{\phi^*}$ a nie należy do $L_{(000)^* + (00000)^*}$. To wyrażenie nie opisuje jezyka $L_{(000)^* + (00000)^*}$.
 \item $\phi + \psi$. Rozpatrzmy przypadki:
   \begin{itemize}
@@ -35,7 +35,11 @@ dla $\phi, \psi$ będących wyrażeniami regularnymi. Dla każdej z powyższych 
 \item $\phi \circ \psi$. Rozpatrzmy przypadki:
   \begin{itemize}
   \item $\phi$ lub $\psi$ jest zdegenerowany. Jeśli degeneracja polega na tym, że język $\phi$ (symetrycznie $\psi$) jest pusty to konkatenacja języka pustego z dowolnym językiem daje język pusty a $L_{(000)^* + (00000)^*}$ jest niepusty. Jeśli degeneracja polega na tym, że język $\phi$ (symetrycznie $\psi$) składa się jedynie z $\epsilon$ to powtarzamy rozumowanie dla $\psi$.
-    \item $\phi$ i $\psi$ nie są zdegenerowane. Wtedy konkatenacja tych języków nigdy nie da słowa pustego, które należy do $L_{(000)^* + (00000)^*}$.
+    \item $\phi$ i $\psi$ opisują języki skończone. Wtedy ich konkatenacja nie daje języka nieskończonego, jakim jest $L_{(000)^* + (00000)^*}$.
+    \item $\phi$ opisuje język o tylko jednym elemencie $\epsilon$, a $\psi$ opisuje język nieskończony. Wtedy powtarzamy rozumowanie dla $\psi$.
+    \item $\phi$ opisuje język o tylko jednym elemencie, różnym od $\epsilon$, a $\psi$ opisuje język nieskończony. Wtedy ich konkatenacja nigdy nie da słowa pustego, które należy do $L_{(000)^* + (00000)^*}$
+    \item $\phi$ opisuje język składający się z dwóch słów, $\epsilon$ i słowa niepustego $0^k$, a $\psi$ opisuje język nieskończony. Żeby ta konkatenacja opisywała wybrany język to $L_{\psi} \cup L_{0^k \circ \psi} = L_{(000)^* + (00000)^*}$. Jeśli $L_{\psi} \cap L_{0^k \circ \psi} \neq \o$ to język nie jest deterministyczny. $L_{\psi}, L_{0^k \circ \psi}$ muszą więc pokrywać rozłączne podzbiory $L_{(000)^* + (00000)^*}$.
+    \item $\phi$ opisuje język o co najmniej dwóch elementach różnych od $\epsilon$, a $\psi$ opisuje język niezdegenerowany. Weźmy dwa takie słowa $krotsze, dluzsze \in L_{\phi}$ takie, że $|krotsze| < |dluzsze|$. Weźmy dowolne niepuste słowo $w \in L_{psi}$. Rozpatrzmy słowo $prefiks = krotsze \circ 0$ i podkreślmy ostatnie jego zero. Słowo $prefiks$ jest prefiksem zarówno słowa $krotsze \circ w$ jak i słowa $dluzsze \circ w$. W pierwszym przypadku podkreślone zero mapuje się na pewien symbol z $\psi$ a w drugim przypadku mapuje się na pewien symbol z $\phi$.
   \end{itemize}
 \end{enumerate}
 
