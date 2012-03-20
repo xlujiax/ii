@@ -7,12 +7,15 @@
 \usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
 
 \begin{document}
+
+\setlength{\parindent}{0pt}
+
 \textbf{Zadanie 16.} Czy dla każdego języka języka regularnego istnieje deterministyczne on-line wyrażenie regularne, które go definiuje?
 \vspace{1cm}
 
-Będę pisał, że wyrażenie regularne $\psi$ \textbf{opisuje} język $L_{\phi}$ jeśli $L_{\psi} = L_{\phi}$.
+Wyrażenie regularne $\psi$ \textbf{opisuje} język $L_{\phi}$ jeśli $L_{\psi} = L_{\phi}$.
 
-Będę pisał, że język jest \textbf{zdegenerowany}, jeśli jest pusty lub składa się jedynie ze słowa pustego.
+Język jest \textbf{zdegenerowany}, jeśli jest pusty lub składa się jedynie ze słowa pustego.
 \vspace{1cm}
 
 \textbf{Rozwiązanie.} Nie. Weźmy język opisywany przez wyrażenie $(000)^* + (00000)^*$. Wyrażenie regularne nad alfabetem $\Sigma = \{ 0 \}$ może być postaci:
@@ -31,9 +34,8 @@ dla $\phi, \psi$ będących wyrażeniami regularnymi. Dla każdej z powyższych 
   \end{itemize}
 \item $\phi \circ \psi$. Rozpatrzmy przypadki:
   \begin{itemize}
-  \item $\phi$ lub $\psi$ jest zdegenerowany. Jeśli degeneracja polega na tym, że język $\phi$ (symetrycznie $\psi$) jest pusty to konkatenacja języka pustego z dowolnym językiem daje język pusty. Jeśli degeneracja polega na tym, że język $\phi$ (symetrycznie $\psi$) składa się jedynie z $\epsilon$ to powtarzamy rozumowanie dla $\psi$.
-    \item $\phi$ opisuje język składający się z przynajmniej dwóch słów a $\psi$ opisuje język niezdegenerowany. Weźmy słowa $krotsze, dluzsze \in L_{\phi}$, gdzie $|krotsze| < |dluzsze|$. Słowo $krotsze \circ 0$ jest prefiksem zarówno słowa $dluzsze$ jak i słowa $krotsze \circ w_{\psi}$, gdzie $w_{\psi} \in L_{\psi}$. W pierwszym przypadku ostatnie zero prefiksu mapuje się na pewien symbol z $\phi$, a w drugim przypadku mapuje się na pewien symbol z $\psi$. Wyrażenie nie jest deterministyczne on-line.
-    \item $\phi$ opisuje język składający się z dokładnie jednego, niepustego słowa a $\phi$ opisuje język niezdegenerowany. Wtedy konkatenacja tych języków nigdy nie da słowa pustego, które należy do $L_{(000)^* + (00000)^*}$.
+  \item $\phi$ lub $\psi$ jest zdegenerowany. Jeśli degeneracja polega na tym, że język $\phi$ (symetrycznie $\psi$) jest pusty to konkatenacja języka pustego z dowolnym językiem daje język pusty a $L_{(000)^* + (00000)^*}$ jest niepusty. Jeśli degeneracja polega na tym, że język $\phi$ (symetrycznie $\psi$) składa się jedynie z $\epsilon$ to powtarzamy rozumowanie dla $\psi$.
+    \item $\phi$ i $\psi$ nie są zdegenerowane. Wtedy konkatenacja tych języków nigdy nie da słowa pustego, które należy do $L_{(000)^* + (00000)^*}$.
   \end{itemize}
 \end{enumerate}
 
