@@ -38,7 +38,21 @@ dla $\phi, \psi$ będących wyrażeniami regularnymi. Dla każdej z powyższych 
     \item $\phi$ i $\psi$ opisują języki skończone. Wtedy ich konkatenacja nie daje języka nieskończonego, jakim jest $L_{(000)^* + (00000)^*}$.
     \item $\phi$ opisuje język o tylko jednym elemencie $\epsilon$, a $\psi$ opisuje język nieskończony. Wtedy powtarzamy rozumowanie dla $\psi$.
     \item $\phi$ opisuje język o tylko jednym elemencie, różnym od $\epsilon$, a $\psi$ opisuje język nieskończony. Wtedy ich konkatenacja nigdy nie da słowa pustego, które należy do $L_{(000)^* + (00000)^*}$
-    \item $\phi$ opisuje język składający się z dwóch słów, $\epsilon$ i słowa niepustego $0^k$, a $\psi$ opisuje język nieskończony. Żeby ta konkatenacja opisywała wybrany język to $L_{\psi} \cup L_{0^k \circ \psi} = L_{(000)^* + (00000)^*}$. Jeśli $L_{\psi} \cap L_{0^k \circ \psi} \neq \o$ to język nie jest deterministyczny. $L_{\psi}, L_{0^k \circ \psi}$ muszą więc pokrywać rozłączne podzbiory $L_{(000)^* + (00000)^*}$.
+    \item $\phi$ opisuje język składający się z dwóch słów, $\epsilon$ i słowa niepustego $0^k$, a $\psi$ opisuje język nieskończony. Żeby ta konkatenacja opisywała wybrany język to $L_{\psi} \cup L_{0^k \circ \psi} = L_{(000)^* + (00000)^*}$.
+
+\textbf{Lemat.} W $L_{\psi}$ znajduje się zarówno słowo $000$ jak i słowo $00000$. 
+
+\textbf{Dowód.} Jeśli w $L_{\psi}$ nie ma słowa $000$ to zachodzą przypadki:
+\begin{itemize}
+  \item $\epsilon \in L_{\psi}, k = 3$. Wtedy 
+
+
+Weźmy $w_1 \in L_{\psi}, w_2 = 0^k \circ w_1$. Rozpatrzmy podprzypadki:
+      \begin{itemize}
+        \item $k$ nie jest podzielne przez $3$ ani przez $5$. Weźmy 
+        \item $k$ jest podzielne przez $3$, ale nie jest podzielne przez $5$. Weźmy
+        \item $k$ jest podzielne przez $15$. Wtedy wyrażenie nie jest deterministyczne (więc w szczególności nie jest deterministyczne on-line), ponieważ wszystkie zera słowa $0^{15}$ mogą mapować się na symbole $\phi$ lub symbole z $\psi$.
+      \end{itemize}
     \item $\phi$ opisuje język o co najmniej dwóch elementach różnych od $\epsilon$, a $\psi$ opisuje język niezdegenerowany. Weźmy dwa takie słowa $krotsze, dluzsze \in L_{\phi}$ takie, że $|krotsze| < |dluzsze|$. Weźmy dowolne niepuste słowo $w \in L_{psi}$. Rozpatrzmy słowo $prefiks = krotsze \circ 0$ i podkreślmy ostatnie jego zero. Słowo $prefiks$ jest prefiksem zarówno słowa $krotsze \circ w$ jak i słowa $dluzsze \circ w$. W pierwszym przypadku podkreślone zero mapuje się na pewien symbol z $\psi$ a w drugim przypadku mapuje się na pewien symbol z $\phi$.
   \end{itemize}
 \end{enumerate}
