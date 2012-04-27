@@ -16,7 +16,14 @@ class doFunCallClass = object(self)
 end
 
 let reportFunCall () =
-  ignore (warn "Reporting");;
+  print_string "Reporting...";
+  print_newline ();
+  Hashtbl.iter (fun fname count ->
+    print_string fname;
+    print_string " = ";
+    print_int count;
+    print_newline ();
+  ) calls;;
 
 let feature : featureDescr =
   { fd_enabled     = ref false
