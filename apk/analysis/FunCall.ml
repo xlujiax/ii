@@ -4,15 +4,21 @@ open Hashtbl
 
 let calls = Hashtbl.create 32;;
 
+let inc_calls fname = 
+  if Hashtbl.mem calls fname then
+    let count = Hashtbl.find calls fname
+    in
+    Hashtbl.replace calls fname (count + 1);
+  else
+    Hashtbl.add calls fname 1;;
+
 class doFunCallClass = object(self)
   inherit nopCilVisitor
 
   method vstmt sd =
-    (* If statement contains function call, increment external hash*)
     ignore (warn "Statement");
-    (* Hashtbl.add calls "1" "2"; *)
-    Hashtbl.add calls "asdf" 1;
-    SkipChildren
+    inc_calls "foo";
+    SkipChildren;
 end
 
 let reportFunCall () =
