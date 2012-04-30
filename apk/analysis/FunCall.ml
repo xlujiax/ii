@@ -6,13 +6,6 @@ exception FunCallError of string;;
 
 let calls = Hashtbl.create 32;;
 
-let inc_calls fname = 
-  if Hashtbl.mem calls fname then
-    let count = Hashtbl.find calls fname
-    in
-    Hashtbl.replace calls fname (count + 1);
-  else
-    raise (FunCallError "Function call uninitialized");;
 
 let init_calls fname =
   if not (Hashtbl.mem calls fname) then
@@ -20,15 +13,30 @@ let init_calls fname =
   else
     raise (FunCallError "Multiple declarations of the same function");;
 
+let inc_calls fname = 
+  if Hashtbl.mem calls fname then
+    let count = Hashtbl.find calls fname
+    in
+    Hashtbl.replace calls fname (count + 1);
+  else
+    init_calls fname;;
+(*    raise (FunCallError "Function call uninitialized");; *)
+
 
 
 class doFunCallClass = object(self)
   inherit nopCilVisitor
 
-  method vstmt sd =
-   Pretty.fprint stdout 80 (d_stmt () sd);
-    inc_calls "foo";
-    DoChildren;
+  method vinst id =
+    match id with
+      | Call (lval_opt, e, elist, location) ->
+	Pretty.fprint stdout 80 (d_instr () id);
+	print_string "\n";
+	Pretty.fprint stdout 80 (d_exp () e);
+	print_string "\n";
+	inc_calls (Pretty.sprint 80 (d_exp () e));
+	SkipChildren;
+      | _ -> DoChildren;
 end
 
 class doFunCollectClass = object(self)
