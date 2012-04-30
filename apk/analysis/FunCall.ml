@@ -26,7 +26,7 @@ class doFunCallClass = object(self)
   inherit nopCilVisitor
 
   method vstmt sd =
-    ignore (warn "Statement");
+   Pretty.fprint stdout 80 (d_stmt () sd);
     inc_calls "foo";
     DoChildren;
 end
