@@ -17,10 +17,7 @@ let inc_calls fname =
   if Hashtbl.mem calls fname then
     let count = Hashtbl.find calls fname
     in
-    Hashtbl.replace calls fname (count + 1);
-  else
-    init_calls fname;;
-(*    raise (FunCallError "Function call uninitialized");; *)
+    Hashtbl.replace calls fname (count + 1);;
 
 
 
@@ -29,12 +26,8 @@ class doFunCallClass = object(self)
 
   method vinst id =
     match id with
-      | Call (lval_opt, e, elist, location) ->
-	Pretty.fprint stdout 80 (d_instr () id);
-	print_string "\n";
-	Pretty.fprint stdout 80 (d_exp () e);
-	print_string "\n";
-	inc_calls (Pretty.sprint 80 (d_exp () e));
+      | Call (_, called_symbol, _, _) ->
+	inc_calls (Pretty.sprint 80 (d_exp () called_symbol));
 	SkipChildren;
       | _ -> DoChildren;
 end
